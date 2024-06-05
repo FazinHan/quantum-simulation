@@ -291,216 +291,106 @@ def cost_func_vqd(parameters, ansatz, prev_states, step, betas, estimator, sampl
 # ### Linear Driver code
 
 # In[11]:
-
-
-from qiskit.primitives import Estimator
-from qiskit.primitives import Sampler
-
-sampler = Sampler()
-estimator = Estimator()
-
-
-# In[48]:
-
-
-from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
-from qiskit import QuantumCircuit
-from qiskit.circuit.library import HamiltonianGate, UGate
-from scipy.optimize import minimize
-import time
-
-# j = 1
-
-k = 2**1
-betas = [5]*k
-x0 = np.ones(3)
-
-A_Array = np.linspace(0,4/Ω,8)
-
-def evolver_gen():
-    for i in A_Array:
-        yield unitary_time_evolver(hamiltonian_linear, i, num_qbits=1)
-
-time_evo_circuits = evolver_gen()
-
-matrix = np.array([[1,0],[0,0]])
-observable = SparsePauliOp.from_operator(matrix)
-ground_states = []
-excited_states = [] 
-
-t0 = time.perf_counter()
-for r in time_evo_circuits:
-
-    ansatz = QuantumCircuit(1)
-    theta = ParameterVector('θ',3)
-    ansatz.u(*theta,0)
-    ansatz.compose(r, inplace=True)
-    ansatz.compose(UGate(*theta).inverse(),inplace=True)
-    # if j:
-    #     display(ansatz.draw())
-    #     j = 0
+if __name__ == "__main__":
     
-    prev_states = []
-    prev_opt_parameters = []
-    eigenvalues = []
-
-
-# try:
-    for step in range(1, k + 1):
+    from qiskit.primitives import Estimator
+    from qiskit.primitives import Sampler
+    
+    sampler = Sampler()
+    estimator = Estimator()
+    
+    
+    # In[48]:
+    
+    
+    from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
+    from qiskit import QuantumCircuit
+    from qiskit.circuit.library import HamiltonianGate, UGate
+    from scipy.optimize import minimize
+    import time
+    
+    # j = 1
+    
+    k = 2**1
+    betas = [5]*k
+    x0 = np.ones(3)
+    
+    A_Array = np.linspace(0,4/Ω,8)
+    
+    def evolver_gen():
+        for i in A_Array:
+            yield unitary_time_evolver(hamiltonian_linear, i, num_qbits=1)
+    
+    time_evo_circuits = evolver_gen()
+    
+    matrix = np.array([[1,0],[0,0]])
+    observable = SparsePauliOp.from_operator(matrix)
+    ground_states = []
+    excited_states = [] 
+    
+    t0 = time.perf_counter()
+    for r in time_evo_circuits:
+    
+        ansatz = QuantumCircuit(1)
+        theta = ParameterVector('θ',3)
+        ansatz.u(*theta,0)
+        ansatz.compose(r, inplace=True)
+        ansatz.compose(UGate(*theta).inverse(),inplace=True)
+        # if j:
+        #     display(ansatz.draw())
+        #     j = 0
         
-        if step > 1:
-            prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
-        
-        result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
-        # while result.fun >= cost_threshold:
-        #     result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
-        #     x0 = result.x
+        prev_states = []
+        prev_opt_parameters = []
+        eigenvalues = []
+    
+    
+    # try:
+        for step in range(1, k + 1):
             
-        # print(result)
-    
-        prev_opt_parameters = result.x
-        eigenvalues.append(result.fun)
-        # if result.fun >= .1:
-        #     # print(np.linalg.det(result.hess_inv))
-        #     print(result.fun)
-    
-    eigenvalues = np.array(eigenvalues)
-    ground_states.append(eigenvalues[0]/Ω)
-    excited_states.append(eigenvalues[1]/Ω)
-
-# except Exception as e:
-#     print(e)
-t1 = time.perf_counter()
-
-print('time taken: %.2f s'%(t1-t0))
-print(ground_states)
-print(excited_states)
-
-
-# #### Plotter
-
-# In[45]:
-
-
-import matplotlib.pyplot as plt
-import os
-num = 1
-while os.path.isfile(f'.//outputs//figure{num}.png'):
-    num += 1
-
-plt.plot(A_Array*Ω, ground_states,'b.')
-plt.plot(A_Array*Ω, excited_states,'r.')
-plt.grid()
-plt.xlabel('A/$\\Omega$')
-plt.ylabel('$\\epsilon/\\Omega$')
-plt.savefig(f'.//outputs//figure{num}.png')
-
-
-# ### Julia driver?
-
-# In[25]:
-
-
-# from julia.api import Julia
-# jl = Julia(compiled_modules=False)
-
-# from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
-# from qiskit import QuantumCircuit
-# from qiskit.circuit.library import HamiltonianGate, UGate
-# from scipy.optimize import minimize
-
-# k = 2**1
-# betas = [5]*k
-# x0 = np.ones(3)
-# jl.x0 = x0.tolist()
-
-# A_Array = np.linspace(0,4/Ω,8)
-
-# def evolver_gen():
-#     for i in A_Array:
-#         yield unitary_time_evolver(hamiltonian_linear, i, num_qbits=1)
-
-# time_evo_circuits = evolver_gen()
-
-# matrix = np.array([[1,0],[0,0]])
-# observable = SparsePauliOp.from_operator(matrix)
-# ground_states = []
-# excited_states = [] 
-
-# for r in time_evo_circuits:
-
-#     ansatz = QuantumCircuit(1)
-#     theta = ParameterVector('θ',3)
-#     ansatz.u(*theta,0)
-#     ansatz.compose(r, inplace=True)
-#     ansatz.compose(UGate(*theta).inverse(),inplace=True)
-#     # if j:
-#     #     display(ansatz.draw())
-#     #     j = 0
-    
-#     prev_states = []
-#     prev_opt_parameters = []
-#     eigenvalues = []
-
-
-# # try:
-#     for step in range(1, k + 1):
+            if step > 1:
+                prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
+            
+            result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
+            # while result.fun >= cost_threshold:
+            #     result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
+            #     x0 = result.x
+                
+            # print(result)
         
-#         if step > 1:
-#             prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
-
-#         # Create a closure to fix the additional arguments
-#         def wrapped_function(x):
-#             return cost_func_vqd(x, ansatz, prev_states, step, betas, estimator, sampler, observable)
-
-#         # Import Julia's Optim package
-#         jl.using('Optim')
+            prev_opt_parameters = result.x
+            eigenvalues.append(result.fun)
+            # if result.fun >= .1:
+            #     # print(np.linalg.det(result.hess_inv))
+            #     print(result.fun)
         
-#         # Define a Julia wrapper for your Python function
-#         jl.eval('''
-#         function julia_function(x)
-#             return pyfunction(x)
-#         end
-#         ''')
-        
-#         # Bind the Python closure to the Julia wrapper
-#         jl.pyfunction = wrapped_function
-
-
-#         # Call the optimizer in Julia
-#         result = jl.eval('optimize(julia_function, x0, BFGS())')
+        eigenvalues = np.array(eigenvalues)
+        ground_states.append(eigenvalues[0]/Ω)
+        excited_states.append(eigenvalues[1]/Ω)
     
-#         prev_opt_parameters = np.array(result.minimizer)
-#         eigenvalues.append(result.minimum)
-#         # if result.fun >= .1:
-#             # print(np.linalg.det(result.hess_inv))
+    # except Exception as e:
+    #     print(e)
+    t1 = time.perf_counter()
     
-#     eigenvalues = np.array(eigenvalues)
-#     ground_states.append(eigenvalues[0]/Ω)
-#     excited_states.append(eigenvalues[1]/Ω)
-
-# # except Exception as e:
-# #     print(e)
-# print(ground_states)
-# print(excited_states)
-
-
-# #### Plotter
-
-# In[ ]:
-
-
-# import matplotlib.pyplot as plt
-# plt.plot(A_Array*Ω, ground_states,'b.')
-# plt.plot(A_Array*Ω, excited_states,'r.')
-# plt.grid()
-# plt.xlabel('A/$\\Omega$')
-# plt.ylabel('$\\epsilon/\\Omega$')
-# plt.show()
-
-
-# In[ ]:
-
-
-
-
+    print('time taken: %.2f s'%(t1-t0))
+    print(ground_states)
+    print(excited_states)
+    
+    
+    # #### Plotter
+    
+    # In[45]:
+    
+    
+    import matplotlib.pyplot as plt
+    import os
+    num = 1
+    while os.path.isfile(f'.//outputs//figure{num}.png'):
+        num += 1
+    
+    plt.plot(A_Array*Ω, ground_states,'b.')
+    plt.plot(A_Array*Ω, excited_states,'r.')
+    plt.grid()
+    plt.xlabel('A/$\\Omega$')
+    plt.ylabel('$\\epsilon/\\Omega$')
+    plt.savefig(f'.//outputs//figure{num}.png')
