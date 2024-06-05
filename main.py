@@ -352,9 +352,9 @@ if __name__ == "__main__":
                 prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
             
             result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
-            # while result.fun >= cost_threshold:
-            #     result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
-            #     x0 = result.x
+            while result.fun >= cost_threshold:
+                result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
+                x0 = result.x
                 
             # print(result)
         
