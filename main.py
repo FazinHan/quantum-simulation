@@ -355,6 +355,7 @@ if __name__ == "__main__":
             while result.fun >= cost_threshold:
                 result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
                 x0 = result.x
+                print(result.fun)
                 
             # print(result)
         
