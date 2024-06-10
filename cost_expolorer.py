@@ -11,7 +11,7 @@ estimator = Estimator()
 
 chain_length = 4
 
-Ω = 2.5
+OO = 2.5
 
 omit_ratio = 0
 
@@ -20,12 +20,12 @@ h_cut = 1
 num_layers = 2
 num_periods = 1
 num_time_steps = 100
-T = num_periods * 2*np.pi/Ω
+T = num_periods * 2*np.pi/OO
 dt = T / num_time_steps
 
-def hamiltonian_linear(t, A, Δ=1, omega=Ω):
+def hamiltonian_linear(t, A, Δ=1, omega=OO):
     ham = SparsePauliOp(['Z','X'] , [-Δ/2, A/2*np.cos(omega*t)])
-    # plt.plot(t, A*np.cos(Ω*t)/2,'.')
+    # plt.plot(t, A*np.cos(OO*t)/2,'.')
     return ham
 
 def unitary_time_evolver(ham, *args, num_qbits=chain_length, time=T, dt=dt):#num_steps=num_time_steps):
@@ -100,7 +100,7 @@ def cost_wrapper(theta, lam):
     ansatz = QuantumCircuit(1)
     thetas = ParameterVector('theta',3)
     ansatz.u(*thetas,0)
-    U_T = unitary_time_evolver(hamiltonian_linear, 1/Ω, num_qbits=1)
+    U_T = unitary_time_evolver(hamiltonian_linear, 1/OO, num_qbits=1)
     
     matrix = np.array([[1,0],[0,0]])
     observable = SparsePauliOp.from_operator(matrix)
