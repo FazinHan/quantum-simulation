@@ -25,6 +25,14 @@ num_time_steps = 100
 T = num_periods * 2*np.pi/OO
 dt = T / num_time_steps
 
+def plot_and_save():
+    num = 1
+    while os.path.isfile(f'.//outputs//figure{num}.png'):
+        num += 1
+
+    plt.savefig(f'.//outputs//figure{num}.png')
+    
+
 def hamiltonian_linear(t, A, Δ=1, omega=OO):
     ham = SparsePauliOp(['Z','X'] , [-Δ/2, A/2*np.cos(omega*t)])
     # plt.plot(t, A*np.cos(OO*t)/2,'.')
@@ -98,7 +106,7 @@ def cost_func_vqd(parameters, U_T, ansatz, prev_states, step, betas, estimator, 
 
     return value*sign
 
-def cost_wrapper(theta, lam):
+def cost_wrapper(theta, phi, lam):
     ansatz = QuantumCircuit(1)
     thetas = ParameterVector('theta',3)
     ansatz.u(*thetas,0)
@@ -107,7 +115,7 @@ def cost_wrapper(theta, lam):
     matrix = np.array([[1,0],[0,0]])
     observable = SparsePauliOp.from_operator(matrix)
 
-    return cost_func_vqd(np.array((theta,0,lam)), U_T, ansatz, [], 0, [], estimator, sampler, observable, sign=1)
+    return cost_func_vqd(np.array((theta,phi,lam)), U_T, ansatz, [], 0, [], estimator, sampler, observable, sign=1)
 
 if __name__=="__main__":
     theta = np.linspace(-2*np.pi,2*np.pi)
@@ -118,14 +126,30 @@ if __name__=="__main__":
     t0 = time.perf_counter()
     for i in range(theta.shape[0]):
         for j in range(theta.shape[1]):
-            costs[i,j] = cost_wrapper(theta[i,j],lam[i,j])
+            costs[i,j] = cost_wrapper(theta[i,j],0,lam[i,j])
+    
+    
+    plt.contourf(theta, lam, costs)
+    plt.title('$\phi=0$')
+    plot_and_save()
+
+    for i in range(theta.shape[0]):
+        for j in range(theta.shape[1]):
+            costs[i,j] = cost_wrapper(0,theta[i,j],lam[i,j])
+    
+    
+    plt.contourf(theta, lam, costs)
+    plt.title('$\theta=0$')
+    plot_and_save()
+
+    for i in range(theta.shape[0]):
+        for j in range(theta.shape[1]):
+            costs[i,j] = cost_wrapper(theta[i,j],lam[i,j],0)
+    
+    
+    plt.contourf(theta, lam, costs)
+    plt.title('$\lambda=0$')
+    plot_and_save()
+
     t1 = time.perf_counter()
     print('time taken {:.3f} s'.format(t1-t0))
-
-    num = 1
-    while os.path.isfile(f'.//outputs//figure{num}.png'):
-        num += 1
-
-    plt.contourf(theta, lam, costs)
-    plt.savefig(f'.//outputs//figure{num}.png')
-    
