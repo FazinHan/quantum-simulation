@@ -1,0 +1,4 @@
+  File "/data/khan/quantum-simulation/main.py", line 95
+    qc.rx(param_space[param_counter:=param_counter+1],i)
+                                   ^
+SyntaxError: invalid syntax
