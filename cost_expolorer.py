@@ -4,7 +4,9 @@ import matplotlib.pyplot as plt
 from qiskit.circuit import ParameterVector
 from qiskit.primitives import StatevectorSampler as Sampler
 from qiskit.primitives import StatevectorEstimator as Estimator
-import os
+from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
+from qiskit.circuit.library import HamiltonianGate, UGate
+import os, time
 
 sampler = Sampler()
 estimator = Estimator()
@@ -105,13 +107,20 @@ def cost_wrapper(theta, lam):
     matrix = np.array([[1,0],[0,0]])
     observable = SparsePauliOp.from_operator(matrix)
 
-    return cost_func_vqd([theta,0,lam], U_T, ansatz, [], 0, [], estimator, sampler, observable, sign=1)
+    return cost_func_vqd(np.array((theta,0,lam)), U_T, ansatz, [], 0, [], estimator, sampler, observable, sign=1)
 
 if __name__=="__main__":
     theta = np.linspace(-2*np.pi,2*np.pi)
     lam = np.linspace(0,2*np.pi)
     theta, lam = np.meshgrid(theta, lam)
-    costs = np.array(list(map(cost_wrapper, theta, lam)))
+    costs = np.zeros(theta.shape)
+
+    t0 = time.perf_counter()
+    for i in range(theta.shape[0]):
+        for j in range(theta.shape[1]):
+            costs[i,j] = cost_wrapper(theta[i,j],lam[i,j])
+    t1 = time.perf_counter()
+    print('time taken {:.3f} s'.format(t1-t0))
 
     num = 1
     while os.path.isfile(f'.//outputs//figure{num}.png'):
