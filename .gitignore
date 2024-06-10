@@ -161,3 +161,5 @@ cython_debug/
 
 # pdfs
 *.pdf
+
+.job_output
