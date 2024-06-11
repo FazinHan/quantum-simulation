@@ -29,7 +29,7 @@ def plot_and_save():
     num = 1
     while os.path.isfile(f'.//outputs//figure{num}.png'):
         num += 1
-
+    plt.colorbar()
     plt.savefig(f'.//outputs//figure{num}.png')
     
 
@@ -130,7 +130,7 @@ if __name__=="__main__":
     
     
     plt.contourf(theta, lam, costs)
-    plt.title('$\phi=0$')
+    plt.title('$\\phi=0$')
     plot_and_save()
 
     for i in range(theta.shape[0]):
@@ -139,7 +139,7 @@ if __name__=="__main__":
     
     
     plt.contourf(theta, lam, costs)
-    plt.title('$\theta=0$')
+    plt.title('$\\theta=0$')
     plot_and_save()
 
     for i in range(theta.shape[0]):
@@ -148,7 +148,7 @@ if __name__=="__main__":
     
     
     plt.contourf(theta, lam, costs)
-    plt.title('$\lambda=0$')
+    plt.title('$\\lambda=0$')
     plot_and_save()
 
     t1 = time.perf_counter()
