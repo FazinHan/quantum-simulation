@@ -131,6 +131,8 @@ if __name__=="__main__":
     
     
     ax[0].contourf(theta, lam, costs)
+    ax[0].set_xlabel('$\\theta$')
+    ax[0].set_ylabel('$\\lambda$')
     ax[0].set_title('$\\phi=0$')
 
     for i in range(theta.shape[0]):
@@ -139,6 +141,8 @@ if __name__=="__main__":
     
     
     ax[1].contourf(theta, lam, costs)
+    ax[1].set_xlabel('$\\theta$')
+    ax[1].set_ylabel('$\\lambda$')
     ax[1].set_title('$\\theta=0$')
 
     for i in range(theta.shape[0]):
