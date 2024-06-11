@@ -29,7 +29,6 @@ def plot_and_save():
     num = 1
     while os.path.isfile(f'.//outputs//figure{num}.png'):
         num += 1
-    plt.colorbar()
     plt.savefig(f'.//outputs//figure{num}.png')
     
 
@@ -123,32 +122,32 @@ if __name__=="__main__":
     theta, lam = np.meshgrid(theta, lam)
     costs = np.zeros(theta.shape)
 
+    fig, ax = plt.subplots(3,1,figsize=(4,8))
+
     t0 = time.perf_counter()
     for i in range(theta.shape[0]):
         for j in range(theta.shape[1]):
             costs[i,j] = cost_wrapper(theta[i,j],0,lam[i,j])
     
     
-    plt.contourf(theta, lam, costs)
-    plt.title('$\\phi=0$')
-    plot_and_save()
+    ax[0].contourf(theta, lam, costs)
+    ax[0].set_title('$\\phi=0$')
 
     for i in range(theta.shape[0]):
         for j in range(theta.shape[1]):
             costs[i,j] = cost_wrapper(0,theta[i,j],lam[i,j])
     
     
-    plt.contourf(theta, lam, costs)
-    plt.title('$\\theta=0$')
-    plot_and_save()
+    ax[1].contourf(theta, lam, costs)
+    ax[1].set_title('$\\theta=0$')
 
     for i in range(theta.shape[0]):
         for j in range(theta.shape[1]):
             costs[i,j] = cost_wrapper(theta[i,j],lam[i,j],0)
     
     
-    plt.contourf(theta, lam, costs)
-    plt.title('$\\lambda=0$')
+    ax[2].contourf(theta, lam, costs)
+    ax[2].set_title('$\\lambda=0$')
     plot_and_save()
 
     t1 = time.perf_counter()
