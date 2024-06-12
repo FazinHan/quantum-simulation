@@ -12,6 +12,8 @@ chain_length = 4
 
 omit_ratio = 0
 
+h_cut = 1
+
 
 # In[2]:
 
@@ -19,9 +21,10 @@ omit_ratio = 0
 import numpy as np
 
 num_layers = 2
-periods = 1
+num_periods = 1
 num_time_steps = 100
-dt = periods / num_time_steps * 2*np.pi/Ω
+T = num_periods * 2*np.pi/Ω
+dt = T / num_time_steps
 
 
 # In[3]:
@@ -30,9 +33,6 @@ dt = periods / num_time_steps * 2*np.pi/Ω
 from qiskit.circuit import ParameterVector, Parameter
 
 cost_threshold = 1e-3
-
-parameter_space_size = 2 * chain_length + 3 * chain_length * num_layers
-param_space = ParameterVector('θ', parameter_space_size)
 
 parameter_space_size2 = 2 * chain_length * num_layers + (omit_ratio*chain_length)//2 + (((chain_length*(1-omit_ratio)))//2-1)
 param_space2 = ParameterVector('θ', parameter_space_size2)
@@ -85,7 +85,7 @@ def qft_dagger(qc, n):
 # In[5]:
 
 
-def create_ansatz_circuit(qc, num_layers=num_layers, param_space=param_space):
+def create_ansatz_circuit(qc, num_layers, param_space):
     param_counter = -1
     def ansatz_circuit_0(qc, param_space, param_counter=0):
         print('Number of params:',parameter_space_size)
@@ -108,7 +108,7 @@ def create_ansatz_circuit(qc, num_layers=num_layers, param_space=param_space):
     param_counter = ansatz_circuit_0(qc, param_space, param_counter)
     for i in range(num_layers):
         param_counter = ansatz_circuit_1(qc, param_space, param_counter)
-    display(qc.draw('mpl'))
+    # display(qc.draw('mpl'))
 
 
 # #### Ansatz creator for spin ladder
@@ -144,7 +144,7 @@ def ansatz_circuit_ladder(qc, param_space=param_space2, omit_ratio=omit_ratio):
 # In[7]:
 
 
-def hamiltonian(t, A=2, J=1, Ω=Ω):
+def hamiltonian_circular(t, A=2, J=1, omega=Ω):
     creator = ['I']*chain_length
     paulis = ['I','X','Y','Z']
     ham = [] # [('X',1.0)]
@@ -158,16 +158,19 @@ def hamiltonian(t, A=2, J=1, Ω=Ω):
         op1, op2 = creator[:], creator[:]
         op1[i] = 'X'
         op2[i] = 'Y'
-        ham.append([''.join(op1), A * np.cos(Ω*t)])
-        ham.append([''.join(op2), A * np.sin(Ω*t)])
+        ham.append([''.join(op1), A * np.cos(omega*t)])
+        ham.append([''.join(op2), A * np.sin(omega*t)])
     ham = np.array(ham)
     # print(A * np.cos(Ω*t))
     return SparsePauliOp(ham[:,0], ham[:,1])
 
-def hamiltonian_linear(t, A, Δ=1, Ω=Ω):
-    ham = SparsePauliOp(['Z','X'] , [-Δ/2, A/2/Ω*np.cos(Ω*t)])
+def hamiltonian_linear(t, A, Δ=1, omega=Ω):
+    ham = SparsePauliOp(['Z','X'] , [-Δ/2, A/2*np.cos(omega*t)])
     # plt.plot(t, A*np.cos(Ω*t)/2,'.')
     return ham
+
+def hamiltonian():
+    pass
 
 
 # #### Unitary time evolution
@@ -175,12 +178,13 @@ def hamiltonian_linear(t, A, Δ=1, Ω=Ω):
 # In[8]:
 
 
-def unitary_time_evolver(ham, *args, num_qbits=chain_length, time=num_time_steps*dt, dt=dt):#num_steps=num_time_steps):
+def unitary_time_evolver(ham, *args, num_qbits=chain_length, time=T, dt=dt):#num_steps=num_time_steps):
 
     circuit = QuantumCircuit(num_qbits)
     
     for i in range(1, int(time/dt)+1):
         circuit.compose(HamiltonianGate(ham(i*dt, *args), time=dt), inplace=True)
+        # print(Operator(HamiltonianGate(ham(i*dt, *args), time=dt)).is_unitary())
     
     return circuit
 
@@ -194,55 +198,41 @@ def unitary_time_evolver(ham, *args, num_qbits=chain_length, time=num_time_steps
 # In[9]:
 
 
-def calculate_overlap(circuits_1, circuits_2, parameters, backend):
+import numpy as np
 
-    def get_global_fidelity(probability_distribution):
-        """Process the probability distribution of a measurement to determine the
-        global fidelity.
-        """
-        return probability_distribution.get(0, 0)
-    
+def calculate_overlaps(ansatz, prev_circuits, parameters, estimator):
+
     def create_fidelity_circuit(circuit_1, circuit_2):
+
+        """
+        Constructs the list of fidelity circuits to be evaluated.
+        These circuits represent the state overlap between pairs of input circuits,
+        and their construction depends on the fidelity method implementations.
+        """
+                
         if len(circuit_1.clbits) > 0:
             circuit_1.remove_final_measurements()
         if len(circuit_2.clbits) > 0:
             circuit_2.remove_final_measurements()
 
         circuit = circuit_1.compose(circuit_2.inverse())
-        circuit.measure_all()
+        # circuit.measure_all()
         return circuit
+    overlaps = []
+
+    matrix = np.zeros((2**ansatz.num_qubits,2**ansatz.num_qubits))
+    matrix[0,0] = 1
+    observable = SparsePauliOp.from_operator(matrix)
+
+    for prev_circuit in prev_circuits:
+        fidelity_circuit = create_fidelity_circuit(ansatz, prev_circuit)
+        estimator_job = estimator.run([(fidelity_circuit, observable, [parameters])])
+        estimator_result = estimator_job.result()[0]
+        value = estimator_result.data.evs[0]
+        
+        overlaps.append(value)
     
-    def construct_fidelity_circuits(circuits_1, circuits_2):
-        """
-        Constructs the list of fidelity circuits to be evaluated.
-        These circuits represent the state overlap between pairs of input circuits,
-        and their construction depends on the fidelity method implementations.
-        """
-        circuits = []
-        for (circuit_1, circuit_2) in zip(circuits_1, circuits_2):
-            # re-parametrize input circuits
-            parameters_1 = ParameterVector("x", circuit_1.num_parameters)
-            parametrized_circuit_1 = circuit_1.assign_parameters(parameters_1)
-            parameters_2 = ParameterVector("y", circuit_2.num_parameters)
-            parametrized_circuit_2 = circuit_2.assign_parameters(parameters_2)
-
-            circuit = create_fidelity_circuit(
-                parametrized_circuit_1, parametrized_circuit_2
-            )
-            circuits.append(circuit)
-
-        return circuits
-
-    circuits = construct_fidelity_circuits(circuits_1, circuits_2)
-
-    job = backend.run(circuits=circuits, parameter_values=parameters)
-    result = job.result()
-
-    raw_fidelities = [
-        get_global_fidelity(prob_dist) for prob_dist in result.quasi_dists
-    ]
-
-    return np.clip(raw_fidelities, 0, 1).tolist()
+    return np.array(overlaps)
 
 
 # It's time to write VQD's cost function:
@@ -254,144 +244,270 @@ def calculate_overlap(circuits_1, circuits_2, parameters, backend):
 
 import numpy as np
 
-def cost_func_vqd(parameters, ansatz, prev_states, step, betas, estimator, sampler, hamiltonian):
-    
-    if len(parameters.shape) == 1:
-        parameters = np.reshape(parameters, (-1, ansatz.num_parameters))
+def cost_func_vqd(parameters, U_T, ansatz, prev_states, step, betas, estimator, hamiltonian, sign=-1):
 
-    batch_size = len(parameters)
+    '''
+    Estimates <ψ|H|ψ> - λ Σ |<0|(U_θβ†)(U_θ)|0>|²
 
-    estimator_job = estimator.run(
-        batch_size * [ansatz], batch_size * [hamiltonian], parameters
-    )
+    Where:
+    H = observable
+    |ψ> = (U_θ†)(U_T)(U_θ)|0>
+    '''
 
-    total_cost = np.zeros(batch_size)
+    circuit = ansatz.compose(U_T)
+    circuit.compose(ansatz.inverse(),inplace=True)
+    estimator_job = estimator.run([(circuit, hamiltonian, [parameters])])
+
+    total_cost = 0
 
     if step > 1:
-        # compute overlap cost
-        batched_prev_states = [state for state in prev_states for _ in range(batch_size)]
-        costs = calculate_overlap(
-            batch_size * [ansatz] * (step - 1),
-            batched_prev_states,
-            np.tile(parameters, (step - 1, 1)),
-            sampler
-        )
+        overlaps = calculate_overlaps(ansatz, prev_states, parameters, estimator)
+        total_cost = np.sum([np.real(betas[state] * overlap**2) for state, overlap in enumerate(overlaps)])
 
-        costs = np.reshape(costs, (step - 1, -1))
-        for state, cost in enumerate(costs):
-            total_cost -= np.real(betas[state] * cost)
+    estimator_result = estimator_job.result()[0]
 
-    estimator_result = estimator_job.result()
+    value = estimator_result.data.evs[0] - total_cost
 
-    values = estimator_result.values + total_cost
-    
-    return ((values if len(values) > 1 else values[0])-1)**2
+    return value*sign
 
 
-# ### Linear Driver code
+# ### Linear Driver code (suppressed)
 
 # In[11]:
-if __name__ == "__main__":
+
+
+from qiskit.primitives import StatevectorSampler as Sampler
+from qiskit.primitives import StatevectorEstimator as Estimator
+estimator = Estimator()
+
+
+# In[12]:
+
+
+# from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
+# from qiskit import QuantumCircuit
+# from qiskit.circuit.library import HamiltonianGate, UGate
+# from scipy.optimize import minimize
+# import time
+
+# # j = 1
+
+# k = 2**1
+# betas = [5]*k
+# x0 = np.random.uniform(-np.pi, np.pi, size=3)
+
+# A_Array = np.linspace(0,4,8)
+
+# def evolver_gen():
+#     for A in A_Array:
+#         yield unitary_time_evolver(hamiltonian_linear, A*Ω, num_qbits=1)
+
+# matrix = np.array([[1,0],[0,0]])
+# observable = SparsePauliOp.from_operator(matrix)
+# ground_states = []
+# excited_states = [] 
+# costs = []
+
+# t0 = time.perf_counter()
+# for U_T in evolver_gen():
+
+#     ansatz = QuantumCircuit(1)
+#     theta = ParameterVector('θ',3)
+#     ansatz.u(*theta,0)
     
-    from qiskit.primitives import Estimator
-    from qiskit.primitives import Sampler
     
-    sampler = Sampler()
-    estimator = Estimator()
+#     prev_states = []
+#     prev_opt_parameters = []
+#     eigenvalues = []
+
+
+# # try:
+#     for step in range(1, k + 1):
+        
+#         result = minimize(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable), method="bfgs")
+        
+        
+#         prev_opt_parameters = result.x
+        
+#         ### Computes expectation value of optimised circuit
+
+#         floquet_mode = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
+        
+#         eigenvalues.append(-np.angle(floquet_mode.expectation_value(U_T))/T)
+        
+#         prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
+
+#         costs.append(-result.fun)
     
-    
-    # In[48]:
-    
-    
-    from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
-    from qiskit import QuantumCircuit
-    from qiskit.circuit.library import HamiltonianGate, UGate
-    from scipy.optimize import minimize
-    import time
-    
-    # j = 1
-    
-    k = 2**1
+#     eigenvalues = np.array(eigenvalues)/Ω
+#     eigenvalues.sort()
+#     # print(eigenvalues.shape)
+#     ground_states.append(eigenvalues[0])
+#     excited_states.append(eigenvalues[1])
+
+# # except Exception as e:
+# #     print(e)
+# costs = np.array(costs).reshape(8,2)
+
+# t1 = time.perf_counter()
+
+
+# In[13]:
+
+
+# # print(eigenvalues)
+
+# print('time taken: %.2f s'%(t1-t0))
+# ground_states=np.array(ground_states)
+# excited_states=np.array(excited_states)
+# # print(excited_states[0])
+
+
+# #### Plotter
+
+# In[14]:
+
+
+# import matplotlib.pyplot as plt
+# import os
+# num = 1
+# while os.path.isfile(f'.//outputs//figure{num}.png'):
+#     num += 1
+
+# plt.plot(A_Array, ground_states.real,'b.')
+# plt.plot(A_Array, excited_states.real,'r.')
+# plt.grid()
+# plt.xlabel('$A/\\Omega$')
+# plt.ylabel('$\\epsilon/\\Omega$')
+# plt.title('Initial guess: {}'.format(x0))
+# # plt.savefig(f'.//outputs//figure{num}.png')
+
+
+# #### Plotting the cost function
+
+# In[15]:
+
+
+# plt.plot(A_Array, costs[:,0],'x',label='ground states')
+# plt.plot(A_Array, costs[:,1],'.',label='excited states')
+# plt.legend()
+# plt.ylim(0,1.3)
+# plt.ylabel('$\\mathcal{L}(\\theta)$')
+# plt.xlabel('$A/\\Omega$')
+# plt.grid()
+# num = 1
+# while os.path.isfile(f'.//outputs//figure{num}.png'):
+#     num += 1
+# # plt.savefig(f'.//outputs//figure{num}.png')
+
+
+# ### Circular Driving
+
+# #### Convergence function
+
+# In[16]:
+
+
+def convergence_parameter(ansatz, parameters, U_T, observable, estimator):
+    # circuit = ansatz.compose(U_T)
+    circuit=ansatz.compose(ansatz.inverse())
+    circuit.draw()
+    estimator_job = estimator.run([(circuit, observable, [parameters])])
+    estimator_result = estimator_job.result()[0]
+    value = estimator_result.data.evs[0]
+    return 1 - value
+
+
+# #### Driver code
+
+# In[17]:
+
+
+from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
+from qiskit import QuantumCircuit
+from qiskit.circuit.library import HamiltonianGate, UGate
+from scipy.optimize import minimize
+import time
+
+# j = 1
+
+
+
+A_Array = np.linspace(0,4,8)
+
+U_T = unitary_time_evolver(hamiltonian_circular)
+
+matrix = np.zeros((2**chain_length, 2**chain_length))
+matrix[0,0] = 1
+observable = SparsePauliOp.from_operator(matrix)
+ground_states = []
+excited_states = [] 
+costs = []
+
+layers = range(1,3)
+
+t0 = time.perf_counter()
+for num_layers in layers:
+
+    parameter_space_size = 2 * chain_length + 3 * chain_length * num_layers
+    param_space = ParameterVector('θ', parameter_space_size)
+
+    k = 2**chain_length
     betas = [5]*k
-    x0 = np.ones(3)
+    x0 = np.random.uniform(-np.pi, np.pi, size=parameter_space_size)
     
-    A_Array = np.linspace(0,4/Ω,8)
     
-    def evolver_gen():
-        for i in A_Array:
-            yield unitary_time_evolver(hamiltonian_linear, i, num_qbits=1)
+
+    ansatz = QuantumCircuit(chain_length)
+    create_ansatz_circuit(ansatz, num_layers, param_space)
     
-    time_evo_circuits = evolver_gen()
     
-    matrix = np.array([[1,0],[0,0]])
-    observable = SparsePauliOp.from_operator(matrix)
-    ground_states = []
-    excited_states = [] 
     
-    t0 = time.perf_counter()
-    for r in time_evo_circuits:
-    
-        ansatz = QuantumCircuit(1)
-        theta = ParameterVector('θ',3)
-        ansatz.u(*theta,0)
-        ansatz.compose(r, inplace=True)
-        ansatz.compose(UGate(*theta).inverse(),inplace=True)
-        # if j:
-        #     display(ansatz.draw())
-        #     j = 0
+    prev_states = []
+    prev_opt_parameters = []
+    eigenvalues = []
+    ϵ2 = 0
+
+
+# try:
+    for step in range(1, k + 1):
         
-        prev_states = []
-        prev_opt_parameters = []
-        eigenvalues = []
-    
-    
-    # try:
-        for step in range(1, k + 1):
-            
-            if step > 1:
-                prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
-            
-            result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
-            while result.fun >= cost_threshold:
-                result = minimize(cost_func_vqd, x0, args=(ansatz, prev_states, step, betas, estimator, sampler, observable), method="bfgs")
-                x0 = result.x
-                print(result.fun)
-                
-            # print(result)
+        result = minimize(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable), method="bfgs")
         
-            prev_opt_parameters = result.x
-            eigenvalues.append(result.fun)
-            # if result.fun >= .1:
-            #     # print(np.linalg.det(result.hess_inv))
-            #     print(result.fun)
         
-        eigenvalues = np.array(eigenvalues)
-        ground_states.append(eigenvalues[0]/Ω)
-        excited_states.append(eigenvalues[1]/Ω)
+        prev_opt_parameters = result.x
+        
+
+        # floquet_mode = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
+        
+        # eigenvalues.append(-np.angle(floquet_mode.expectation_value(U_T))/T)
+        
+        # prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
+
+        # costs.append(-result.fun)
+        ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T, observable, estimator)
     
-    # except Exception as e:
-    #     print(e)
-    t1 = time.perf_counter()
-    
-    print('time taken: %.2f s'%(t1-t0))
-    print(ground_states)
-    print(excited_states)
-    
-    
-    # #### Plotter
-    
-    # In[45]:
-    
-    
-    import matplotlib.pyplot as plt
-    import os
-    num = 1
-    while os.path.isfile(f'.//outputs//figure{num}.png'):
-        num += 1
-    
-    plt.plot(A_Array*Ω, ground_states,'b.')
-    plt.plot(A_Array*Ω, excited_states,'r.')
-    plt.grid()
-    plt.xlabel('A/$\\Omega$')
-    plt.ylabel('$\\epsilon/\\Omega$')
-    plt.savefig(f'.//outputs//figure{num}.png')
+    costs.append(ϵ2**.5)
+
+# except Exception as e:
+#     print(e)
+# costs = np.array(costs).reshape(8,2)
+
+t1 = time.perf_counter()
+
+
+# #### Plotter
+
+# In[ ]:
+
+
+import matplotlib.pyplot as plt
+plt.plot(layers, costs)
+plt.show()
+
+
+# In[ ]:
+
+
+
+
