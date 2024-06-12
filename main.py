@@ -443,7 +443,7 @@ ground_states = []
 excited_states = [] 
 costs = []
 
-layers = range(1,3)
+layers = range(1,4)
 
 t0 = time.perf_counter()
 for num_layers in layers:
