@@ -502,7 +502,7 @@ t1 = time.perf_counter()
 with open('./outputs/data.npz','wb') as file:
     np.savez(file, layers=layers, costs=costs)
 
-
+print('time taken: {:.3f}'.format(t1-t0))
 # In[ ]:
 
 
