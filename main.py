@@ -409,13 +409,13 @@ estimator = Estimator()
 
 
 def convergence_parameter(ansatz, parameters, U_T, observable, estimator):
-    circuit = ansatz.copy()
-    circuit=ansatz.compose(ansatz.inverse())
-    circuit.draw()
+    circuit = ansatz.compose(U_T)
+    circuit.compose(ansatz.inverse(),inplace=True)
+    display(circuit.draw())
     estimator_job = estimator.run([(circuit, observable, [parameters])])
     estimator_result = estimator_job.result()[0]
     value = estimator_result.data.evs[0]
-    return 1 - value
+    return (1 - np.abs(value))**2
 
 
 # #### Driver code
