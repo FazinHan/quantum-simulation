@@ -408,12 +408,10 @@ estimator = Estimator()
 # In[16]:
 
 
-def convergence_parameter(ansatz, parameters, U_T, observable, estimator):
-    circuit = ansatz.compose(U_T)
-    circuit.compose(ansatz.inverse(),inplace=True)
-    estimator_job = estimator.run([(circuit, observable, [parameters])])
-    estimator_result = estimator_job.result()[0]
-    value = estimator_result.data.evs[0]
+def convergence_parameter(ansatz, parameters, U_T):
+    circuit = ansatz.assign_parameters(parameters)
+    floquet_mode = Statevector.from_instruction(circuit)
+    value = floquet_mode.expectation_value(U_T)
     return (1 - np.abs(value))**2
 
 
@@ -484,7 +482,7 @@ for num_layers in layers:
         # prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
 
         # costs.append(-result.fun)
-        ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T, observable, estimator)
+        ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
     
     costs.append(ϵ2**.5)
 
