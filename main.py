@@ -446,6 +446,8 @@ layers = range(1,4)
 t0 = time.perf_counter()
 for num_layers in layers:
 
+    print('layer',num_layers)
+
     parameter_space_size = 2 * chain_length + 3 * chain_length * num_layers
     param_space = ParameterVector('θ', parameter_space_size)
 
