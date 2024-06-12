@@ -409,7 +409,7 @@ estimator = Estimator()
 
 
 def convergence_parameter(ansatz, parameters, U_T, observable, estimator):
-    # circuit = ansatz.compose(U_T)
+    circuit = ansatz.copy()
     circuit=ansatz.compose(ansatz.inverse())
     circuit.draw()
     estimator_job = estimator.run([(circuit, observable, [parameters])])
