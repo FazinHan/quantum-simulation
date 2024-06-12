@@ -88,7 +88,7 @@ def qft_dagger(qc, n):
 def create_ansatz_circuit(qc, num_layers, param_space):
     param_counter = -1
     def ansatz_circuit_0(qc, param_space, param_counter=0):
-        print('Number of params:',parameter_space_size)
+        # print('Number of params:',parameter_space_size)
         # layer 0
         # param_counter=0
         for i in range(qc.num_qubits):
