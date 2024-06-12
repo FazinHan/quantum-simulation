@@ -88,7 +88,7 @@ def qft_dagger(qc, n):
 def create_ansatz_circuit(qc, num_layers, param_space):
     param_counter = -1
     def ansatz_circuit_0(qc, param_space, param_counter=0):
-        # print('Number of params:',parameter_space_size)
+        print('Number of params:',parameter_space_size)
         # layer 0
         # param_counter=0
         for i in range(qc.num_qubits):
@@ -424,6 +424,7 @@ from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
 from qiskit import QuantumCircuit
 from qiskit.circuit.library import HamiltonianGate, UGate
 from scipy.optimize import minimize
+from optimparallel import minimize_parallel
 import time
 
 # j = 1
@@ -445,8 +446,6 @@ layers = range(1,4)
 
 t0 = time.perf_counter()
 for num_layers in layers:
-
-    print('layer',num_layers)
 
     parameter_space_size = 2 * chain_length + 3 * chain_length * num_layers
     param_space = ParameterVector('θ', parameter_space_size)
@@ -471,7 +470,7 @@ for num_layers in layers:
 # try:
     for step in range(1, k + 1):
         
-        result = minimize(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable), method="bfgs")
+        result = minimize_parallel(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable), method="bfgs")
         
         
         prev_opt_parameters = result.x
