@@ -499,9 +499,8 @@ t1 = time.perf_counter()
 # In[ ]:
 
 
-import matplotlib.pyplot as plt
-plt.plot(layers, costs)
-plt.show()
+with open('./outputs/data.npz','wb') as file:
+    np.savez(file, layers=layers, costs=costs)
 
 
 # In[ ]:
