@@ -425,7 +425,7 @@ from qiskit import QuantumCircuit
 from qiskit.circuit.library import HamiltonianGate, UGate
 from scipy.optimize import minimize
 from optimparallel import minimize_parallel
-import time
+import time, sys
 
 # j = 1
 
@@ -497,9 +497,11 @@ t1 = time.perf_counter()
 # #### Plotter
 
 # In[ ]:
+name = 'data'
+if sys.argv[1] != None:
+    name = sys.argv[1]
 
-
-with open('./outputs/data.npz','wb') as file:
+with open(f'./outputs/{name}.npz','wb') as file:
     np.savez(file, layers=layers, costs=costs)
 
 print('time taken: {:.3f}'.format(t1-t0))
