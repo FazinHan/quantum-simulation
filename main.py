@@ -470,7 +470,7 @@ for num_layers in layers:
 # try:
     for step in range(1, k + 1):
         
-        result = minimize(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable), method="bfgs")
+        result = minimize_parallel(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable))#, method="bfgs")
         
         
         prev_opt_parameters = result.x
