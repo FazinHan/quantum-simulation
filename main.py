@@ -497,9 +497,10 @@ t1 = time.perf_counter()
 # #### Plotter
 
 # In[ ]:
-name = 'data'
-if sys.argv[1] != None:
+try:
     name = sys.argv[1]
+except:
+    name = 'data'
 
 with open(f'./outputs/{name}.npz','wb') as file:
     np.savez(file, layers=layers, costs=costs)
