@@ -31,6 +31,7 @@ dt = T / num_time_steps
 
 
 from qiskit.circuit import ParameterVector, Parameter
+from fractions import Fraction
 
 cost_threshold = 1e-3
 
@@ -419,95 +420,95 @@ def convergence_parameter(ansatz, parameters, U_T):
 
 # In[17]:
 
-
-from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
-from qiskit import QuantumCircuit
-from qiskit.circuit.library import HamiltonianGate, UGate
-from scipy.optimize import minimize
-from optimparallel import minimize_parallel
-import time, sys
-
-# j = 1
-
-
-
-A_Array = np.linspace(0,4,8)
-
-U_T = unitary_time_evolver(hamiltonian_circular)
-
-matrix = np.zeros((2**chain_length, 2**chain_length))
-matrix[0,0] = 1
-observable = SparsePauliOp.from_operator(matrix)
-ground_states = []
-excited_states = [] 
-costs = []
-
-layers = range(1,4)
-
-t0 = time.perf_counter()
-for num_layers in layers:
-
-    parameter_space_size = 2 * chain_length + 3 * chain_length * num_layers
-    param_space = ParameterVector('θ', parameter_space_size)
-
-    k = 2**chain_length
-    betas = [5]*k
-    x0 = np.random.uniform(-np.pi, np.pi, size=parameter_space_size)
+if __name__=="__main__":
+    from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
+    from qiskit import QuantumCircuit
+    from qiskit.circuit.library import HamiltonianGate, UGate
+    from scipy.optimize import minimize
+    from optimparallel import minimize_parallel
+    import time, sys
     
-    
-
-    ansatz = QuantumCircuit(chain_length)
-    create_ansatz_circuit(ansatz, num_layers, param_space)
+    # j = 1
     
     
     
-    prev_states = []
-    prev_opt_parameters = []
-    eigenvalues = []
-    ϵ2 = 0
-
-
-# try:
-    for step in range(1, k + 1):
-        
-        result = minimize_parallel(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable))#, method="bfgs")
-        
-        
-        prev_opt_parameters = result.x
-        
-
-        # floquet_mode = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
-        
-        # eigenvalues.append(-np.angle(floquet_mode.expectation_value(U_T))/T)
-        
-        # prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
-
-        # costs.append(-result.fun)
-        ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
+    A_Array = np.linspace(0,4,8)
     
-    costs.append(ϵ2**.5)
-
-# except Exception as e:
-#     print(e)
-# costs = np.array(costs).reshape(8,2)
-
-t1 = time.perf_counter()
-
-
-# #### Plotter
-
-# In[ ]:
-try:
-    name = sys.argv[1]
-except:
-    name = 'data'
-
-with open(f'./outputs/{name}.npz','wb') as file:
-    np.savez(file, layers=layers, costs=costs)
-
-print('time taken: {:.3f}'.format(t1-t0))
-# In[ ]:
-
-
-
-
+    U_T = unitary_time_evolver(hamiltonian_circular)
+    
+    matrix = np.zeros((2**chain_length, 2**chain_length))
+    matrix[0,0] = 1
+    observable = SparsePauliOp.from_operator(matrix)
+    ground_states = []
+    excited_states = [] 
+    costs = []
+    
+    layers = range(1,4)
+    
+    t0 = time.perf_counter()
+    for num_layers in layers:
+    
+        parameter_space_size = 2 * chain_length + 3 * chain_length * num_layers
+        param_space = ParameterVector('θ', parameter_space_size)
+    
+        k = 2**chain_length
+        betas = [5]*k
+        x0 = np.zeros(parameter_space_size)
+        
+        
+    
+        ansatz = QuantumCircuit(chain_length)
+        create_ansatz_circuit(ansatz, num_layers, param_space)
+        
+        
+        
+        prev_states = []
+        prev_opt_parameters = []
+        eigenvalues = []
+        ϵ2 = 0
+    
+    
+    # try:
+        for step in range(1, k + 1):
+            
+            result = minimize_parallel(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable))#, method="bfgs")
+            
+            
+            prev_opt_parameters = result.x
+            
+    
+            # floquet_mode = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
+            
+            # eigenvalues.append(-np.angle(floquet_mode.expectation_value(U_T))/T)
+            
+            # prev_states.append(ansatz.assign_parameters(prev_opt_parameters))
+    
+            # costs.append(-result.fun)
+            ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
+        
+        costs.append(ϵ2**.5)
+    
+    # except Exception as e:
+    #     print(e)
+    # costs = np.array(costs).reshape(8,2)
+    
+    t1 = time.perf_counter()
+    
+    
+    # #### Plotter
+    
+    # In[ ]:
+    try:
+        name = sys.argv[1]
+    except:
+        name = 'data'
+    
+    with open(f'./outputs/{name}.npz','wb') as file:
+        np.savez(file, layers=layers, costs=costs)
+    
+    print('time taken: {:.3f}'.format(t1-t0))
+    # In[ ]:
+    
+    
+    
+    
