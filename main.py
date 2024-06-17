@@ -471,7 +471,7 @@ if __name__=="__main__":
     # try:
         for step in range(1, k + 1):
             
-            result = minimize_parallel(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable))#, method="bfgs")
+            result = minimize(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable), method="bfgs")
             
             
             prev_opt_parameters = result.x
