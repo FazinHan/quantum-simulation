@@ -794,6 +794,7 @@ if __name__=="__main__":
             ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
         
         costs.append(ϵ2**.5)
+        print(f'{num_layers}-layer circuit computed')
     
     # except Exception as e:
     #     print(e)
