@@ -109,7 +109,7 @@ def create_ansatz_circuit(qc, num_layers, param_space):
 # In[6]:
 
 
-def ansatz_circuit_ladder(qc, param_space, layers, omit_ratio):
+def ansatz_circuit_ladder(qc, param_space, layers, entangle_ratio):
     counter = 0
     def layer(qc, params, param_counter):
         for i in range(qc.num_qubits):
@@ -127,7 +127,7 @@ def ansatz_circuit_ladder(qc, param_space, layers, omit_ratio):
                 qc.rzz(params[param_counter], 2*i+1, 2*i+2)
                 param_counter += 1
         return param_counter
-    fra = Fraction(omit_ratio).limit_denominator()
+    fra = Fraction(entangle_ratio).limit_denominator()
     # print(fra)
     for layer_count in range(layers):
         counter = layer(qc, param_space, counter)
@@ -595,7 +595,7 @@ if __name__ == "__main__":
     excited_states = [] 
     costs = []
     
-    layers = range(7,8)
+    layers = range(1,10)
     
     t0 = time.perf_counter()
     for num_layers in layers:
