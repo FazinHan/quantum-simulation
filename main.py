@@ -506,7 +506,7 @@ if __name__=="__main__":
     with open(f'./outputs/{name}.npz','wb') as file:
         np.savez(file, layers=layers, costs=costs)
     
-    print('time taken: {:.3f}'.format(t1-t0))
+    print('time taken: {:.3f}s'.format(t1-t0))
     # In[ ]:
     
     

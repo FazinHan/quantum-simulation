@@ -106,7 +106,7 @@ def create_ansatz_circuit(qc, num_layers, param_space):
 
 # #### Ansatz creator for spin ladder
 
-# In[6]:
+# In[5]:
 
 
 def ansatz_circuit_ladder(qc, param_space, layers, entangle_ratio):
@@ -170,6 +170,94 @@ def hamiltonian_linear(t, A, Δ=1, omega=Ω):
 def hamiltonian():
     pass
 
+
+# #### Ladder Hamiltonian
+
+# In[21]:
+
+
+def entanglement_relator(J, ent_ratio):
+    return J*ent_ratio
+
+def hamiltonian_ladder(num_states, entanglement_ratio, J=1):
+    J11 = entanglement_relator(J, entanglement_ratio)
+    pauli = ['I','X','Y','Z']
+    ham = []
+    coeffs = []
+    for i in range(num_states//2):
+        for j in range(1,4):
+            creator = ['I']*num_states
+            creator[2*i] = pauli[j]
+            creator[2*i+1] = pauli[j]
+            ham.append(''.join(creator))
+            coeffs.append(J)
+    for i in range(num_states//2-1):
+        for j in range(1,4):
+            creator = ['I']*num_states
+            creator[2*i] = pauli[j]
+            creator[2*(i+1)] = pauli[j]
+            ham.append(''.join(creator))
+            coeffs.append(J11)
+            creator = ['I']*num_states
+            creator[2*i+1] = pauli[j]
+            creator[2*(i+1)+1] = pauli[j]
+            ham.append(''.join(creator))
+            coeffs.append(J11)
+    return SparsePauliOp(ham, coeffs)
+
+
+# In[26]:
+
+
+# from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
+
+
+# hamiltonian_ladder(4,1)
+
+
+# In[31]:
+
+
+# def bmatrix(a):
+#     """Returns a LaTeX bmatrix
+
+#     :a: numpy array
+#     :returns: LaTeX bmatrix as a string
+#     """
+#     if len(a.shape) > 2:
+#         raise ValueError('bmatrix can at most display two dimensions')
+#     lines = str(a).replace('[', '').replace(']', '').splitlines()
+#     rv = [r'\begin{bmatrix}']
+#     rv += ['  ' + ' & '.join(l.split()) + r'\\' for l in lines]
+#     rv +=  [r'\end{bmatrix}']
+#     return '\n'.join(rv)
+
+# print(bmatrix(hamiltonian_ladder(4,1).to_matrix().real))
+
+
+# SparsePauliOp(['XXIIII', 'YYIIII', 'ZZIIII', 'IIXXII', 'IIYYII', 'IIZZII', 'IIIIXX', 'IIIIYY', 'IIIIZZ', 'XIXIII', 'IXIXII', 'YIYIII', 'IYIYII', 'ZIZIII', 'IZIZII', 'IIXIXI', 'IIIXIX', 'IIYIYI', 'IIIYIY', 'IIZIZI', 'IIIZIZ'],
+#               coeffs=[1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j,
+#  1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j, 1.+0.j,
+#  1.+0.j, 1.+0.j, 1.+0.j])
+
+# \begin{bmatrix}
+#   4. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 0. & 2. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 2. & 0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 2. & 0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 0. & 0. & 2. & 0. & 2. & -4. & 0. & 0. & 0. & 2. & 0. & 2. & 0. & 0. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 2. & 0. & 0.\\
+#   0. & 0. & 2. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 0. & 0. & 2. & 0. & 2. & 0. & 0. & 0. & -4. & 2. & 0. & 2. & 0. & 0. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0. & 2. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 0. & 0. & 0. & 0. & 0. & 2. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 2. & 0. & 2. & 0. & 0.\\
+#   0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 0. & 4.\\
+# \end{bmatrix}
 
 # #### Unitary time evolution
 
@@ -568,11 +656,44 @@ def convergence_parameter(ansatz, parameters, U_T):
 
 # #### Plotter
 
+# In[2]:
+
+
+# import numpy as np
+# import matplotlib.pyplot as plt
+
+# filepath = './outputs/data.npz'
+
+# with open(filepath,'rb') as file:
+#     data = np.load(file)
+
+#     layers = data['layers']
+#     costs = data['costs']
+
+# print(layers,costs)
+# # plt.xlim(2,3)
+# plt.show()
+
+
 # ### My work
 
-# In[ ]:
+# In[10]:
 
-if __name__ == "__main__":
+
+# from qiskit import QuantumCircuit
+# from qiskit.circuit import ParameterVector, Parameter
+# from fractions import Fraction
+
+# qc = QuantumCircuit(4)
+# params = ParameterVector('theta',200)
+# ansatz_circuit_ladder(qc, params, 10, 1)
+# print(len(qc.parameters))
+# display(qc.draw())
+
+
+# In[23]:
+
+if __name__=="__main__":
     from qiskit.quantum_info import SparsePauliOp, Statevector, Operator, Pauli
     from qiskit import QuantumCircuit
     from qiskit.circuit.library import HamiltonianGate, UGate
@@ -584,11 +705,13 @@ if __name__ == "__main__":
     # j = 1
     
     chain_length = 4
-    entangle_ratio = .5
     
-    U_T = unitary_time_evolver(hamiltonian_circular, num_qbits=chain_length)
+    num_states = 2*chain_length
+    entangle_ratio = 1
     
-    matrix = np.zeros((2**chain_length, 2**chain_length))
+    U_T = unitary_time_evolver(hamiltonian_ladder, entangle_ratio, num_qbits=num_states)
+    
+    matrix = np.zeros((2**num_states, 2**num_states))
     matrix[0,0] = 1
     observable = SparsePauliOp.from_operator(matrix)
     ground_states = []
@@ -597,28 +720,30 @@ if __name__ == "__main__":
     
     layers = range(1,10)
     
+    
+    
     t0 = time.perf_counter()
     for num_layers in layers:
     
         # print(parameter_space_size2)
         # param_space2 = ParameterVector('test', 100)
         
-        # parameter_space_size2 = ansatz_circuit_ladder(QuantumCircuit(chain_length), param_space2, num_layers, entangle_ratio)
+        # parameter_space_size2 = ansatz_circuit_ladder(QuantumCircuit(num_states), param_space2, num_layers, entangle_ratio)
         
-        param_space2 = ParameterVector('test', 200)
+        param_space2 = ParameterVector('test', 112)
         
-        ansatz = QuantumCircuit(chain_length)
+        ansatz = QuantumCircuit(num_states)
         # print(num_layers)
         ansatz_circuit_ladder(ansatz, param_space2, num_layers, entangle_ratio)
         parameter_space_size2 = len(ansatz.parameters)
         
         param_space2 = ParameterVector('θ', parameter_space_size2)
+        ansatz.assign_parameters(param_space2)
         
-        k = 2**chain_length
+        k = 2**num_states
         betas = [5]*k
         x0 = np.zeros(parameter_space_size2)
     
-        ansatz.assign_parameters(param_space2)
         # print(parameter_space_size2)
         # break
         
@@ -655,15 +780,6 @@ if __name__ == "__main__":
     # costs = np.array(costs).reshape(8,2)
     
     t1 = time.perf_counter()
-    
-    
-    # In[ ]:
-    
-    
-    
-    # In[ ]:
-    
-    
     try:
         name = sys.argv[1]
     except:
@@ -672,5 +788,14 @@ if __name__ == "__main__":
     with open(f'./outputs/{name}.npz','wb') as file:
         np.savez(file, layers=layers, costs=costs)
     
-    print('time taken: {:.3f}'.format(t1-t0))
+    print('time taken: {:.3f}s'.format(t1-t0))
+
+# In[ ]:
+
+
+# plt.plot(layers, costs)
+# plt.grid()
+# plt.xlabel('layers')
+# plt.ylabel('$\\epsilon$')
+# plt.show()
 
