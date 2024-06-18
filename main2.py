@@ -179,12 +179,32 @@ def hamiltonian():
 def entanglement_relator(J, ent_ratio):
     return J*ent_ratio
 
-def hamiltonian_ladder(num_states, entanglement_ratio, J=1):
+def hamiltonian_ladder(t, num_states, entanglement_ratio, J=1, B=1, omega=2.5):
     J11 = entanglement_relator(J, entanglement_ratio)
     pauli = ['I','X','Y','Z']
     ham = []
     coeffs = []
     for i in range(int(num_states/2)):
+        creator = ['I']*num_states
+        creator[i] = pauli[1]
+        coeff = B * np.cos(omega * t)
+        ham.append(''.join(creator))
+        coeffs.append(coeff)
+        creator = ['I']*num_states
+        creator[i+1] = pauli[1]
+        coeff = B * np.cos(omega * t)
+        ham.append(''.join(creator))
+        coeffs.append(coeff)
+        creator = ['I']*num_states
+        creator[i] = pauli[2]
+        coeff = B * np.sin(omega * t)
+        ham.append(''.join(creator))
+        coeffs.append(coeff)
+        creator = ['I']*num_states
+        creator[i+1] = pauli[2]
+        coeff = B * np.sin(omega * t)
+        ham.append(''.join(creator))
+        coeffs.append(coeff)
         for j in range(1,4):
             creator = ['I']*num_states
             creator[2*i] = pauli[j]
@@ -269,7 +289,7 @@ def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_ti
     circuit = QuantumCircuit(num_qbits)
     
     for i in range(1, int(time/dt)+1):
-        circuit.compose(HamiltonianGate(ham(i*dt, *args), time=dt), inplace=True)
+        circuit.compose(HamiltonianGate(ham(i*dt, num_qbits, *args), time=dt), inplace=True)
         # print(Operator(HamiltonianGate(ham(i*dt, *args), time=dt)).is_unitary())
     
     return circuit
@@ -759,7 +779,7 @@ if __name__=="__main__":
         for step in range(1, k + 1):
             
             result = minimize_parallel(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable))#, method="bfgs")
-            
+            # print(hamiltonian_ladder(np.pi,4,1))
             
             prev_opt_parameters = result.x
             
