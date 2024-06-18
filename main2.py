@@ -184,14 +184,14 @@ def hamiltonian_ladder(num_states, entanglement_ratio, J=1):
     pauli = ['I','X','Y','Z']
     ham = []
     coeffs = []
-    for i in range(num_states//2):
+    for i in range(int(num_states/2)):
         for j in range(1,4):
             creator = ['I']*num_states
             creator[2*i] = pauli[j]
             creator[2*i+1] = pauli[j]
             ham.append(''.join(creator))
             coeffs.append(J)
-    for i in range(num_states//2-1):
+    for i in range(int(num_states/2)-1):
         for j in range(1,4):
             creator = ['I']*num_states
             creator[2*i] = pauli[j]
