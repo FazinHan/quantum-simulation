@@ -743,6 +743,7 @@ if __name__=="__main__":
     
     
     t0 = time.perf_counter()
+    ti = t0
     for num_layers in layers:
     
         # print(parameter_space_size2)
@@ -794,7 +795,9 @@ if __name__=="__main__":
             ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
         
         costs.append(ϵ2**.5)
-        print(f'{num_layers}-layer circuit computed')
+        ti_new = time.perf_counter()
+        print(f'{num_layers}-layer circuit computed in {ti_new-t1}s')
+        ti = ti_new
     
     # except Exception as e:
     #     print(e)
