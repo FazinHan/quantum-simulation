@@ -738,7 +738,7 @@ if __name__=="__main__":
     excited_states = [] 
     costs = []
     
-    layers = range(1,10)
+    layers = range(5,8)
     
     
     
