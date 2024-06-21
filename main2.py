@@ -751,7 +751,7 @@ if __name__=="__main__":
         
         # parameter_space_size2 = ansatz_circuit_ladder(QuantumCircuit(num_states), param_space2, num_layers, entangle_ratio)
         
-        param_space2 = ParameterVector('test', 112)
+        param_space2 = ParameterVector('test', 500)
         
         ansatz = QuantumCircuit(num_states)
         # print(num_layers)
