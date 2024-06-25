@@ -1,5 +1,5 @@
 from qutip import *
-from physics import qutip_ladder as hamiltonian
+from physics import qutip_ladder_hamiltonian as hamiltonian
 import numpy as np
 
 chain_length = 1
@@ -12,4 +12,8 @@ state = basis(num_qubits, 0)
 
 sz = tensor(sigmaz(), sigmaz())
 
-result = sesolve([[hamiltonian]], state, time, e_ops=[sz])
+ham_list = hamiltonian(1)
+
+print(ham_list)
+
+result = sesolve(ham_list, state, time, e_ops=[sz])

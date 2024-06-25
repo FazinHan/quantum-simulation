@@ -84,19 +84,19 @@ def hamiltonian_ladder(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
             coeffs.append(J11)
     return SparsePauliOp(ham, coeffs)
 
-def qutip_ladder_hamiltonian(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
+def qutip_ladder_hamiltonian(num_rungs, J=1, ratio=1, B=1, omega=2.5):
     num_states = num_rungs*2
     J11 = ratio * J
     pauli_list = [qeye(2)]*num_states
     H0 = []
     H1 = []
     def H1_t(t, args):
-        return B * np.cos(w * t)
+        return B * np.cos(omega * t)
     H2 = []
     def H2_t(t, args):
-        return B * np.sin(w * t)
-    for x in ['s','y','z']:
-        for i in range(num_states):
+        return B * np.sin(omega * t)
+    for x in ['x','y','z']:
+        for i in range(0,num_states-1,2):
             op = pauli_list[:]
             op[i] = eval(f'sigma{x}()')
             op[i+1] = eval(f'sigma{x}()')
@@ -115,9 +115,17 @@ def qutip_ladder_hamiltonian(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
                 H0.append(J11*tensor(op3))
             except IndexError:
                 pass
-            op4 = pauli_list[:]
-            
-            
+    for i in range(0,num_states-1,2):   
+        op4 = pauli_list[:]
+        op4[i] = sigmax()
+        op4[i+1] = sigmax()
+        op5 = pauli_list[:]
+        op5[i] = sigmay()
+        op5[i+1] = sigmay()
+        H1.append(tensor(op4))
+        H2.append(tensor(op5))
+    return [*H0, [H1, H1_t], [H2, H2_t]]
+
 
 def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_time_steps):
 
