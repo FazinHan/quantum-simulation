@@ -1,9 +1,15 @@
-from qiskit.quantum_info import SparsePauliOp
 import numpy as np
 from qiskit.circuit.library import HamiltonianGate
+from qiskit import QuantumCircuit
+from qutip import tensor, sigmax, sigmay, sigmaz, qeye
 
 Ω = 2.5
 h_cut = 1
+
+num_periods = 1
+num_time_steps = 100
+T = num_periods * 2*np.pi/Ω
+dt = T / num_time_steps
 
 def hamiltonian_circular(t, A=2, J=1, omega=Ω):
     creator = ['I']*chain_length
@@ -31,8 +37,9 @@ def hamiltonian_linear(t, A, Δ=1, omega=Ω):
     return ham
 
 
-def hamiltonian_ladder(t, num_states, entanglement_ratio, J=1, B=1, omega=2.5):
-    J11 = entanglement_relator(J, entanglement_ratio)
+def hamiltonian_ladder(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
+    num_states = num_rungs*2
+    J11 = J*ratio
     pauli = ['I','X','Y','Z']
     ham = []
     coeffs = []
@@ -77,6 +84,41 @@ def hamiltonian_ladder(t, num_states, entanglement_ratio, J=1, B=1, omega=2.5):
             coeffs.append(J11)
     return SparsePauliOp(ham, coeffs)
 
+def qutip_ladder_hamiltonian(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
+    num_states = num_rungs*2
+    J11 = ratio * J
+    pauli_list = [qeye(2)]*num_states
+    H0 = []
+    H1 = []
+    def H1_t(t, args):
+        return B * np.cos(w * t)
+    H2 = []
+    def H2_t(t, args):
+        return B * np.sin(w * t)
+    for x in ['s','y','z']:
+        for i in range(num_states):
+            op = pauli_list[:]
+            op[i] = eval(f'sigma{x}()')
+            op[i+1] = eval(f'sigma{x}()')
+            H0.append(J*tensor(op))
+            try:
+                op2 = pauli_list[:]
+                op2[i] = eval(f'sigma{x}()')
+                op2[i+2] = eval(f'sigma{x}()')
+                H0.append(J11*tensor(op2))
+            except IndexError:
+                pass
+            try:
+                op3 = pauli_list[:]
+                op3[i+1] = eval(f'sigma{x}()')
+                op3[i+3] = eval(f'sigma{x}()')
+                H0.append(J11*tensor(op3))
+            except IndexError:
+                pass
+            op4 = pauli_list[:]
+            
+            
+
 def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_time_steps):
 
     circuit = QuantumCircuit(num_qbits)
@@ -86,3 +128,18 @@ def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_ti
         # print(Operator(HamiltonianGate(ham(i*dt, *args), time=dt)).is_unitary())
     
     return circuit
+
+if __name__=="__main__":
+    ham = hamiltonian_ladder(0, 4)
+    import matplotlib.pyplot as plt
+    import matplotlib.animation as animation
+    def update(i):
+        ham = hamiltonian_ladder(i/2/np.pi, 4)
+        matrice.set_array(ham.to_matrix().real)
+
+    fig, ax = plt.subplots()
+    matrice = ax.matshow(ham.to_matrix().real)
+    plt.colorbar(matrice)
+    
+    ani = animation.FuncAnimation(fig, update, frames=150, interval=50*3)
+    plt.show()
