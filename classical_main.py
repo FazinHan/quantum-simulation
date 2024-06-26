@@ -16,7 +16,7 @@ state = [basis(2,0)]*num_qubits
 state[0] = basis(2,1)
 state = tensor(state)
 
-B_arr = np.linspace(0,10,500)
+B_arr = np.linspace(0,5,500)
 
 energies = []
 
@@ -24,7 +24,7 @@ for B in B_arr:
     
     ham_list = hamiltonian(num_rungs, J=2)
 
-    print(ham_list[0])
+    # print(ham_list[0])
     
     f_basis = FloquetBasis(ham_list, T, args={'B':B*omega, 'omega':omega})
     f_energies = f_basis.e_quasi

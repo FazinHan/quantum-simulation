@@ -123,10 +123,10 @@ def qutip_ladder_hamiltonian(num_rungs, J=1, ratio=1, B=1, omega=2.5):
     for i in range(num_rungs):   
         clockwise = pauli_list[:]
         clockwise[2*i] = sigmax()
-        clockwise[2*i+1] = sigmax()
+        # clockwise[2*i+1] = sigmax()
         counter = pauli_list[:]
         counter[2*i] = sigmay()
-        counter[2*i+1] = sigmay()
+        # counter[2*i+1] = sigmay()
         H1.append(tensor(clockwise))
         H2.append(tensor(counter))
     return [*H0, *[[H, H1_t] for H in H1], *[[H, H2_t] for H in H2]]
