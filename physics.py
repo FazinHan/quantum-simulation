@@ -39,50 +39,53 @@ def hamiltonian_linear(t, A, Δ=1, omega=Ω):
 
 
 def hamiltonian_ladder(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
+    '''
+    Hamiltonians are created with terms of alternating sides: LRLRLRLR...
+    Returns a SparsePauliOp.
+    '''
     num_qubits = num_rungs*2
-    J11 = J*ratio
-    pauli = ['I','X','Y','Z']
+    JII = J*ratio
+    pauli = ['X','Y','Z']
+    creator = ['II']*num_rungs
+    creator2 = ['I']*num_qubits
     ham = []
     coeffs = []
-    for i in range(int(num_qubits/2)):
-        creator = ['I']*num_qubits
-        creator[i] = pauli[1]
-        coeff = B * np.cos(omega * t)
-        ham.append(''.join(creator))
-        coeffs.append(coeff)
-        creator = ['I']*num_qubits
-        creator[i+1] = pauli[1]
-        coeff = B * np.cos(omega * t)
-        ham.append(''.join(creator))
-        coeffs.append(coeff)
-        creator = ['I']*num_qubits
-        creator[i] = pauli[2]
-        coeff = B * np.sin(omega * t)
-        ham.append(''.join(creator))
-        coeffs.append(coeff)
-        creator = ['I']*num_qubits
-        creator[i+1] = pauli[2]
-        coeff = B * np.sin(omega * t)
-        ham.append(''.join(creator))
-        coeffs.append(coeff)
-        for j in range(1,4):
-            creator = ['I']*num_qubits
-            creator[2*i] = pauli[j]
-            creator[2*i+1] = pauli[j]
-            ham.append(''.join(creator))
+    for i in range(num_rungs):
+        for j in pauli:
+            plist_I_ = creator[:]
+            plist_II_1 = creator[:]
+            plist_II_2 = creator[:]
+            
+            plist_I_[i] = j+j
             coeffs.append(J)
-    for i in range(int(num_qubits/2)-1):
-        for j in range(1,4):
-            creator = ['I']*num_qubits
-            creator[2*i] = pauli[j]
-            creator[2*(i+1)] = pauli[j]
-            ham.append(''.join(creator))
-            coeffs.append(J11)
-            creator = ['I']*num_qubits
-            creator[2*i+1] = pauli[j]
-            creator[2*(i+1)+1] = pauli[j]
-            ham.append(''.join(creator))
-            coeffs.append(J11)
+            ham.append(''.join(plist_I_))
+            
+            plist_II_1[i] = 'I'+j
+            plist_II_2[i] = j+'I'
+            coeffs.append(JII)
+            coeffs.append(JII)
+            ham.append(''.join(plist_II_1))
+            ham.append(''.join(plist_II_2))
+            
+        tlist_1 = creator2[:]
+        tlist_2 = creator2[:]
+        tlist_3 = creator2[:]
+        tlist_4 = creator2[:]
+
+        tlist_1[2*i] = 'X'
+        tlist_2[2*i+1] = 'X'
+        ham.append(''.join(tlist_1))
+        ham.append(''.join(tlist_2))
+        coeffs.append(B * np.cos( omega * t))
+        coeffs.append(B * np.cos( omega * t))
+        
+        tlist_3[2*i] = 'Y'
+        tlist_4[2*i+1] = 'Y'
+        ham.append(''.join(tlist_3))
+        ham.append(''.join(tlist_4))
+        coeffs.append(B * np.sin( omega * t))
+        coeffs.append(B * np.sin( omega * t))
+        
     return SparsePauliOp(ham, coeffs)
 
 def qutip_ladder_hamiltonian(num_rungs, J=1, ratio=1, B=1, omega=2.5):
@@ -91,7 +94,7 @@ def qutip_ladder_hamiltonian(num_rungs, J=1, ratio=1, B=1, omega=2.5):
     Returns in QuTiP readable (time-dependent) hamiltonian list.
     '''
     num_qubits = num_rungs*2
-    J11 = ratio * J
+    JII = ratio * J
     pauli_list = [qeye(2)]*num_qubits
     H0 = []
     H1 = []
@@ -110,14 +113,14 @@ def qutip_ladder_hamiltonian(num_rungs, J=1, ratio=1, B=1, omega=2.5):
                 opL = pauli_list[:]
                 opL[2*i] = eval(f'sigma{x}()')
                 opL[2*i+2] = eval(f'sigma{x}()')
-                H0.append(J11*tensor(opL))
+                H0.append(JII*tensor(opL))
             except IndexError:
                 pass
             try:
                 opR = pauli_list[:]
                 opR[2*i+1] = eval(f'sigma{x}()')
                 opR[2*i+3] = eval(f'sigma{x}()')
-                H0.append(J11*tensor(opR))
+                H0.append(JII*tensor(opR))
             except IndexError:
                 pass
     for i in range(num_rungs):   
@@ -156,5 +159,21 @@ if __name__=="__main__":
     
     # ani = animation.FuncAnimation(fig, update, frames=150, interval=50*3)
     # plt.show()
-
-    print(qutip_ladder_hamiltonian(1)[0].dims)
+    t = 1
+    qiskit_ham = hamiltonian_ladder(t,1).to_matrix()
+    qutip_ham_list = qutip_ladder_hamiltonian(1)
+    qutip_ham = [i.full() for i in qutip_ham_list if type(i)!=list] + [ (i[0]+i[1](t,{})).full() for i in qutip_ham_list if type(i) == list]
+    qutip_ham = np.sum(qutip_ham,axis=0)
+    # print(qutip_ham, qiskit_ham, sep='\n--------\n')
+    print(np.allclose(qutip_ham, qiskit_ham))
+    import matplotlib.pyplot as plt
+    fig, axs = plt.subplots(2,2)
+    axs[0,0].matshow(qiskit_ham.real)
+    axs[0,1].matshow(qiskit_ham.imag)
+    axs[1,0].matshow(qutip_ham.real)
+    axs[1,1].matshow(qutip_ham.imag)
+    axs[0,0].set_ylabel('qiskit ham')
+    axs[1,0].set_ylabel('qutip ham')
+    plt.show()
+    
+    

@@ -16,7 +16,7 @@ state = [basis(2,0)]*num_qubits
 state[0] = basis(2,1)
 state = tensor(state)
 
-B_arr = np.linspace(0,5,500)
+B_arr = np.linspace(0,np.pi,1000)
 
 energies = []
 
