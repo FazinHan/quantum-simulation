@@ -4,6 +4,10 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import SparsePauliOp
 from qutip import tensor, sigmax, sigmay, sigmaz, qeye
 
+'''
+All tests show hamiltonians are not equivalent somehow.
+'''
+
 Ω = 2.5
 h_cut = 1
 
@@ -194,14 +198,18 @@ if __name__=="__main__1":
 
 if __name__=="__main__1":
     qutip_ham_list = qutip_ladder_hamiltonian(1)
+    print('\nQUTIP HAMILTONIAN:\n\n------\n')
     qutip_ham = [i.full() for i in qutip_ham_list if type(i)!=list] + [ (i[0]+i[1](0,{})).full() for i in qutip_ham_list if type(i) == list]
     print(np.sum(qutip_ham,axis=0))
+    print()
 
 if __name__=="__main__1":
     qiskit_ham = hamiltonian_ladder(0,1)
+    print('\nQISKIT HAMILTONIAN:\n\n------\n')
     print(qiskit_ham.to_matrix())
+    print()
 
-if __name__=="__main__1":
+if __name__=="__main__1": 
     from qiskit.quantum_info import Statevector, Pauli
     time_evo_qiskit = unitary_time_evolver(hamiltonian_ladder,1,num_qbits=2)
     statez = Statevector.from_instruction(time_evo_qiskit)
