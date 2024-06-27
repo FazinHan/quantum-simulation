@@ -2,7 +2,7 @@ import numpy as np
 from qiskit.circuit.library import HamiltonianGate
 from qiskit import QuantumCircuit
 from qiskit.quantum_info import SparsePauliOp
-from qutip import tensor, sigmax, sigmay, sigmaz, qeye
+from qutip import tensor, sigmax, sigmay, sigmaz, qeye, FloquetBasis
 
 '''
 All tests show hamiltonians are not equivalent somehow.
@@ -112,7 +112,7 @@ def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=1, ratio=1):
     pauli_list = [qeye(2)]*num_qubits
     H0 = []
     H1 = []
-    def H1_t(t, args): # may have to use 'eval' instead to return with B and amega subsituted?
+    def H1_t(t, args): # may have to use 'eval' instead to return with B and omega subsituted?
         return args.get('B',B) * np.cos(args.get('omega',omega) * t)
     H2 = []
     def H2_t(t, args):
@@ -146,6 +146,20 @@ def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=1, ratio=1):
         H2.append(tensor(counter))
     return [*H0, *[[H, H1_t] for H in H1], *[[H, H2_t] for H in H2]]
 
+def unitary_integrator(operator, func, t, args={}):
+    if t == 0:
+        return qeye(2)
+    steps = num_time_steps* ( (t/T)**.5 )
+    delta_t = t/steps
+    output = 1
+    for step in range( int(steps) ):
+        term = -1j*func(delta_t*step, args)*operator
+        output *= term.expm()
+    return output
+
+def unitary(ham_list, T):
+    return [*[i.expm() for i in ham_list if type(i) != list], *[unitary_integrator(i[0], i[1], T) for i in ham_list if type(i) == list]]
+
 
 def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_time_steps):
 
@@ -157,9 +171,23 @@ def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_ti
     
     return circuit
 
+def floquetor(hamiltonian, T, **kwargs):
+
+    B = kwargs.get('B')
+    omega = kwargs.get('omega')
+    num_rungs = kwargs.get('rungs')
+    
+    ham_list = unitary(hamiltonian(num_rungs, B*omega, omega), T)
+
+    # print(ham_list[0])
+    
+    f_basis = FloquetBasis(ham_list, T)
+
+    return f_basis
+
 ### ISOLATED TESTS
 
-if __name__=="__main__1":
+if __name__=="__main__":
    
     import matplotlib.animation as animation
     
