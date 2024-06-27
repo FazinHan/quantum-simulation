@@ -34,7 +34,7 @@ for B in B_arr:
 energies = np.array(energies)
 
 for i in range(2**num_qubits):
-    plt.plot(B_arr, energies[:,i],'.')
+    plt.plot(B_arr, energies[:,i],'.',ms=1.2)
 plt.xlabel('$B/\\Omega$')
 plt.ylabel('$\\varepsilon$')
 plt.savefig(filename())
