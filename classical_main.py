@@ -8,7 +8,7 @@ num_rungs = 1
 num_layers = 1
 num_qubits = 2*num_rungs
 
-omega = .5
+omega = 2.5
 
 T = 2*np.pi/omega
 
@@ -38,3 +38,4 @@ for i in range(2**num_qubits):
 plt.xlabel('$B/\\Omega$')
 plt.ylabel('$\\varepsilon$')
 plt.savefig(filename())
+# plt.show()
