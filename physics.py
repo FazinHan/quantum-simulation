@@ -43,7 +43,7 @@ def hamiltonian_linear(t, A=2, Δ=1, omega=Ω):
     return ham, qutip_ham
 
 
-def hamiltonian_ladder(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
+def hamiltonian_ladder(t, num_rungs, B=2, omega=2.5, J=1, ratio=1):
     '''
     Hamiltonians are created with terms of alternating sides: LRLRLRLR...
     Returns a SparsePauliOp.
@@ -100,7 +100,7 @@ def hamiltonian_ladder(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
         
     return SparsePauliOp(ham, coeffs)
 
-def qutip_ladder_hamiltonian(num_rungs, J=1, ratio=1, B=1, omega=2.5):
+def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=1, ratio=1):
     '''
     Hamiltonians are created with terms of alternating sides: LRLRLRLR...
     Returns in QuTiP readable (time-dependent) hamiltonian list.
