@@ -32,16 +32,19 @@ def hamiltonian_circular(t, A=2, J=1, omega=Ω):
     # print(A * np.cos(Ω*t))
     return SparsePauliOp(ham[:,0], ham[:,1])
 
-def hamiltonian_linear(t, A, Δ=1, omega=Ω):
+def hamiltonian_linear(t, A=2, Δ=1, omega=Ω):
     ham = SparsePauliOp(['Z','X'] , [-Δ/2, A/2*np.cos(omega*t)])
     # plt.plot(t, A*np.cos(Ω*t)/2,'.')
-    return ham
+    qutip_ham = [sigmaz()*-Δ/2,[sigmax(), lambda t, args: args.get('A',A)/2*np.cos(args.get('omega',omega)*t)]]
+    return ham, qutip_ham
 
 
 def hamiltonian_ladder(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
     '''
     Hamiltonians are created with terms of alternating sides: LRLRLRLR...
     Returns a SparsePauliOp.
+    
+    For open boundary. Edit the exception handling if you want to include periodic boundary conditions.
     '''
     num_qubits = num_rungs*2
     JII = J*ratio
@@ -50,37 +53,42 @@ def hamiltonian_ladder(t, num_rungs, J=1, ratio=1, B=1, omega=2.5):
     creator2 = ['I']*num_qubits
     ham = []
     coeffs = []
-    for i in range(num_rungs):
+    for r in range(num_rungs):
         for j in pauli:
             plist_I_ = creator[:]
-            plist_II_1 = creator[:]
-            plist_II_2 = creator[:]
+            plist_II_R = creator[:]
+            plist_II_L = creator[:]
             
-            plist_I_[i] = j+j
+            plist_I_[r] = j+j
             coeffs.append(J)
             ham.append(''.join(plist_I_))
-            
-            plist_II_1[i] = 'I'+j
-            plist_II_2[i] = j+'I'
-            coeffs.append(JII)
-            coeffs.append(JII)
-            ham.append(''.join(plist_II_1))
-            ham.append(''.join(plist_II_2))
+
+            try:
+                plist_II_R[r+1] = 'I'+j
+                plist_II_R[r] = 'I'+j
+                plist_II_L[r+1] = j+'I'
+                plist_II_L[r] = j+'I' # open boundary
+                coeffs.append(JII)
+                coeffs.append(JII)
+                ham.append(''.join(plist_II_R))
+                ham.append(''.join(plist_II_L))
+            except IndexError:
+                pass
             
         tlist_1 = creator2[:]
         tlist_2 = creator2[:]
         tlist_3 = creator2[:]
         tlist_4 = creator2[:]
 
-        tlist_1[2*i] = 'X'
-        tlist_2[2*i+1] = 'X'
+        tlist_1[2*r] = 'X'
+        tlist_2[2*r+1] = 'X'
         ham.append(''.join(tlist_1))
         ham.append(''.join(tlist_2))
         coeffs.append(B * np.cos( omega * t))
         coeffs.append(B * np.cos( omega * t))
         
-        tlist_3[2*i] = 'Y'
-        tlist_4[2*i+1] = 'Y'
+        tlist_3[2*r] = 'Y'
+        tlist_4[2*r+1] = 'Y'
         ham.append(''.join(tlist_3))
         ham.append(''.join(tlist_4))
         coeffs.append(B * np.sin( omega * t))
@@ -92,6 +100,8 @@ def qutip_ladder_hamiltonian(num_rungs, J=1, ratio=1, B=1, omega=2.5):
     '''
     Hamiltonians are created with terms of alternating sides: LRLRLRLR...
     Returns in QuTiP readable (time-dependent) hamiltonian list.
+
+    For open boundary. Edit the exception handling if you want to include periodic boundary conditions.
     '''
     num_qubits = num_rungs*2
     JII = ratio * J
@@ -104,32 +114,30 @@ def qutip_ladder_hamiltonian(num_rungs, J=1, ratio=1, B=1, omega=2.5):
     def H2_t(t, args):
         return args.get('B',B) * np.sin(args.get('omega',omega) * t)
     for x in ['x','y','z']:
-        for i in range(num_rungs):
+        for r in range(num_rungs):
             op = pauli_list[:]
-            op[2*i] = eval(f'sigma{x}()')
-            op[2*i+1] = eval(f'sigma{x}()')
+            op[2*r] = eval(f'sigma{x}()')
+            op[2*r+1] = eval(f'sigma{x}()')
             H0.append(J*tensor(op))
             try:
                 opL = pauli_list[:]
-                opL[2*i] = eval(f'sigma{x}()')
-                opL[2*i+2] = eval(f'sigma{x}()')
+                opL[2*(r+1)] = eval(f'sigma{x}()')
+                opL[2*r] = eval(f'sigma{x}()')
                 H0.append(JII*tensor(opL))
             except IndexError:
                 pass
             try:
                 opR = pauli_list[:]
-                opR[2*i+1] = eval(f'sigma{x}()')
-                opR[2*i+3] = eval(f'sigma{x}()')
+                opR[2*(r+1)] = eval(f'sigma{x}()')
+                opR[2*r+1] = eval(f'sigma{x}()') # open boundary
                 H0.append(JII*tensor(opR))
             except IndexError:
                 pass
-    for i in range(num_rungs):   
+    for i in range(num_qubits):   
         clockwise = pauli_list[:]
-        clockwise[2*i] = sigmax()
-        # clockwise[2*i+1] = sigmax()
+        clockwise[i] = sigmax()
         counter = pauli_list[:]
-        counter[2*i] = sigmay()
-        # counter[2*i+1] = sigmay()
+        counter[i] = sigmay()
         H1.append(tensor(clockwise))
         H2.append(tensor(counter))
     return [*H0, *[[H, H1_t] for H in H1], *[[H, H2_t] for H in H2]]
@@ -140,40 +148,66 @@ def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_ti
     circuit = QuantumCircuit(num_qbits)
     
     for i in range(1, int(time/dt)+1):
-        circuit.compose(HamiltonianGate(ham(i*dt, num_qbits, *args), time=dt), inplace=True)
+        circuit.compose(HamiltonianGate(ham(i*dt, *args), time=dt), inplace=True)
         # print(Operator(HamiltonianGate(ham(i*dt, *args), time=dt)).is_unitary())
     
     return circuit
 
-if __name__=="__main__":
-    # ham = hamiltonian_ladder(0, 2)
-    # import matplotlib.pyplot as plt
-    # import matplotlib.animation as animation
-    # def update(i):
-    #     ham = hamiltonian_ladder(i/2/np.pi, 2)
-    #     matrice.set_array(ham.to_matrix().real)
+### ISOLATED TESTS
 
-    # fig, ax = plt.subplots()
-    # matrice = ax.matshow(ham.to_matrix().real)
-    # plt.colorbar(matrice)
+if __name__=="__main__1":
+   
+    import matplotlib.animation as animation
     
-    # ani = animation.FuncAnimation(fig, update, frames=150, interval=50*3)
-    # plt.show()
-    t = 1
-    qiskit_ham = hamiltonian_ladder(t,1).to_matrix()
-    qutip_ham_list = qutip_ladder_hamiltonian(1)
+    t = 0
+    qiskit_ham, qutip_ham_list = hamiltonian_ladder(t,1).to_matrix(), qutip_ladder_hamiltonian(1)
+    # qiskit_ham, qutip_ham_list = hamiltonian_linear(t)
+    # qiskit_ham = qiskit_ham.to_matrix()
     qutip_ham = [i.full() for i in qutip_ham_list if type(i)!=list] + [ (i[0]+i[1](t,{})).full() for i in qutip_ham_list if type(i) == list]
     qutip_ham = np.sum(qutip_ham,axis=0)
-    # print(qutip_ham, qiskit_ham, sep='\n--------\n')
+
+    outputs = qiskit_ham.real,qiskit_ham.imag,qutip_ham.real,qutip_ham.imag
+    
     print(np.allclose(qutip_ham, qiskit_ham))
     import matplotlib.pyplot as plt
+    def update(t):
+        # qiskit_ham, qutip_ham_list = hamiltonian_linear(t)
+        # qiskit_ham = qiskit_ham.to_matrix()
+        qiskit_ham, qutip_ham_list = hamiltonian_ladder(t,1).to_matrix(), qutip_ladder_hamiltonian(1)
+        qiskit_ham, qutip_ham = qiskit_ham, [i.full() for i in qutip_ham_list if type(i)!=list] + [ (i[0]+i[1](t,{})).full() for i in qutip_ham_list if type(i) == list]
+        qutip_ham = np.sum(qutip_ham,axis=0)
+        outputs = qiskit_ham.real,qiskit_ham.imag,qutip_ham.real,qutip_ham.imag
+        for idx, array in enumerate(matrices):
+            for jdx, matrix in enumerate(array):
+                matrix.set_array(outputs[2*idx+jdx])
     fig, axs = plt.subplots(2,2)
-    axs[0,0].matshow(qiskit_ham.real)
-    axs[0,1].matshow(qiskit_ham.imag)
-    axs[1,0].matshow(qutip_ham.real)
-    axs[1,1].matshow(qutip_ham.imag)
+    matrices = [[axs[i,j].matshow(outputs[2*i+j]) for j in range(2)] for i in range(2)]
+    ani = animation.FuncAnimation(fig, update, frames=150, interval=50*3)
     axs[0,0].set_ylabel('qiskit ham')
     axs[1,0].set_ylabel('qutip ham')
+    axs[1,0].set_xlabel('real part')
+    axs[1,1].set_xlabel('imaginary part')
     plt.show()
-    
-    
+
+    # print(np.allclose(SparsePauliOp('XY'*6,1).to_matrix(), tensor([tensor(sigmax(),sigmay())]*6).full()))
+
+
+if __name__=="__main__1":
+    qutip_ham_list = qutip_ladder_hamiltonian(1)
+    qutip_ham = [i.full() for i in qutip_ham_list if type(i)!=list] + [ (i[0]+i[1](0,{})).full() for i in qutip_ham_list if type(i) == list]
+    print(np.sum(qutip_ham,axis=0))
+
+if __name__=="__main__1":
+    qiskit_ham = hamiltonian_ladder(0,1)
+    print(qiskit_ham.to_matrix())
+
+if __name__=="__main__1":
+    from qiskit.quantum_info import Statevector, Pauli
+    time_evo_qiskit = unitary_time_evolver(hamiltonian_ladder,1,num_qbits=2)
+    statez = Statevector.from_instruction(time_evo_qiskit)
+    from qutip import sesolve, basis
+    time_evo_qutip = sesolve(qutip_ladder_hamiltonian(1), tensor([basis(2,0)]*2), np.linspace(0,T,num_time_steps), e_ops=[tensor([sigmax()]*2),tensor([sigmay()]*2),tensor([sigmaz()]*2)])
+    if statez.expectation_value(Pauli('X')) == time_evo_qutip.expect[0][-1]:
+        for i in range(3):
+            plt.plot(tlist, time_evo_qutip.expect[i])
+        plt.show()
