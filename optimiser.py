@@ -10,7 +10,7 @@ estimator = Estimator()
 
 from physics import hamiltonian_ladder, unitary_time_evolver
 from ansatzor import ansatz_circuit_ladder
-from information import cost_func_vqd, convergence_parameter
+from information import cost_func_vqd, convergence_parameter, determine_next_filename
 
 ### Systeme
 num_rungs = 1
@@ -85,13 +85,8 @@ for num_layers in layers:
 
 t1 = time.perf_counter()
 
-folder = sys.argv[2]
-try:
-    name = sys.argv[3]
-except:
-    name = 'data'+B+'T'
-
-with open(os.path.join('outputs',folder,f'{name}.npz'),'wb') as file:
+folder='data'
+with open(determine_next_filename(folder, filetype='npz'),'wb') as file:
     np.savez(file, layers=layers, costs=costs, params=prev_opt_parameters)
 
 print('time taken: {:.3f}s'.format(t1-t0))

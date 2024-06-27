@@ -68,9 +68,11 @@ def calculate_overlaps(ansatz, prev_circuits, parameters, estimator):
     
     return np.array(overlaps)
 
-def determine_next_filename(folder='outputs'):
+def determine_next_filename(folder='outputs',filetype='png',exists=0):
     num = 1
     import os
-    while os.path.isfile(os.path.join('.',folder,f'output{num}.png')):
+    while os.path.isfile(os.path.join('.',folder,f'output{num}.{filetype}')):
         num += 1
+    if exists==1:
+        num -= 1
     return os.path.join('.',folder,f'output{num}.png')
