@@ -14,7 +14,7 @@ if __name__=="__main__":
         mapper = exe.map(optimiser_main, B_arr)
     for singlet, triplet in mapper:
         singlets.append(singlet)
-        triplets.append(triplet)
+        triplets.append(np.array(triplet))
     plt.plot(B_arr, singlets,'.')
     for i in range(3):
         plt.plot(B_arr, triplets[:,i],'.')
