@@ -6,6 +6,7 @@ from qiskit.quantum_info import SparsePauliOp
 from optimparallel import minimize_parallel
 import time, sys
 import numpy as np
+import matplotlib.pyplot as plt
 estimator = Estimator()
 
 from physics import hamiltonian_ladder, unitary_time_evolver
@@ -27,9 +28,9 @@ U_T = unitary_time_evolver(hamiltonian_ladder, num_rungs, float(B), num_qbits=nu
 matrix = np.zeros((2**num_qubits, 2**num_qubits))
 matrix[0,0] = 1
 observable = SparsePauliOp.from_operator(matrix)
-ground_states = []
-excited_states = [] 
-costs = []
+
+singlets = []
+triplets = []
 
 layers = [1]
 
@@ -72,9 +73,14 @@ for num_layers in layers:
         prev_opt_parameters = result.x
         
 
-        ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
-    
-    costs.append(ϵ2**.5)
+        # ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
+        floquet_state = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
+        eigenvalues.append(-np.angle(floquet_state.expectation_value(U_T))/T)
+    eigenvalues = np.array(eigenvalues)
+    eigenvalues.sort()
+    singlets.append(eigenvalues.pop(0))
+    for i in eigenvalues:
+        triplets.append(i)
     ti_new = time.perf_counter()
     print(f'{num_layers}-layer circuit computed in {ti_new-ti}s')
     ti = ti_new
@@ -85,8 +91,8 @@ for num_layers in layers:
 
 t1 = time.perf_counter()
 
-folder='data'
+folder='data//data1'
 with open(determine_next_filename(folder, filetype='npz'),'wb') as file:
-    np.savez(file, layers=layers, costs=costs, params=prev_opt_parameters)
+    np.savez(file, singlets=singlets, triplets=triplets)
 
-print('time taken: {:.3f}s'.format(t1-t0))
+# print('time taken: {:.3f}s'.format(t1-t0))
