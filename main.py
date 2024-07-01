@@ -12,6 +12,3 @@ def function(B):
 if __name__=="__main__":
     with ProcessPoolExecutor(8) as exe:
         mapper = exe.map(function , B_arr)
-    
-    for i in mapper:
-        print(i)
