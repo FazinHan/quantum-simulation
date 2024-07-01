@@ -4,13 +4,16 @@ import os
 from concurrent.futures import ProcessPoolExecutor
 from optimiser import optimiser_main
 from information import determine_next_filename
+from physics import Ω as omega
 
-B_arr = np.linspace(0,10,8)
+B_size = 10
+
+B_arr = np.linspace(0,10,B_size)*omega
 singlets = []
 triplets = []
 
 if __name__=="__main__":
-    with ProcessPoolExecutor(8) as exe:
+    with ProcessPoolExecutor(B_size) as exe:
         mapper = exe.map(optimiser_main, B_arr)
     for singlet, triplet in mapper:
         singlets.append(singlet)
@@ -19,4 +22,6 @@ if __name__=="__main__":
     triplets = np.array(triplets)
     for i in range(3):
         plt.plot(B_arr, triplets[:,i],'.')
+    plt.xlabel('$B/\Omega$')
+    plt.ylabel('$\\epsilon$')
     plt.savefig(determine_next_filename())
