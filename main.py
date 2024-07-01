@@ -11,7 +11,7 @@ triplets = []
 
 if __name__=="__main__":
     with ProcessPoolExecutor(8) as exe:
-        mapper = exe.map(function , optimiser_main)
+        mapper = exe.map(optimiser_main, B_arr)
     for singlet, triplet in mapper:
         singlets.append(singlet)
         triplets.append(triplet)
