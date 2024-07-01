@@ -2,7 +2,7 @@ from qiskit.primitives import StatevectorSampler as Sampler
 from qiskit.primitives import StatevectorEstimator as Estimator
 from qutip import sigmax, sigmay, sigmaz
 from qiskit.circuit import ParameterVector, QuantumCircuit
-from qiskit.quantum_info import SparsePauliOp
+from qiskit.quantum_info import SparsePauliOp, Statevector
 from optimparallel import minimize_parallel
 import time, sys
 import numpy as np
