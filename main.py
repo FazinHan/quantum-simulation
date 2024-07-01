@@ -22,6 +22,6 @@ if __name__=="__main__":
     triplets = np.array(triplets)
     for i in range(3):
         plt.plot(B_arr, triplets[:,i],'.')
-    plt.xlabel('$B/\Omega$')
+    plt.xlabel('$B/\\Omega$')
     plt.ylabel('$\\epsilon$')
     plt.savefig(determine_next_filename())
