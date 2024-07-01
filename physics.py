@@ -56,7 +56,6 @@ def hamiltonian_ladder(t, num_rungs, B=2, omega=Ω, J=J, JII=JII):
     num_qubits = num_rungs*2
     pauli = ['X','Y','Z']
     creator = ['II']*num_rungs
-    creator2 = ['I']*num_qubits
     ham = []
     coeffs = []
     for r in range(num_rungs):
@@ -80,27 +79,35 @@ def hamiltonian_ladder(t, num_rungs, B=2, omega=Ω, J=J, JII=JII):
                 ham.append(''.join(plist_II_L))
             except IndexError:
                 pass
+            # print(plist_I_)
+            # print(plist_II_L)
+            # print(plist_II_R)
             
-        tlist_1 = creator2[:]
-        tlist_2 = creator2[:]
-        tlist_3 = creator2[:]
-        tlist_4 = creator2[:]
+        tlist_1 = creator[:]
+        tlist_2 = creator[:]
+        tlist_3 = creator[:]
+        tlist_4 = creator[:]
 
-        tlist_1[2*r] = 'X'
-        tlist_2[2*r+1] = 'X'
+        tlist_2[r] = 'IX'
+        tlist_1[r] = 'XI'
         ham.append(''.join(tlist_1))
         ham.append(''.join(tlist_2))
         coeffs.append(B * np.cos( omega * t))
         coeffs.append(B * np.cos( omega * t))
-        
-        tlist_3[2*r] = 'Y'
-        tlist_4[2*r+1] = 'Y'
+
+        tlist_3[r] = 'YI'
+        tlist_4[r] = 'IY'
+        # print(tlist_1)
         ham.append(''.join(tlist_3))
         ham.append(''.join(tlist_4))
         coeffs.append(B * np.sin( omega * t))
         coeffs.append(B * np.sin( omega * t))
+
+    operator = SparsePauliOp(ham, coeffs)
+
+    # print(operator.to_matrix())
         
-    return SparsePauliOp(ham, coeffs)
+    return operator
 
 def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=J, JII=JII):
     '''
@@ -118,31 +125,35 @@ def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=J, JII=JII):
     H2 = []
     def H2_t(t, args):
         return args.get('B',B) * np.sin(args.get('omega',omega) * t)
-    for x in ['x','y','z']:
+    for sigma in [sigmax(), sigmay(), sigmaz()]:
         for r in range(num_rungs):
             op = pauli_list[:]
-            op[2*r] = eval(f'sigma{x}()')
-            op[2*r+1] = eval(f'sigma{x}()')
+            op[2*r] = sigma
+            op[2*r+1] = sigma
             H0.append(J*tensor(op))
             try:
                 opL = pauli_list[:]
-                opL[2*(r+1)] = eval(f'sigma{x}()')
-                opL[2*r] = eval(f'sigma{x}()')
+                opL[2*(r+1)] = sigma
+                opL[2*r] = sigma
                 H0.append(JII*tensor(opL))
             except IndexError:
                 pass
             try:
                 opR = pauli_list[:]
-                opR[2*(r+1)] = eval(f'sigma{x}()')
-                opR[2*r+1] = eval(f'sigma{x}()') # open boundary
+                opR[1+2*(r+1)] = sigma
+                opR[1+2*r] = sigma # open boundary
                 H0.append(JII*tensor(opR))
             except IndexError:
                 pass
+            # print(op)
+            # print(opL)
+            # print(opR)
     for i in range(num_qubits):   
         clockwise = pauli_list[:]
         clockwise[i] = sigmax()
         counter = pauli_list[:]
         counter[i] = sigmay()
+        # print(clockwise)
         H1.append(tensor(clockwise))
         H2.append(tensor(counter))
     return [*H0, *[[H, H1_t] for H in H1], *[[H, H2_t] for H in H2]]
@@ -220,6 +231,7 @@ if __name__=="__main__":
     axs[1,0].set_ylabel('qutip ham')
     axs[1,0].set_xlabel('real part')
     axs[1,1].set_xlabel('imaginary part')
+    fig.colorbar(matrices[0][0],ax=axs)
     plt.show()
 
     # print(np.allclose(SparsePauliOp('XY'*6,1).to_matrix(), tensor([tensor(sigmax(),sigmay())]*6).full()))
