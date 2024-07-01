@@ -16,7 +16,10 @@ num_time_steps = 100
 T = num_periods * 2*np.pi/Ω
 dt = T / num_time_steps
 
-def hamiltonian_circular(t, A=2, J=1, omega=Ω):
+J = 1
+JII = 1
+
+def hamiltonian_circular(t, A=2, J=J, omega=Ω):
     creator = ['I']*chain_length
     paulis = ['I','X','Y','Z']
     ham = [] # [('X',1.0)]
@@ -43,7 +46,7 @@ def hamiltonian_linear(t, A=2, Δ=1, omega=Ω):
     return ham, qutip_ham
 
 
-def hamiltonian_ladder(t, num_rungs, B=2, omega=2.5, J=1, ratio=1):
+def hamiltonian_ladder(t, num_rungs, B=2, omega=Ω, J=J, JII=JII):
     '''
     Hamiltonians are created with terms of alternating sides: LRLRLRLR...
     Returns a SparsePauliOp.
@@ -51,7 +54,6 @@ def hamiltonian_ladder(t, num_rungs, B=2, omega=2.5, J=1, ratio=1):
     For open boundary. Edit the exception handling if you want to include periodic boundary conditions.
     '''
     num_qubits = num_rungs*2
-    JII = J*ratio
     pauli = ['X','Y','Z']
     creator = ['II']*num_rungs
     creator2 = ['I']*num_qubits
@@ -100,7 +102,7 @@ def hamiltonian_ladder(t, num_rungs, B=2, omega=2.5, J=1, ratio=1):
         
     return SparsePauliOp(ham, coeffs)
 
-def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=1, ratio=1):
+def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=J, JII=JII):
     '''
     Hamiltonians are created with terms of alternating sides: LRLRLRLR...
     Returns in QuTiP readable (time-dependent) hamiltonian list.
@@ -108,7 +110,6 @@ def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=1, ratio=1):
     For open boundary. Edit the exception handling if you want to include periodic boundary conditions.
     '''
     num_qubits = num_rungs*2
-    JII = ratio * J
     pauli_list = [qeye(2)]*num_qubits
     H0 = []
     H1 = []
