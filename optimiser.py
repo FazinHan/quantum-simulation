@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 estimator = Estimator()
 
-from physics import hamiltonian_ladder, unitary_time_evolver
+from physics import hamiltonian_ladder, unitary_time_evolver, T
 from ansatzor import ansatz_circuit_ladder
 from information import cost_func_vqd, convergence_parameter, determine_next_filename
 
