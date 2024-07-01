@@ -10,7 +10,7 @@ def function(B):
     os.system(f'python optimiser.py {B}')
 
 if __name__=="__main__":
-    with ProcessPoolExecutor(4) as exe:
+    with ProcessPoolExecutor(8) as exe:
         mapper = exe.map(function , B_arr)
     
     for i in mapper:

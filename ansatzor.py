@@ -34,6 +34,7 @@ def ansatz_circuit_ladder(qc, param_space, layers, entangle_qubits=[]):
     def entangle(qc, params, param_counter, entangle_qubits_local):
         for i in entangle_qubits_local:
             qc.rzz(params[param_counter], *i)
+            param_counter += 1
         return param_counter
     for layer_count in range(layers):
         counter = layer(qc, param_space, counter)
@@ -45,5 +46,7 @@ if __name__=="__main__":
     from qiskit.circuit import ParameterVector
     from qiskit import QuantumCircuit
     qc = QuantumCircuit(4)
-    ansatz_circuit_ladder(qc, ParameterVector('θ',14*2), 2)
+    params = ParameterVector('θ',14*2+2)
+    ansatz_circuit_ladder(qc, params, 2, entangle_qubits=[(0,2),(1,3)])
+    ansatz_circuit_ladder(qc, params, 2)
     print(qc.draw())
