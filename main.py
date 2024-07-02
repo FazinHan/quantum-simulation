@@ -26,4 +26,7 @@ if __name__=="__main__":
     plt.ylabel('$\\epsilon$')
     plt.savefig(determine_next_filename())
 
+    with open(determine_next_filename('data','npz'), 'wb') as file:
+        np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, B_size=B_size)
+
     print('\n ________ \n COMPLETE \n ________')
