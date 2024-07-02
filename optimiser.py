@@ -66,7 +66,8 @@ def optimiser_main(B, num_rungs = 1, layers = 1):
             # print(hamiltonian_ladder(np.pi,4,1))
             
             prev_opt_parameters = result.x
-            cost = result.fun # plot costs
+            
+            cost = result.fun
             
     
             # ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
