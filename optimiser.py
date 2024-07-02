@@ -13,7 +13,7 @@ from physics import hamiltonian_ladder, unitary_time_evolver, T, h_cut
 from ansatzor import ansatz_circuit_ladder
 from information import cost_func_vqd, convergence_parameter, determine_next_filename
 
-def optimiser_main(B, num_rungs = 1, layers = 1):
+def optimiser_main(B, num_rungs = 1, layers = [1]):
     ### Systeme
     
     
