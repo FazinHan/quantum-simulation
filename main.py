@@ -19,7 +19,7 @@ if __name__=="__main__":
     for B, singlet, triplet, cost, layer_step in mapper:
         singlets[B] = singlet
         triplets[B] = triplet
-        costs[tuple(layer_step)] = cost
+        costs.append(cost)
     B_arr, singlets = zip(*sorted(singlets.items()))
     B_arr, triplets = zip(*sorted(triplets.items()))
     plt.plot(B_arr, singlets,'.')
