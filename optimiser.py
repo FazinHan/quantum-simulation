@@ -71,7 +71,7 @@ def optimiser_main(B):
     
             # ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
             floquet_state = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
-            eigenvalues.append(-h_bar*np.angle(floquet_state.expectation_value(U_T))/T)
+            eigenvalues.append(-h_cut*np.angle(floquet_state.expectation_value(U_T))/T)
         eigenvalues = np.array(eigenvalues)
         eigenvalues.sort()
         singlet = eigenvalues[0]
