@@ -9,15 +9,17 @@ from physics import Ω as omega
 B_size = 50
 
 B_arr = np.linspace(0,10,B_size)*omega
-singlets = []
-triplets = []
+singlets = {}
+triplets = {}
 
 if __name__=="__main__":
     with ProcessPoolExecutor(B_size) as exe:
         mapper = exe.map(optimiser_main, B_arr)
-    for singlet, triplet in mapper:
-        singlets.append(singlet)
-        triplets.append(triplet)
+    for B, singlet, triplet in mapper:
+        singlets[B] = singlet
+        triplets[B] = triplet
+    B_arr, singlets = zip(*sorted(singlets.items()))
+    B_arr, triplets = zip(*sorted(triplets.items()))
     plt.plot(B_arr, singlets,'.')
     triplets = np.array(triplets)
     for i in range(3):

@@ -79,4 +79,4 @@ def optimiser_main(B):
         ti_new = time.perf_counter()
         print(f'{num_layers}-layer circuit computed in {ti_new-ti}s')
         ti = ti_new
-    return singlet, triplets
+    return B, singlet, triplets
