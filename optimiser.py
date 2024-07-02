@@ -75,7 +75,7 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
             floquet_state = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
             eigenvalues.append(-h_cut*np.angle(floquet_state.expectation_value(U_T))/T)
             costs.append(cost)
-            layer_step.append([num_layers, steps])
+            layer_step.append([num_layers, step])
         eigenvalues = np.array(eigenvalues)
         eigenvalues.sort()
         singlet = eigenvalues[0]
