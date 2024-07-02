@@ -9,7 +9,7 @@ num_rungs = 1
 num_layers = 1
 num_qubits = 2*num_rungs
 
-omega = 2.5
+omega = 10
 J = 1
 JII = 1
 T = 2*np.pi/omega
@@ -18,7 +18,7 @@ state = [basis(2,0)]*num_qubits
 state[0] = basis(2,1)
 state = tensor(state)
 
-B_arr = np.linspace(0,np.pi,1000)*omega
+B_arr = np.linspace(0,.1,1000)*omega
 
 energies = []
 
