@@ -38,5 +38,6 @@ for i in range(2**num_qubits):
     plt.plot(B_arr/omega, energies[:,i],'b.',ms=1.2)
 plt.xlabel('$B/\\Omega$')
 plt.ylabel('$\\varepsilon$')
+plt.title(f'$\\Omega={omega}$')
 plt.savefig(filename())
 # plt.show()

@@ -6,7 +6,7 @@ from optimiser import optimiser_main
 from information import determine_next_filename
 from physics import Ω as omega
 
-B_size = 50
+B_size = 100
 
 B_arr = np.linspace(0,10,B_size)*omega
 singlets = {}
