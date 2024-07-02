@@ -29,6 +29,6 @@ if __name__=="__main__":
     plt.savefig(determine_next_filename())
 
     with open(determine_next_filename('data','npz'), 'wb') as file:
-        np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, B_size=B_size)
+        np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr)
 
     print(' ________ \n\n COMPLETE \n ________\n')
