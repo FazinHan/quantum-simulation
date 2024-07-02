@@ -29,4 +29,4 @@ if __name__=="__main__":
     with open(determine_next_filename('data','npz'), 'wb') as file:
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, B_size=B_size)
 
-    print('\n ________ \n COMPLETE \n ________')
+    print(' ________ \n\n COMPLETE \n ________\n')
