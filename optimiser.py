@@ -55,6 +55,7 @@ def optimiser_main(B, num_rungs = 1, layers = 1):
         prev_states = []
         prev_opt_parameters = []
         eigenvalues = []
+        costs = {}
         ϵ2 = 0
     
     
@@ -71,6 +72,7 @@ def optimiser_main(B, num_rungs = 1, layers = 1):
             # ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
             floquet_state = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
             eigenvalues.append(-h_cut*np.angle(floquet_state.expectation_value(U_T))/T)
+            costs[(num_layers, step)] = cost
         eigenvalues = np.array(eigenvalues)
         eigenvalues.sort()
         singlet = eigenvalues[0]
@@ -78,4 +80,4 @@ def optimiser_main(B, num_rungs = 1, layers = 1):
         ti_new = time.perf_counter()
         print(f'{num_layers}-layer circuit computed in {ti_new-ti}s')
         ti = ti_new
-    return B, singlet, triplets
+    return B, singlet, triplets, costs
