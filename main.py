@@ -25,3 +25,5 @@ if __name__=="__main__":
     plt.xlabel('$B/\\Omega$')
     plt.ylabel('$\\epsilon$')
     plt.savefig(determine_next_filename())
+
+    print('\n ________ \n COMPLETE \n ________')
