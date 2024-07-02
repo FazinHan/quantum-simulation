@@ -109,7 +109,7 @@ def hamiltonian_ladder(t, num_rungs, B=2, omega=Ω, J=J, JII=JII):
         
     return operator
 
-def qutip_ladder_hamiltonian(num_rungs, B=2, omega=2.5, J=J, JII=JII):
+def qutip_ladder_hamiltonian(num_rungs, B=2, omega=Ω, J=J, JII=JII):
     '''
     Hamiltonians are created with terms of alternating sides: LRLRLRLR...
     Returns in QuTiP readable (time-dependent) hamiltonian list.
@@ -170,7 +170,7 @@ def unitary_integrator(operator, func, t, args={}):
     return output
 
 def unitary(ham_list, T):
-    return [*[i.expm() for i in ham_list if type(i) != list], *[unitary_integrator(i[0], i[1], T) for i in ham_list if type(i) == list]]
+    return np.sum([*[(-1j*i*T/h_cut).expm() for i in ham_list if type(i) != list], *[unitary_integrator(i[0], i[1], T) for i in ham_list if type(i) == list]])
 
 
 def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_time_steps):
@@ -183,13 +183,13 @@ def unitary_time_evolver(ham, *args, num_qbits, time=T, dt=dt):#num_steps=num_ti
     
     return circuit
 
-def floquetor(hamiltonian, T, **kwargs):
+def floquetor(hamiltonian, T, **kwargs): # ditched
 
     B = kwargs.get('B')
     omega = kwargs.get('omega')
     num_rungs = kwargs.get('rungs')
     
-    ham_list = unitary(hamiltonian(num_rungs, B*omega, omega), T)
+    ham_list = unitary(hamiltonian(num_rungs, B, omega), T)
 
     # print(ham_list[0])
     
@@ -199,6 +199,20 @@ def floquetor(hamiltonian, T, **kwargs):
 
 ### ISOLATED TESTS
 
+if __name__=="__main__1":
+    from qiskit.circuit import Parameter
+    for j in np.linspace(0,3*np.pi):
+        qiskitham = hamiltonian_ladder(j,1)
+        ham = qutip_ladder_hamiltonian(1)
+        qutipham = np.sum([i if type(i) != list else i[0]*(i[1](j, {})) for i in ham])
+        print(qutipham)
+        exit()
+        if not np.allclose(qutipham.full(), qiskitham.to_matrix()):
+            print(qutipham.full())
+            print(qiskitham.to_matrix())
+        else:
+            print(1)
+
 if __name__=="__main__":
    
     import matplotlib.animation as animation
@@ -207,8 +221,7 @@ if __name__=="__main__":
     qiskit_ham, qutip_ham_list = hamiltonian_ladder(t,1).to_matrix(), qutip_ladder_hamiltonian(1)
     # qiskit_ham, qutip_ham_list = hamiltonian_linear(t)
     # qiskit_ham = qiskit_ham.to_matrix()
-    qutip_ham = [i.full() for i in qutip_ham_list if type(i)!=list] + [ (i[0]+i[1](t,{})).full() for i in qutip_ham_list if type(i) == list]
-    qutip_ham = np.sum(qutip_ham,axis=0)
+    qutip_ham = np.sum([i if type(i) != list else i[0]*(i[1](t, {})) for i in qutip_ham_list]).full()
 
     outputs = qiskit_ham.real,qiskit_ham.imag,qutip_ham.real,qutip_ham.imag
     
@@ -218,8 +231,7 @@ if __name__=="__main__":
         # qiskit_ham, qutip_ham_list = hamiltonian_linear(t)
         # qiskit_ham = qiskit_ham.to_matrix()
         qiskit_ham, qutip_ham_list = hamiltonian_ladder(t,1).to_matrix(), qutip_ladder_hamiltonian(1)
-        qiskit_ham, qutip_ham = qiskit_ham, [i.full() for i in qutip_ham_list if type(i)!=list] + [ (i[0]+i[1](t,{})).full() for i in qutip_ham_list if type(i) == list]
-        qutip_ham = np.sum(qutip_ham,axis=0)
+        qiskit_ham, qutip_ham = qiskit_ham, np.sum([i if type(i) != list else i[0]*(i[1](t, {})) for i in qutip_ham_list]).full()
         outputs = qiskit_ham.real,qiskit_ham.imag,qutip_ham.real,qutip_ham.imag
         for idx, array in enumerate(matrices):
             for jdx, matrix in enumerate(array):
@@ -260,3 +272,7 @@ if __name__=="__main__1":
         for i in range(3):
             plt.plot(tlist, time_evo_qutip.expect[i])
         plt.show()
+
+if __name__=="__main__1":
+    unit = unitary(qutip_ladder_hamiltonian(1),np.pi)
+    print(unit.eigenenergies().round(5)/T)
