@@ -32,6 +32,6 @@ if __name__=="__main__":
     fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     plt.savefig(determine_next_filename(folder='outputs'))
 
-    # qiskit_cost_plotter(ls, costs, omega, J, JII)
-    qiskit_penalty_plotter(ls, penalties, omega, J, JII)
+    qiskit_cost_plotter(ls, costs, omega, J, JII)
+    # qiskit_penalty_plotter(ls, penalties, omega, J, JII)
     plt.savefig(determine_next_filename(folder='outputs'))
