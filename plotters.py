@@ -17,7 +17,7 @@ def qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII, plot_singlets=T
         ax.plot(B_arr/omega, triplets[:,i],'.',label='VQE')
     # ax.set_xlim(*B_range)
     
-def qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII):
+def qiskit_cost_plotter(ls, costs, omega, J, JII):
     # costs plotter
     fig2, axs = plt.subplots(np.unique(ls[:,0]).size,1) # number of layers is determined
     for idx, n in enumerate(ls[:,0]):
@@ -25,11 +25,25 @@ def qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII):
         try:
             axs[idx].plot(ls[locs][:,1], costs[locs],'.')
             axs[idx].set_xlabel(f'layer {n[0]} steps')
-            axs[idx].set_ylabel('cost')
+            axs[idx].set_ylabel('penalty')
         except TypeError:
             axs.plot(ls[locs][:,1], costs[locs],'.')
             axs.set_xlabel('steps')
             axs.set_ylabel('costs')
     fig2.tight_layout()
     fig2.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-    
+
+def qiskit_penalty_plotter(ls, costs, omega, J, JII):
+    fig3, axs = plt.subplots(np.unique(ls[:,0]).size,1) # number of layers is determined
+    for idx, n in enumerate(ls[:,0]):
+        locs = np.where(ls[:,0]==n)
+        try:
+            axs[idx].plot(ls[locs][:,1], costs[locs],'.')
+            axs[idx].set_xlabel(f'layer {n[0]} steps')
+            axs[idx].set_ylabel('penalty')
+        except TypeError:
+            axs.plot(ls[locs][:,1], costs[locs],'.')
+            axs.set_xlabel('steps')
+            axs.set_ylabel('penalty')
+    fig3.tight_layout()
+    fig3.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
