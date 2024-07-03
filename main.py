@@ -11,7 +11,7 @@ B_size = 100
 B_arr = np.linspace(0,10,B_size)*omega
 singlets = {}
 triplets = {}
-costs = {}
+costs = []
 
 if __name__=="__main__":
     with ProcessPoolExecutor(100) as exe:
