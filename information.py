@@ -52,7 +52,7 @@ def penalty(parameters, U_T, ansatz, prev_states, step, betas, estimator, hamilt
 
     if step > 1:
         overlaps = calculate_overlaps(ansatz, prev_states, parameters, estimator)
-        return overlaps
+        return np.sum(overlaps)
     else:
         return 0
 
