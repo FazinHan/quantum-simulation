@@ -5,6 +5,7 @@ from concurrent.futures import ProcessPoolExecutor
 from optimiser import optimiser_main
 from information import determine_next_filename
 from physics import Ω as omega
+from physics import J, JII
 
 B_size = 100
 
@@ -32,13 +33,15 @@ if __name__=="__main__":
 
     ls, costs = zip(*sorted(costs.items()))
     fig, axs = plt.subplots(np.unique(ls[:,0]).size,1)
+    fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J||={JII}$')
     for idx, n in enumerate(np.unique(ls[:,0])):
         locs = np.where(ls[:,0]==n)
         axs[idx].plot(ls[locs][:,1], costs[locs])
+    fig.tight_layout()
     plt.savefig(determine_next_filename())
     
     
-    with open(determine_next_filename('data','npz'), 'wb') as file:
+    with open(determine_next_filename('dimer','data','npz'), 'wb') as file:
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step)
 
     print(' ________ \n\n COMPLETE \n ________\n')
