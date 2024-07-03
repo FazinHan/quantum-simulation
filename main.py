@@ -27,6 +27,7 @@ if __name__=="__main__":
     B_arr, triplets = zip(*sorted(triplets.items()))
     singlets = np.array(singlets)
     triplets = np.array(triplets)
+    ls = np.array(ls)
     plt.plot(B_arr, singlets,'.')
     for i in range(3):
         plt.plot(B_arr, triplets[:,i],'.')
