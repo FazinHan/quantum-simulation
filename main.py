@@ -6,6 +6,7 @@ from physics import Ω as omega
 from physics import J, JII, B_range
 from information import determine_next_filename
 import matplotlib.pyplot as plt
+from plotters import qiskit_cost_plotter, qiskit_plotter, classical_plotter
 
 B_size = 25
 
