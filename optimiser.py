@@ -84,8 +84,8 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
             
             floquet_state = Statevector.from_instruction(curr_state)
             eigenvalues.append(-h_cut*np.angle(floquet_state.expectation_value(U_T))/T)
-            costs.append([num_layers,cost])
-            layer_step.append([num_layers, step])
+            costs.append(cost)
+            layer_step.append(step)
 
             overlap = penalty(prev_opt_parameters, U_T, ansatz, prev_states, step, betas, estimator, observable)
             penalties.append(overlap)
