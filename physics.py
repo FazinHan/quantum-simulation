@@ -223,7 +223,7 @@ if __name__=="__main__":
     import matplotlib.animation as animation
     
     t = 0
-    qiskit_ham, qutip_ham_list = hamiltonian_ladder(t,1).to_matrix(), qutip_ladder_hamiltonian(1)
+    qiskit_ham, qutip_ham_list = hamiltonian_ladder(t,2).to_matrix(), qutip_ladder_hamiltonian(2)
     # qiskit_ham, qutip_ham_list = hamiltonian_linear(t)
     # qiskit_ham = qiskit_ham.to_matrix()
     qutip_ham = np.sum([i if type(i) != list else i[0]*(i[1](t, {})) for i in qutip_ham_list]).full()
@@ -235,14 +235,14 @@ if __name__=="__main__":
     def update(t):
         # qiskit_ham, qutip_ham_list = hamiltonian_linear(t)
         # qiskit_ham = qiskit_ham.to_matrix()
-        qiskit_ham, qutip_ham_list = hamiltonian_ladder(t,1).to_matrix(), qutip_ladder_hamiltonian(1)
+        qiskit_ham, qutip_ham_list = hamiltonian_ladder(t,2).to_matrix(), qutip_ladder_hamiltonian(2)
         qiskit_ham, qutip_ham = qiskit_ham, np.sum([i if type(i) != list else i[0]*(i[1](t, {})) for i in qutip_ham_list]).full()
         outputs = qiskit_ham.real,qiskit_ham.imag,qutip_ham.real,qutip_ham.imag
         for idx, array in enumerate(matrices):
             for jdx, matrix in enumerate(array):
                 matrix.set_array(outputs[2*idx+jdx])
     fig, axs = plt.subplots(2,2)
-    matrices = [[axs[i,j].matshow(outputs[2*i+j]) for j in range(2)] for i in range(2)]
+    matrices = [[axs[i,j].matshow(outputs[2*i+j],cmap='seismic') for j in range(2)] for i in range(2)]
     ani = animation.FuncAnimation(fig, update, frames=150, interval=50*3)
     axs[0,0].set_ylabel('qiskit ham')
     axs[1,0].set_ylabel('qutip ham')

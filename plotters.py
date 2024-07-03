@@ -6,15 +6,15 @@ def classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII, plot_singl
     for i in range(2**num_qubits):
         if i==0 and not plot_singlets:
             continue
-        ax.plot(B_arr/omega, energies[:,i],'b--',ms=1.2)
+        ax.plot(B_arr/omega, energies[:,i],'b--',ms=1.2,label='exact')
     # ax.set_xlim(*B_range)
 
 def qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII, plot_singlets=True):
     # qiskit result plotter
     if plot_singlets:
-        ax.plot(B_arr/omega, singlets,'.')
+        ax.plot(B_arr/omega, singlets,'.',label='VQE')
     for i in range(3):
-        ax.plot(B_arr/omega, triplets[:,i],'.')
+        ax.plot(B_arr/omega, triplets[:,i],'.',label='VQE')
     # ax.set_xlim(*B_range)
     
 def qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII):

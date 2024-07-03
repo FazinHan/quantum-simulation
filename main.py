@@ -47,7 +47,7 @@ if __name__=="__main__":
         data = np.load(file)
         B_arr = data['B_arr']
         energies = data['energies']
-        print(B_arr[-1])
+        # print(B_arr[-1])
     classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII, plot_singlets=False)
 
     with open(determine_next_filename('dimer','npz','data',exists=True),'rb') as file:
@@ -56,7 +56,7 @@ if __name__=="__main__":
         singlets = data['singlets']
         triplets = data['triplets']
         ls = data['layer_step']
-        print(B_arr[-1])
+        # print(B_arr[-1])
         costs = data['costs']
     qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
     
