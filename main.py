@@ -5,6 +5,7 @@ from optimiser import optimiser_main
 from physics import Ω as omega
 from physics import J, JII, B_range
 from information import determine_next_filename
+import matplotlib.pyplot as plt
 
 B_size = 25
 
@@ -30,6 +31,7 @@ if __name__=="__main__":
     costs = np.array(costs)
 
     qiskit_plotter(B_arr, singlets, triplets, omega, J, JII)
+    plt.savefig(determine_next_filename())
 
     filename = determine_next_filename('dimer','data','npz')
     with open(filename, 'wb') as file:
@@ -37,5 +39,6 @@ if __name__=="__main__":
         print('data saved in',filename)
 
     qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII)
+    plt.savefig(determine_next_filename())
     
     print(' ________ \n\n COMPLETE \n ________\n')

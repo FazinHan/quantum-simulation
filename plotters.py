@@ -1,14 +1,10 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from information import determine_next_filename as filename
-
 def classical_plotter(num_qubits, B_arr, omega, energies, J, JII):
     for i in range(2**num_qubits):
         plt.plot(B_arr/omega, energies[:,i],'b.',ms=1.2)
     plt.xlabel('$B/\\Omega$')
     plt.ylabel('$\\varepsilon$')
     plt.title(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-    plt.savefig(filename())
+    
 
 def qiskit_plotter(B_arr, singlets, triplets, omega, J, JII):
     # qiskit result plotter
@@ -18,7 +14,7 @@ def qiskit_plotter(B_arr, singlets, triplets, omega, J, JII):
     plt.xlabel('$B/\\Omega$')
     plt.ylabel('$\\epsilon$')
     plt.title(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-    plt.savefig(filename())
+    
 
 def qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII):
     # costs plotter
@@ -35,4 +31,4 @@ def qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII):
             axs.set_ylabel('costs')
     fig.tight_layout()
     fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-    plt.savefig(filename())
+    

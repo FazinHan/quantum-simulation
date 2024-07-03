@@ -5,6 +5,7 @@ import numpy as np
 from physics import Ω as omega
 from physics import J, JII, B_range
 from plotters import classical_plotter 
+import matplotlib.pyplot as plt
 
 num_rungs = 1
 num_layers = 1
@@ -33,4 +34,5 @@ for B in B_arr:
 energies = np.array(energies)
 
 classical_plotter(num_qubits, B_arr, omega, energies, J, JII)
+plt.savefig(determine_next_filename())
 # plt.show()
