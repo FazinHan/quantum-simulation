@@ -8,15 +8,16 @@ from information import determine_next_filename
 import matplotlib.pyplot as plt
 from plotters import qiskit_cost_plotter, qiskit_plotter, classical_plotter
 
-B_size = 25
-
-B_arr = np.linspace(*B_range,B_size)*omega
-singlets = {}
-triplets = {}
-costs = []
-ls = []
-
 if __name__=="__main__":
+
+    B_size = 25
+
+    B_arr = np.linspace(*B_range,B_size)*omega
+    singlets = {}
+    triplets = {}
+    costs = []
+    ls = []
+
     with ProcessPoolExecutor(10) as exe:
         mapper = exe.map(optimiser_main, B_arr)
     for B, singlet, triplet, cost, layer_step in mapper:
@@ -36,16 +37,28 @@ if __name__=="__main__":
     with open(filename, 'wb') as file:
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step)
         print('data saved in',filename)
+    
+    print(' ________ \n\n COMPLETE \n ________\n')
 
-    qiskit_plotter(B_arr, singlets, triplets, omega, J, JII)
-    with open(determine_next_filename('qutip_data','npz',exists=True),'rb') as file:
+if __name__=="__main__":
+    fig, ax = plt.subplots()
+    with open(determine_next_filename('dimer','npz','data',exists=True),'rb') as file:
+        data = np.load(file)
+        B_arr = data['B_arr']
+        singlets = data['singlets']
+        triplets = data['triplets']
+        ls = data['layer_step']
+        costs = data['costs']
+    qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
+    with open(determine_next_filename('qutip_data','npz','data',exists=True),'rb') as file:
         data = np.load(file)
         B_arr = data['B_arr']
         energies = data['energies']
-    classical_plotter(num_qubits, B_arr, omega, energies, J, JII)
-    plt.savefig(determine_next_filename())
+    classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII)
+    ax.set_xlabel('$B/\\Omega$')
+    ax.set_ylabel('$\\epsilon$')
+    fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
+    plt.savefig(determine_next_filename(folder='outputs'))
 
     qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII)
-    plt.savefig(determine_next_filename())
-    
-    print(' ________ \n\n COMPLETE \n ________\n')
+    plt.savefig(determine_next_filename(folder='outputs'))

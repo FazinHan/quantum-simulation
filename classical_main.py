@@ -31,9 +31,11 @@ for B in B_arr:
 
 energies = np.array(energies)
 
-with open(determine_next_filename('qutip_data','npz'),'wb') as file:
+with open(determine_next_filename('qutip_data','npz','data'),'wb') as file:
     np.savez(file, B_arr=B_arr, energies=energies)
 
-classical_plotter(num_qubits, B_arr, omega, energies, J, JII)
-plt.savefig(determine_next_filename('qutip'))
+fig, ax = plt.subplots()
+classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII)
+fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
+plt.savefig(determine_next_filename('qutip',folder='outputs'))
 # plt.show()

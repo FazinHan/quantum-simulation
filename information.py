@@ -74,6 +74,7 @@ def determine_next_filename(fname='output',filetype='png',folder='',exists=False
     import os
     while os.path.isfile(os.path.join('.',folder,filename(num))):
         num += 1
-    if exists:
-        num -= 1
+    else:
+        if exists:
+            num -= 1
     return os.path.join('.',folder,filename(num))
