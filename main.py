@@ -38,7 +38,7 @@ if __name__=="__main__":
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step)
 
     fig, axs = plt.subplots(np.unique(ls[:,0]).size,1) # number of layers is determined
-    fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J||={JII}$')
+    fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     for idx, n in enumerate(ls[:,0]):
         locs = np.where(ls[:,0]==n)
         axs[idx].plot(ls[locs][:,1], costs[locs])

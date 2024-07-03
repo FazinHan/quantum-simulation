@@ -4,14 +4,13 @@ from physics import floquetor
 from information import determine_next_filename as filename
 import numpy as np
 import matplotlib.pyplot as plt
+from physics import Ω as omega
+from physics import J, JII
 
 num_rungs = 1
 num_layers = 1
 num_qubits = 2*num_rungs
 
-omega = 10
-J = 1
-JII = 1
 T = 2*np.pi/omega
 
 state = [basis(2,0)]*num_qubits
@@ -38,6 +37,6 @@ for i in range(2**num_qubits):
     plt.plot(B_arr/omega, energies[:,i],'b.',ms=1.2)
 plt.xlabel('$B/\\Omega$')
 plt.ylabel('$\\varepsilon$')
-plt.title(f'$\\Omega={omega}$')
+plt.title(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
 plt.savefig(filename())
 # plt.show()

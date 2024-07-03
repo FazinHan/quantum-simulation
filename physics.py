@@ -65,7 +65,7 @@ def hamiltonian_ladder(t, num_rungs, B=2, omega=Ω, J=J, JII=JII):
             plist_II_L = creator[:]
             
             plist_I_[r] = j+j
-            coeffs.append(J)
+            coeffs.append(J/4)
             ham.append(''.join(plist_I_))
 
             try:
@@ -92,16 +92,16 @@ def hamiltonian_ladder(t, num_rungs, B=2, omega=Ω, J=J, JII=JII):
         tlist_1[r] = 'XI'
         ham.append(''.join(tlist_1))
         ham.append(''.join(tlist_2))
-        coeffs.append(B * np.cos( omega * t))
-        coeffs.append(B * np.cos( omega * t))
+        coeffs.append(B/2 * np.cos( omega * t))
+        coeffs.append(B/2 * np.cos( omega * t))
 
         tlist_3[r] = 'YI'
         tlist_4[r] = 'IY'
         # print(tlist_1)
         ham.append(''.join(tlist_3))
         ham.append(''.join(tlist_4))
-        coeffs.append(B * np.sin( omega * t))
-        coeffs.append(B * np.sin( omega * t))
+        coeffs.append(B/2 * np.sin( omega * t))
+        coeffs.append(B/2 * np.sin( omega * t))
 
     operator = SparsePauliOp(ham, coeffs)
 
@@ -121,16 +121,16 @@ def qutip_ladder_hamiltonian(num_rungs, B=2, omega=Ω, J=J, JII=JII):
     H0 = []
     H1 = []
     def H1_t(t, args): # may have to use 'eval' instead to return with B and omega subsituted?
-        return args.get('B',B) * np.cos(args.get('omega',omega) * t)
+        return args.get('B',B)/2 * np.cos(args.get('omega',omega) * t)
     H2 = []
     def H2_t(t, args):
-        return args.get('B',B) * np.sin(args.get('omega',omega) * t)
+        return args.get('B',B)/2 * np.sin(args.get('omega',omega) * t)
     for sigma in [sigmax(), sigmay(), sigmaz()]:
         for r in range(num_rungs):
             op = pauli_list[:]
             op[2*r] = sigma
             op[2*r+1] = sigma
-            H0.append(J*tensor(op))
+            H0.append(J/4*tensor(op))
             try:
                 opL = pauli_list[:]
                 opL[2*(r+1)] = sigma
