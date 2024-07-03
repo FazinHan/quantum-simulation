@@ -28,6 +28,7 @@ if __name__=="__main__":
     singlets = np.array(singlets)
     triplets = np.array(triplets)
     ls = np.array(ls)
+    costs = np.array(costs)
     plt.plot(B_arr, singlets,'.')
     for i in range(3):
         plt.plot(B_arr, triplets[:,i],'.')
