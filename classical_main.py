@@ -3,13 +3,11 @@ from physics import qutip_ladder_hamiltonian as hamiltonian
 from physics import floquetor
 import numpy as np
 from physics import Ω as omega
-from physics import J, JII, B_range, num_rungs, num_layers, num_qubits
+from physics import J, JII, B_range, num_rungs, num_layers, num_qubits, T
 from plotters import classical_plotter 
 import matplotlib.pyplot as plt
 from information import determine_next_filename
 
-
-T = 2*np.pi/omega
 
 state = [basis(2,0)]*num_qubits
 state[0] = basis(2,1)

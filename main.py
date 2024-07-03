@@ -42,21 +42,27 @@ if __name__=="__main__1":
 
 if __name__=="__main__":
     fig, ax = plt.subplots()
+    
+    with open(determine_next_filename('qutip_data','npz','data',exists=True),'rb') as file:
+        data = np.load(file)
+        B_arr = data['B_arr']
+        energies = data['energies']
+        print(B_arr[-1])
+    classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII, plot_singlets=False)
+
     with open(determine_next_filename('dimer','npz','data',exists=True),'rb') as file:
         data = np.load(file)
         B_arr = data['B_arr']
         singlets = data['singlets']
         triplets = data['triplets']
         ls = data['layer_step']
+        print(B_arr[-1])
         costs = data['costs']
     qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
-    with open(determine_next_filename('qutip_data','npz','data',exists=True),'rb') as file:
-        data = np.load(file)
-        B_arr = data['B_arr']
-        energies = data['energies']
-    classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII)
+    
     ax.set_xlabel('$B/\\Omega$')
     ax.set_ylabel('$\\epsilon$')
+    # ax.set_xlim(0,.1)
     fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     plt.savefig(determine_next_filename(folder='outputs'))
 
