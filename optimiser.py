@@ -73,7 +73,11 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
             
     
             # ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
-            floquet_state = Statevector.from_instruction(ansatz.assign_parameters(prev_opt_parameters))
+            curr_state = ansatz.assign_parameters(prev_opt_parameters)
+            
+            prev_states.append(curr_state)
+            
+            floquet_state = Statevector.from_instruction(curr_state)
             eigenvalues.append(-h_cut*np.angle(floquet_state.expectation_value(U_T))/T)
             costs.append(cost)
             layer_step.append([num_layers, step])

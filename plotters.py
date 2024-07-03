@@ -24,14 +24,14 @@ def qiskit_cost_plotter(ls, costs, omega, J, JII):
         locs = np.where(ls[:,0]==n)
         try:
             axs[idx].plot(ls[locs][:,1], costs[locs],'.')
-            axs[idx].set_xlabel(f'layer {n[0]} steps')
+            axs[idx].set_xlabel(f'layer {n[0]} state')
             axs[idx].set_ylabel('penalty')
         except TypeError:
             axs.plot(ls[locs][:,1], costs[locs],'.')
-            axs.set_xlabel('steps')
+            axs.set_xlabel('state')
             axs.set_ylabel('costs')
-    fig2.tight_layout()
     fig2.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
+    fig2.tight_layout()
 
 def qiskit_penalty_plotter(ls, costs, omega, J, JII):
     fig3, axs = plt.subplots(np.unique(ls[:,0]).size,1) # number of layers is determined
@@ -39,11 +39,11 @@ def qiskit_penalty_plotter(ls, costs, omega, J, JII):
         locs = np.where(ls[:,0]==n)
         try:
             axs[idx].plot(ls[locs][:,1], costs[locs],'.')
-            axs[idx].set_xlabel(f'layer {n[0]} steps')
+            axs[idx].set_xlabel(f'layer {n[0]} state')
             axs[idx].set_ylabel('penalty')
         except TypeError:
             axs.plot(ls[locs][:,1], costs[locs],'.')
-            axs.set_xlabel('steps')
+            axs.set_xlabel('state')
             axs.set_ylabel('penalty')
-    fig3.tight_layout()
     fig3.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
+    fig3.tight_layout()

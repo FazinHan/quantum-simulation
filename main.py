@@ -1,5 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from information import determine_next_filename
+from physics import Ω as omega
+from physics import J, JII, B_range, num_rungs, num_layers, num_qubits
+from plotters import *
 
 if __name__=="__main__":
     fig, ax = plt.subplots()
