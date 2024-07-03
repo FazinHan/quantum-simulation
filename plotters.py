@@ -19,10 +19,11 @@ def qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII, plot_singlets=T
     
 def qiskit_cost_plotter(B_arr, costs, omega, J, JII):
     # costs plotter
-    fig2, axs = plt.subplots(1,costs.shape[1]) # number of layers is determined
+    fig2, axs = plt.subplots(costs.shape[1],1) # number of layers is determined
     for idx, ax in enumerate(axs):        
         ax.plot(B_arr/omega, costs[:,idx],'.')
         ax.set_xlabel('$B/\\Omega$')
         ax.set_ylabel('costs')
     fig2.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
+    fig2.set_figheight(7*2)
     fig2.tight_layout()
