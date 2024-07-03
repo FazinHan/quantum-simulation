@@ -3,14 +3,11 @@ from physics import qutip_ladder_hamiltonian as hamiltonian
 from physics import floquetor
 import numpy as np
 from physics import Ω as omega
-from physics import J, JII, B_range
+from physics import J, JII, B_range, num_rungs, num_layers, num_qubits
 from plotters import classical_plotter 
 import matplotlib.pyplot as plt
 from information import determine_next_filename
 
-num_rungs = 1
-num_layers = 1
-num_qubits = 2*num_rungs
 
 T = 2*np.pi/omega
 
@@ -34,9 +31,9 @@ for B in B_arr:
 
 energies = np.array(energies)
 
-with open(determine_next_filename('data','npz'),'wb') as file:
-    np.savez(file, B_arr=B_arr, f_energies=f_energies)
+with open(determine_next_filename('qutip_data','npz'),'wb') as file:
+    np.savez(file, B_arr=B_arr, energies=energies)
 
 classical_plotter(num_qubits, B_arr, omega, energies, J, JII)
-plt.savefig(determine_next_filename(filename='qutip'))
+plt.savefig(determine_next_filename('qutip'))
 # plt.show()

@@ -3,7 +3,7 @@ import os
 from concurrent.futures import ProcessPoolExecutor
 from optimiser import optimiser_main
 from physics import Ω as omega
-from physics import J, JII, B_range
+from physics import J, JII, B_range, num_rungs, num_layers, num_qubits
 from information import determine_next_filename
 import matplotlib.pyplot as plt
 from plotters import qiskit_cost_plotter, qiskit_plotter, classical_plotter
@@ -31,13 +31,20 @@ if __name__=="__main__":
     ls = np.array(ls)
     costs = np.array(costs)
 
-    qiskit_plotter(B_arr, singlets, triplets, omega, J, JII)
-    plt.savefig(determine_next_filename())
-
+    
     filename = determine_next_filename('dimer','npz')
     with open(filename, 'wb') as file:
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step)
         print('data saved in',filename)
+
+    qiskit_plotter(B_arr, singlets, triplets, omega, J, JII)
+    os.system('python classical_main.py')
+    with open(determine_next_filename('qutip_data','npz',exists=True),'rb') as file:
+        data = np.load(file)
+        B_arr = data['B_arr']
+        energies = data['energies']
+    classical_plotter(num_qubits, B_arr, omega, energies, J, JII)
+    plt.savefig(determine_next_filename())
 
     qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII)
     plt.savefig(determine_next_filename())

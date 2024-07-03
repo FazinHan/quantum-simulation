@@ -8,6 +8,10 @@ from qutip import tensor, sigmax, sigmay, sigmaz, qeye, FloquetBasis
 All tests show hamiltonians are not equivalent somehow.
 '''
 
+num_rungs = 1
+num_layers = 1
+num_qubits = 2*num_rungs
+
 Ω = 2.5
 h_cut = 1
 
