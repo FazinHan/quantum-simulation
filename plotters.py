@@ -19,16 +19,9 @@ def qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII, plot_singlets=T
     
 def qiskit_cost_plotter(ls, costs, omega, J, JII):
     # costs plotter
-    fig2, axs = plt.subplots(np.unique(ls[:,0]).size,1) # number of layers is determined
-    for idx, n in enumerate(ls):
-        locs = np.where(ls[:,0]==n[0])
-        try:
-            axs[idx].plot(ls[locs][:,1], costs[locs,1:],'.')
-            axs[idx].set_xlabel(f'layer {n[0]} state label')
-            axs[idx].set_ylabel('costs')
-        except TypeError:
-            axs.plot(ls[locs][:,1], costs[locs],'.')
-            axs.set_xlabel('state label')
-            axs.set_ylabel('costs')
+    fig2, axs = plt.subplots() # number of layers is determined
+    axs.plot(ls, costs,'.')
+    axs.set_xlabel('state label')
+    axs.set_ylabel('costs')
     fig2.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     fig2.tight_layout()

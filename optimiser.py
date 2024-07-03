@@ -30,9 +30,7 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
     matrix = np.zeros((2**num_qubits, 2**num_qubits))
     matrix[0,0] = 1
     observable = SparsePauliOp.from_operator(matrix)
-    
-    costs = []
-    
+        
     t0 = time.perf_counter()
     ti = t0
     for num_layers in layers:
@@ -61,6 +59,7 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         prev_opt_parameters = []
         eigenvalues = []
         layer_step = []
+        costs = []
         ϵ2 = 0
         penalties = []
 
@@ -70,20 +69,18 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         for step in range(1, k + 1):
             
             result = minimize_parallel(cost_func_vqd, x0, args=(U_T, ansatz, prev_states, step, betas, estimator, observable))#, method="bfgs")
-            # print(hamiltonian_ladder(np.pi,4,1))
             
             prev_opt_parameters = result.x
             
-            cost = result.fun
+            cost = result.fun # np.float64
             
-    
-            # ϵ2 += convergence_parameter(ansatz, prev_opt_parameters, U_T)
             curr_state = ansatz.assign_parameters(prev_opt_parameters)
             
             prev_states.append(curr_state)
             
             floquet_state = Statevector.from_instruction(curr_state)
             eigenvalues.append(-h_cut*np.angle(floquet_state.expectation_value(U_T))/T)
+            
             costs.append(cost)
             layer_step.append(step)
 
@@ -92,7 +89,6 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         
         eigenvalues = np.sort(np.array(eigenvalues))
         penalties = np.array(penalties)
-        # eigenvalues.sort()
         singlet = eigenvalues[0]
         triplets = eigenvalues[1:]
         ti_new = time.perf_counter()
