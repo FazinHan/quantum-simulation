@@ -43,7 +43,4 @@ if __name__=="__main__":
     fig.tight_layout()
     plt.savefig(determine_next_filename())
     
-    
-    
-
     print(' ________ \n\n COMPLETE \n ________\n')
