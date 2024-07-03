@@ -83,6 +83,6 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         ti_new = time.perf_counter()
         costs = np.array(costs)
         layer_step = np.array(layer_step)
-        print(f'{num_layers}-layer circuit computed in {ti_new-ti}s')
+        print(f'{num_layers}-layer circuit computed in {np.round(ti_new-ti, 3)}s')
         ti = ti_new
     return B, singlet, triplets, costs, layer_step
