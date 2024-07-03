@@ -33,10 +33,10 @@ if __name__=="__main__":
     
     name = determine_next_filename(folder='outputs')
     plt.savefig(name)
-    print(name, 'saved')
+    print(name, 'created')
 
     qiskit_cost_plotter(ls, costs, omega, J, JII)
     # qiskit_penalty_plotter(ls, penalties, omega, J, JII)
     name = determine_next_filename(folder='outputs')
     plt.savefig(name)
-    print(name, 'saved')
+    print(name, 'created')
