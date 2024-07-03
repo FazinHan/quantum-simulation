@@ -30,8 +30,13 @@ if __name__=="__main__":
     ax.set_ylabel('$\\epsilon$')
     # ax.set_xlim(0,.1)
     fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-    plt.savefig(determine_next_filename(folder='outputs'))
+    
+    name = determine_next_filename(folder='outputs')
+    plt.savefig(name)
+    print(name, 'saved')
 
     qiskit_cost_plotter(ls, costs, omega, J, JII)
     # qiskit_penalty_plotter(ls, penalties, omega, J, JII)
-    plt.savefig(determine_next_filename(folder='outputs'))
+    name = determine_next_filename(folder='outputs')
+    plt.savefig(name)
+    print(name, 'saved')
