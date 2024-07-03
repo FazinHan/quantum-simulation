@@ -19,7 +19,7 @@ if __name__=="__main__":
     with ProcessPoolExecutor(10) as exe:
         mapper = exe.map(optimiser_main, B_arr)
     for B, singlet, triplet, cost, layer_step in mapper:
-        singlepython -c "print('\007')"ts[B] = singlet
+        singlets[B] = singlet
         triplets[B] = triplet
         costs.append(cost)
         ls.append(layer_step)
