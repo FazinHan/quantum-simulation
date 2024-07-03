@@ -25,8 +25,9 @@ if __name__=="__main__":
         ls.append(layer_step)
     B_arr, singlets = zip(*sorted(singlets.items()))
     B_arr, triplets = zip(*sorted(triplets.items()))
-    plt.plot(B_arr, singlets,'.')
+    singlets = np.array(singlets)
     triplets = np.array(triplets)
+    plt.plot(B_arr, singlets,'.')
     for i in range(3):
         plt.plot(B_arr, triplets[:,i],'.')
     plt.xlabel('$B/\\Omega$')
