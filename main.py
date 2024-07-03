@@ -19,6 +19,7 @@ if __name__=="__main__":
         ls = data['layer_step']
         # print(B_arr[-1])
         costs = data['costs']
+        penalties = data['penalties']
     qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
     
     ax.set_xlabel('$B/\\Omega$')

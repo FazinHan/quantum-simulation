@@ -53,11 +53,8 @@ def penalty(parameters, U_T, ansatz, prev_states, step, betas, estimator, hamilt
     if step > 1:
         overlaps = calculate_overlaps(ansatz, prev_states, parameters, estimator)
         return overlaps
-        total_cost = np.sum([np.real(betas[state] * overlap**2) for state, overlap in enumerate(overlaps)])
-
-    estimator_result = estimator_job.result()[0]
-
-    value = estimator_result.data.evs[0] - total_cost
+    else:
+        return 0
 
 
 def calculate_overlaps(ansatz, prev_circuits, parameters, estimator):

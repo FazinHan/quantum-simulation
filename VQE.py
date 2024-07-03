@@ -16,26 +16,29 @@ if __name__=="__main__":
     singlets = {}
     triplets = {}
     costs = []
+    penalties = []
     ls = []
 
     with ProcessPoolExecutor(10) as exe:
         mapper = exe.map(optimiser_main, B_arr)
-    for B, singlet, triplet, cost, layer_step in mapper:
+    for B, singlet, triplet, cost, layer_step, penalty in mapper:
         singlets[B] = singlet
         triplets[B] = triplet
         costs.append(cost)
         ls.append(layer_step)
+        penalties.append(penalty)
     B_arr, singlets = zip(*sorted(singlets.items()))
     B_arr, triplets = zip(*sorted(triplets.items()))
     singlets = np.array(singlets)
     triplets = np.array(triplets)
+    penalties = np.array(penalties)
     ls = np.array(ls)
     costs = np.array(costs)
 
     
     filename = determine_next_filename('dimer','npz')
     with open(filename, 'wb') as file:
-        np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step)
+        np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step, penalties=penalties)
         print('data saved in',filename)
     
     print(' ________ \n\n COMPLETE \n ________\n')
