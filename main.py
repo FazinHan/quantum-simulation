@@ -6,7 +6,7 @@ from physics import Ω as omega
 from physics import J, JII, B_range
 from information import determine_next_filename
 
-B_size = 100
+B_size = 25
 
 B_arr = np.linspace(*B_range,B_size)*omega
 singlets = {}
