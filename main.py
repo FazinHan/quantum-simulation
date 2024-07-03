@@ -21,7 +21,6 @@ if __name__=="__main__":
         singlets = data['singlets']
         triplets = data['triplets']
         ls = data['layer_step']
-        # print(B_arr[-1])
         costs = data['costs']
         penalties = data['penalties']
     qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
@@ -36,7 +35,7 @@ if __name__=="__main__":
     plt.savefig(name)
     print(name, 'created')
 
-    qiskit_cost_plotter(ls, costs, omega, J, JII)
+    qiskit_cost_plotter(B_arr, costs, omega, J, JII)
     # qiskit_cost_plotter(ls, penalties, omega, J, JII)
     name = determine_next_filename(folder='outputs')
     plt.savefig(name)

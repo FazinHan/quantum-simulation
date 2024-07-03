@@ -17,11 +17,12 @@ def qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII, plot_singlets=T
         ax.plot(B_arr/omega, triplets[:,i],'.',label='VQE')
     # ax.set_xlim(*B_range)
     
-def qiskit_cost_plotter(ls, costs, omega, J, JII):
+def qiskit_cost_plotter(B_arr, costs, omega, J, JII):
     # costs plotter
-    fig2, axs = plt.subplots() # number of layers is determined
-    axs.plot(ls, costs,'.')
-    axs.set_xlabel('state label')
-    axs.set_ylabel('costs')
+    fig2, axs = plt.subplots(1,costs.shape[1]) # number of layers is determined
+    for idx, ax in enumerate(axs):        
+        ax.plot(B_arr/omega, costs[:,idx],'.')
+        ax.set_xlabel('$B/\\Omega$')
+        ax.set_ylabel('costs')
     fig2.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     fig2.tight_layout()
