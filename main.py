@@ -13,7 +13,7 @@ if __name__=="__main__":
         B_arr = data['B_arr']
         energies = data['energies']
         # print(B_arr[-1])
-    classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII, plot_singlets=False)
+    classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII, plot_singlets=True)
 
     with open(determine_next_filename('dimer','npz','data',exists=True),'rb') as file:
         data = np.load(file)
@@ -30,6 +30,7 @@ if __name__=="__main__":
     ax.set_ylabel('$\\epsilon$')
     # ax.set_xlim(0,.1)
     fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
+    fig.tight_layout()
     
     name = determine_next_filename(folder='outputs')
     plt.savefig(name)

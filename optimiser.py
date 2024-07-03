@@ -7,11 +7,14 @@ from optimparallel import minimize_parallel
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-estimator = Estimator()
 
 from physics import hamiltonian_ladder, unitary_time_evolver, T, h_cut
 from ansatzor import ansatz_circuit_ladder
 from information import cost_func_vqd, convergence_parameter, determine_next_filename, penalty
+
+'''Do not run for more than one layer at a time!'''
+
+estimator = Estimator()
 
 def optimiser_main(B, num_rungs = 1, layers = [1]):
     ### Systeme
@@ -27,6 +30,8 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
     matrix = np.zeros((2**num_qubits, 2**num_qubits))
     matrix[0,0] = 1
     observable = SparsePauliOp.from_operator(matrix)
+    
+    costs = []
     
     t0 = time.perf_counter()
     ti = t0
@@ -55,10 +60,10 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         prev_states = []
         prev_opt_parameters = []
         eigenvalues = []
-        costs = []
         layer_step = []
         ϵ2 = 0
         penalties = []
+
     
     
     # try:
@@ -79,7 +84,7 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
             
             floquet_state = Statevector.from_instruction(curr_state)
             eigenvalues.append(-h_cut*np.angle(floquet_state.expectation_value(U_T))/T)
-            costs.append(cost)
+            costs.append([num_layers,cost])
             layer_step.append([num_layers, step])
 
             overlap = penalty(prev_opt_parameters, U_T, ansatz, prev_states, step, betas, estimator, observable)
@@ -91,8 +96,6 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         singlet = eigenvalues[0]
         triplets = eigenvalues[1:]
         ti_new = time.perf_counter()
-        costs = np.array(costs)
-        layer_step = np.array(layer_step)
         print(f'{num_layers}-layer circuit computed in {np.round(ti_new-ti, 3)}s')
         ti = ti_new
     return B, singlet, triplets, costs, layer_step, penalties
