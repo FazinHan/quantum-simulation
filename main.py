@@ -34,6 +34,7 @@ if __name__=="__main__":
         plt.plot(B_arr, triplets[:,i],'.')
     plt.xlabel('$B/\\Omega$')
     plt.ylabel('$\\epsilon$')
+    plt.title(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     plt.savefig(determine_next_filename())
 
     with open(determine_next_filename('dimer','data','npz'), 'wb') as file:
@@ -43,9 +44,13 @@ if __name__=="__main__":
     for idx, n in enumerate(ls[:,0]):
         locs = np.where(ls[:,0]==n)
         try:
-            axs[idx].plot(ls[locs][:,1], costs[locs])
+            axs[idx].plot(ls[locs][:,1], costs[locs],'.')
+            axs[idx].set_xlabel(f'layer {n[0]} steps')
+            axs[idx].set_ylabel('cost')
         except TypeError:
-            axs.plot(ls[locs][:,1], costs[locs])
+            axs.plot(ls[locs][:,1], costs[locs],'.')
+            axs.set_xlabel('steps')
+            axs.set_ylabel('costs')
     fig.tight_layout()
     fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     plt.savefig(determine_next_filename())
