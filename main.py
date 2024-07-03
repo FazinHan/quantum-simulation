@@ -38,7 +38,6 @@ if __name__=="__main__":
         print('data saved in',filename)
 
     qiskit_plotter(B_arr, singlets, triplets, omega, J, JII)
-    os.system('python classical_main.py')
     with open(determine_next_filename('qutip_data','npz',exists=True),'rb') as file:
         data = np.load(file)
         B_arr = data['B_arr']
