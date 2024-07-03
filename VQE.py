@@ -36,7 +36,7 @@ if __name__=="__main__":
     costs = np.array(costs)
 
     
-    filename = determine_next_filename('dimer','npz')
+    filename = determine_next_filename('dimer','npz','data')
     with open(filename, 'wb') as file:
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step, penalties=penalties)
         print('data saved in',filename)
