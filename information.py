@@ -68,7 +68,7 @@ def calculate_overlaps(ansatz, prev_circuits, parameters, estimator):
     
     return np.array(overlaps)
 
-def determine_next_filename(fname='output',folder='outputs',filetype='png',exists=False):
+def determine_next_filename(fname='output',filetype='png',folder='',exists=False):
     num = 1
     filename = lambda num: f'{fname}{num}.{filetype}'
     import os

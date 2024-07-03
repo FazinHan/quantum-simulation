@@ -34,7 +34,7 @@ if __name__=="__main__":
     qiskit_plotter(B_arr, singlets, triplets, omega, J, JII)
     plt.savefig(determine_next_filename())
 
-    filename = determine_next_filename('dimer','data','npz')
+    filename = determine_next_filename('dimer','npz')
     with open(filename, 'wb') as file:
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step)
         print('data saved in',filename)
