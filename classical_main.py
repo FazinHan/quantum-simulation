@@ -1,11 +1,10 @@
 from qutip import *
 from physics import qutip_ladder_hamiltonian as hamiltonian
 from physics import floquetor
-from information import determine_next_filename as filename
 import numpy as np
-import matplotlib.pyplot as plt
 from physics import Ω as omega
 from physics import J, JII, B_range
+from plotters import classical_plotter 
 
 num_rungs = 1
 num_layers = 1
@@ -33,10 +32,5 @@ for B in B_arr:
 
 energies = np.array(energies)
 
-for i in range(2**num_qubits):
-    plt.plot(B_arr/omega, energies[:,i],'b.',ms=1.2)
-plt.xlabel('$B/\\Omega$')
-plt.ylabel('$\\varepsilon$')
-plt.title(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-plt.savefig(filename())
+classical_plotter(num_qubits, B_arr, omega, energies, J, JII)
 # plt.show()

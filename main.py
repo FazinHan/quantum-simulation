@@ -1,11 +1,10 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import os
 from concurrent.futures import ProcessPoolExecutor
 from optimiser import optimiser_main
-from information import determine_next_filename
 from physics import Ω as omega
 from physics import J, JII, B_range
+from information import determine_next_filename
 
 B_size = 100
 
@@ -30,33 +29,13 @@ if __name__=="__main__":
     ls = np.array(ls)
     costs = np.array(costs)
 
-    # qiskit result plotter
-    plt.plot(B_arr, singlets,'.')
-    for i in range(3):
-        plt.plot(B_arr, triplets[:,i],'.')
-    plt.xlabel('$B/\\Omega$')
-    plt.ylabel('$\\epsilon$')
-    plt.title(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-    plt.savefig(determine_next_filename())
+    qiskit_plotter(B_arr, singlets, triplets, omega, J, JII)
 
-    with open(determine_next_filename('dimer','data','npz'), 'wb') as file:
+    filename = determine_next_filename('dimer','data','npz')
+    with open(filename, 'wb') as file:
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step)
+        print('data saved in',filename)
 
-    # costs plotter
-
-    fig, axs = plt.subplots(np.unique(ls[:,0]).size,1) # number of layers is determined
-    for idx, n in enumerate(ls[:,0]):
-        locs = np.where(ls[:,0]==n)
-        try:
-            axs[idx].plot(ls[locs][:,1], costs[locs],'.')
-            axs[idx].set_xlabel(f'layer {n[0]} steps')
-            axs[idx].set_ylabel('cost')
-        except TypeError:
-            axs.plot(ls[locs][:,1], costs[locs],'.')
-            axs.set_xlabel('steps')
-            axs.set_ylabel('costs')
-    fig.tight_layout()
-    fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-    plt.savefig(determine_next_filename())
+    qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII)
     
     print(' ________ \n\n COMPLETE \n ________\n')
