@@ -15,7 +15,7 @@ triplets = {}
 costs = []
 
 if __name__=="__main__":
-    with ProcessPoolExecutor(100) as exe:
+    with ProcessPoolExecutor(10) as exe:
         mapper = exe.map(optimiser_main, B_arr)
     for B, singlet, triplet, cost, layer_step in mapper:
         singlets[B] = singlet
