@@ -34,6 +34,32 @@ def cost_func_vqd(parameters, U_T, ansatz, prev_states, step, betas, estimator, 
 
     return value*sign
 
+def penalty(parameters, U_T, ansatz, prev_states, step, betas, estimator, hamiltonian, sign=-1):
+
+    '''
+    Estimates <ψ|H|ψ> - λ Σ |<0|(U_θβ†)(U_θ)|0>|²
+
+    Where:
+    H = observable
+    |ψ> = (U_θ†)(U_T)(U_θ)|0>
+    '''
+
+    circuit = ansatz.compose(U_T)
+    circuit.compose(ansatz.inverse(),inplace=True)
+    estimator_job = estimator.run([(circuit, hamiltonian, [parameters])])
+
+    total_cost = 0
+
+    if step > 1:
+        overlaps = calculate_overlaps(ansatz, prev_states, parameters, estimator)
+        return overlaps
+        total_cost = np.sum([np.real(betas[state] * overlap**2) for state, overlap in enumerate(overlaps)])
+
+    estimator_result = estimator_job.result()[0]
+
+    value = estimator_result.data.evs[0] - total_cost
+
+
 def calculate_overlaps(ansatz, prev_circuits, parameters, estimator):
 
     def create_fidelity_circuit(circuit_1, circuit_2):
