@@ -5,11 +5,11 @@ from concurrent.futures import ProcessPoolExecutor
 from optimiser import optimiser_main
 from information import determine_next_filename
 from physics import Ω as omega
-from physics import J, JII
+from physics import J, JII, B_range
 
 B_size = 100
 
-B_arr = np.linspace(0,10,B_size)*omega
+B_arr = np.linspace(*B_range,B_size)*omega
 singlets = {}
 triplets = {}
 costs = []
@@ -29,6 +29,8 @@ if __name__=="__main__":
     triplets = np.array(triplets)
     ls = np.array(ls)
     costs = np.array(costs)
+
+    # qiskit result plotter
     plt.plot(B_arr, singlets,'.')
     for i in range(3):
         plt.plot(B_arr, triplets[:,i],'.')
@@ -39,6 +41,8 @@ if __name__=="__main__":
 
     with open(determine_next_filename('dimer','data','npz'), 'wb') as file:
         np.savez(file, singlets=singlets, triplets=triplets, B_arr=B_arr, costs=costs, layer_step=layer_step)
+
+    # costs plotter
 
     fig, axs = plt.subplots(np.unique(ls[:,0]).size,1) # number of layers is determined
     for idx, n in enumerate(ls[:,0]):

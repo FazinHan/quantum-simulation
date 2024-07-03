@@ -5,7 +5,7 @@ from information import determine_next_filename as filename
 import numpy as np
 import matplotlib.pyplot as plt
 from physics import Ω as omega
-from physics import J, JII
+from physics import J, JII, B_range
 
 num_rungs = 1
 num_layers = 1
@@ -17,7 +17,7 @@ state = [basis(2,0)]*num_qubits
 state[0] = basis(2,1)
 state = tensor(state)
 
-B_arr = np.linspace(0,.1,1000)*omega
+B_arr = np.linspace(*B_range,1000)*omega
 
 energies = []
 
