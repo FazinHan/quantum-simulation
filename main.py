@@ -8,7 +8,7 @@ from information import determine_next_filename
 import matplotlib.pyplot as plt
 from plotters import qiskit_cost_plotter, qiskit_plotter, classical_plotter
 
-if __name__=="__main__":
+if __name__=="__main__1":
 
     B_size = 25
 

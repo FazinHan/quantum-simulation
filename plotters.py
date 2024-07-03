@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from physics import B_range
 
 def classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII):
     for i in range(2**num_qubits):
         ax.plot(B_arr/omega, energies[:,i],'b.',ms=1.2)
+    ax.set_xlim(*B_range)
     
 
 def qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII):
@@ -11,6 +13,7 @@ def qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII):
     ax.plot(B_arr, singlets,'.')
     for i in range(3):
         ax.plot(B_arr, triplets[:,i],'.')
+    ax.set_xlim(*B_range)
     
 def qiskit_cost_plotter(B_arr, ls, costs, omega, J, JII):
     # costs plotter
