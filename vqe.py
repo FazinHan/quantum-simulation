@@ -10,7 +10,7 @@ from plotters import qiskit_cost_plotter, qiskit_plotter, classical_plotter
 
 if __name__=="__main__":
 
-    B_size = 3
+    B_size = 25
 
     B_arr = np.linspace(*B_range,B_size)*omega
     singlets = {}
