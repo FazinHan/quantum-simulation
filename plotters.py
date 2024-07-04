@@ -19,7 +19,7 @@ def qiskit_plotter(ax, B_arr, energies, omega, J, JII, plot_singlets=True):
     for i in range(num_states):
         if i==0 and not plot_singlets:
             continue
-        handles.append(ax.plot(B_arr/omega, energies[:,i],'.',label=f'VQE $|{i}\\rangle$')[0])
+        handles.append(ax.plot(B_arr/omega, energies[:,i],'y.',label=f'VQE $|{i}\\rangle$')[0])
     return handles
     
 def qiskit_cost_plotter(B_arr, costs, omega, J, JII):

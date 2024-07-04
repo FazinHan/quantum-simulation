@@ -29,7 +29,7 @@ if __name__=="__main__":
     ax.set_xlabel('$B/\\Omega$')
     ax.set_ylabel('$\\epsilon$')
     # ax.set_xlim(0,.1)
-    ax.legend(handles=handles)
+    # ax.legend(handles=handles)
     fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     fig.tight_layout()
     
