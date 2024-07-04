@@ -27,7 +27,7 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
     
     U_T = unitary_time_evolver(hamiltonian_ladder, num_rungs, B, num_qbits=num_qubits)
     
-    matrix = np.random.uniform(size=(2**num_qubits, 2**num_qubits))
+    matrix = np.zeros((2**num_qubits, 2**num_qubits))
     matrix[0,0] = 1
     observable = SparsePauliOp.from_operator(matrix)
         
@@ -48,7 +48,7 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         
         k = 2**num_qubits
         betas = [5]*k
-        x0 = np.ones(parameter_space_size2)
+        x0 = np.random.uniform(size=parameter_space_size2)
     
         # print(parameter_space_size2)
         # break
