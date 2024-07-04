@@ -10,7 +10,7 @@ from plotters import qiskit_cost_plotter, qiskit_plotter, classical_plotter
 
 if __name__=="__main__":
 
-    B_size = 25
+    B_size = 3
 
     B_arr = np.linspace(*B_range,B_size)*omega
     singlets = {}
@@ -19,7 +19,7 @@ if __name__=="__main__":
     penalties = []
     ls = []
 
-    with ProcessPoolExecutor(10) as exe:
+    with ProcessPoolExecutor(14) as exe:
         mapper = exe.map(optimiser_main, B_arr)
     for B, singlet, triplet, cost, layer_step, penalty in mapper:
         singlets[B] = singlet
