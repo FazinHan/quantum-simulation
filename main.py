@@ -13,7 +13,7 @@ if __name__=="__main__":
         data = np.load(file)
         B_arr = data['B_arr']
         qenergies = data['energies']
-    classical_plotter(ax, B_arr, omega, qenergies, J, JII, plot_singlets=False)
+    classical_plotter(ax, B_arr, omega, qenergies, J, JII, plot_singlets=True)
 
     with open(determine_next_filename('dimer','npz','data',exists=True),'rb') as file:
         data = np.load(file)
