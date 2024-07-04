@@ -26,7 +26,7 @@ def qiskit_cost_plotter(B_arr, costs, omega, J, JII):
     # costs plotter
     fig2, axs = plt.subplots(costs.shape[1],1) # number of layers is determined
     for idx, ax in enumerate(axs):        
-        ax.plot(B_arr/omega, costs[:,idx],'.')
+        ax.plot(B_arr/omega, -costs[:,idx],'.')
         ax.set_xlabel('$B/\\Omega$')
         ax.set_ylabel(f'costs of $|{idx}\\rangle$')
     fig2.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
