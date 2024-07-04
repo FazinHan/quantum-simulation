@@ -23,7 +23,7 @@ if __name__=="__main__":
         ls = data['layer_step']
         costs = data['costs']
         penalties = data['penalties']
-    qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
+    handles = qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
     
     ax.set_xlabel('$B/\\Omega$')
     ax.set_ylabel('$\\epsilon$')
