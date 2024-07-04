@@ -80,9 +80,8 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
             prev_states.append(curr_state)
             
             floquet_state = Statevector.from_instruction(curr_state)
-            eigenvalues.append(-h_cut*np.angle(floquet_state.expectation_value(U_T))/T) # append [state_label, floquet_energy]
+            eigenvalues.append([cost, -h_cut*np.angle(floquet_state.expectation_value(U_T))/T]) # append [state_label, floquet_energy]
             
-            costs.append(cost)
             layer_step.append(step)
 
             overlap = penalty(prev_opt_parameters, U_T, ansatz, prev_states, step, betas, estimator, observable)
@@ -95,4 +94,4 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         ti_new = time.perf_counter()
         print(f'{num_layers}-layer circuit computed in {np.round(ti_new-ti, 3)}s')
         ti = ti_new
-    return B, eigenvalues, costs, layer_step, penalties
+    return B, eigenvalues, layer_step, penalties

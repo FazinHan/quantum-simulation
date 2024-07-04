@@ -20,9 +20,9 @@ if __name__=="__main__":
 
     with ProcessPoolExecutor(14) as exe:
         mapper = exe.map(optimiser_main, B_arr)
-        for B, f_energy, cost, layer_step, penalty in mapper:
-            f_energies.append(f_energy)
-            costs.append(cost)
+        for B, f_energy, layer_step, penalty in mapper:
+            f_energies.append(f_energy[:,1])
+            costs.append(f_energy[:,0])
             ls.append(layer_step)
             penalties.append(penalty)
     # B_arr, singlets = zip(*sorted(singlets.items()))
