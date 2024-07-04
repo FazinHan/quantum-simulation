@@ -28,8 +28,6 @@ if __name__=="__main__":
     # B_arr, singlets = zip(*sorted(singlets.items()))
     # B_arr, triplets = zip(*sorted(triplets.items()))
     f_energies = np.array(f_energies)
-    singlets = np.array(singlets)
-    triplets = np.array(triplets)
     penalties = np.array(penalties)
     ls = np.array(ls)
     costs = np.array(costs)
