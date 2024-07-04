@@ -15,7 +15,7 @@ def classical_plotter(ax, B_arr, omega, energies, J, JII, plot_singlets=True):
 def qiskit_plotter(ax, B_arr, energies, omega, J, JII, plot_singlets=True):
     # qiskit result plotter
     handles = []
-    num_states = np.unique(energies[:,0]).size
+    num_states = energies.shape[1]
     for i in range(num_states):
         if i==0 and not plot_singlets:
             continue
@@ -30,5 +30,5 @@ def qiskit_cost_plotter(B_arr, costs, omega, J, JII):
         ax.set_xlabel('$B/\\Omega$')
         ax.set_ylabel(f'costs of $|{idx}\\rangle$')
     fig2.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
-    fig2.set_figheight(7*2)
+    fig2.set_figheight(3.5*costs.shape[1])
     fig2.tight_layout()

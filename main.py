@@ -12,11 +12,8 @@ if __name__=="__main__":
     with open(determine_next_filename('qutip_data','npz','data',exists=True),'rb') as file:
         data = np.load(file)
         B_arr = data['B_arr']
-        energies = data['energies']
-        # print(energies)
-        # exit()
-        # print(B_arr[-1])
-    classical_plotter(ax, B_arr, omega, energies, J, JII, plot_singlets=False)
+        qenergies = data['energies']
+    classical_plotter(ax, B_arr, omega, qenergies, J, JII, plot_singlets=False)
 
     with open(determine_next_filename('dimer','npz','data',exists=True),'rb') as file:
         data = np.load(file)
@@ -24,10 +21,10 @@ if __name__=="__main__":
         # singlets = data['singlets']
         # triplets = data['triplets']
         ls = data['layer_step']
-        energies = data['f_energies']
+        qenergies = data['f_energies']
         costs = data['costs']
         penalties = data['penalties']
-    handles = qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
+    handles = qiskit_plotter(ax, B_arr, qenergies, omega, J, JII)
     
     ax.set_xlabel('$B/\\Omega$')
     ax.set_ylabel('$\\epsilon$')
