@@ -32,7 +32,7 @@ def cost_func_vqd(parameters, U_T, ansatz, prev_states, step, betas, estimator, 
 
     value = estimator_result.data.evs[0] - total_cost
 
-    return value*sign
+    return value**2*sign
 
 def penalty(parameters, U_T, ansatz, prev_states, step, betas, estimator, hamiltonian, sign=-1):
 
