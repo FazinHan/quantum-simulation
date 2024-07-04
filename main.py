@@ -33,12 +33,12 @@ if __name__=="__main__":
     fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     fig.tight_layout()
     
-    name = determine_next_filename(folder='outputs')
+    name = determine_next_filename(fname='q_energies',folder='outputs')
     plt.savefig(name)
     print(name, 'created')
 
     qiskit_cost_plotter(B_arr, costs, omega, J, JII)
     # qiskit_cost_plotter(ls, penalties, omega, J, JII)
-    name = determine_next_filename(folder='outputs')
+    name = determine_next_filename(fname='costs',folder='outputs')
     plt.savefig(name)
     print(name, 'created')
