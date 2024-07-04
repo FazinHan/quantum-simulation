@@ -49,7 +49,7 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
         k = 2**num_qubits
         betas = [5]*k
         # x0 = np.random.uniform(high=np.pi,size=parameter_space_size2)
-        x0 = np.ones(parameter_space_size2)*np.pi/2
+        x0 = np.ones(parameter_space_size2)*np.pi/4
     
         # print(parameter_space_size2)
         # break
