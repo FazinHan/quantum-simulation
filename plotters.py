@@ -31,4 +31,4 @@ def qiskit_cost_plotter(B_arr, costs, omega, J, JII):
         ax.set_ylabel(f'costs of $|{idx}\\rangle$')
     fig2.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
     fig2.set_figheight(3.5*costs.shape[1])
-    # fig2.tight_layout()
+    fig2.tight_layout()
