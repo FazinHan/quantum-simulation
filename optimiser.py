@@ -79,7 +79,7 @@ def optimiser_main(B, num_rungs = 1, layers = [1]):
             prev_states.append(curr_state)
             
             floquet_state = Statevector.from_instruction(curr_state)
-            eigenvalues.append([step-1,-h_cut*np.angle(floquet_state.expectation_value(U_T))/T]) # append [state_label, floquet_energy]
+            eigenvalues.append([-h_cut*np.angle(floquet_state.expectation_value(U_T))/T]) # append [state_label, floquet_energy]
             
             costs.append(cost)
             layer_step.append(step)

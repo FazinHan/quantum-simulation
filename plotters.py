@@ -4,11 +4,12 @@ from physics import B_range
 
 def classical_plotter(ax, B_arr, omega, energies, J, JII, plot_singlets=True):
     handles = []
-    num_states = np.unique(energies[:,0]).size
+    num_states = energies.shape[1]
+    # print(num_states)
     for i in range(num_states):
         if i==0 and not plot_singlets:
             continue
-        handles.append(ax.plot(B_arr/omega, energies[:,np.where(energies[:,0]==i)],color='grey',ms=1.2,label=f'exact $|{i}\\rangle$')[0])
+        handles.append(ax.plot(B_arr/omega, energies[:,i],color='grey',ms=1.2,label=f'exact $|{i}\\rangle$')[0])
     return handles
 
 def qiskit_plotter(ax, B_arr, energies, omega, J, JII, plot_singlets=True):
@@ -18,7 +19,7 @@ def qiskit_plotter(ax, B_arr, energies, omega, J, JII, plot_singlets=True):
     for i in range(num_states):
         if i==0 and not plot_singlets:
             continue
-        handles.append(ax.plot(B_arr/omega, energies[:,np.where(energies[:,0]==i)],'.',label=f'VQE $|{i}\\rangle$')[0])
+        handles.append(ax.plot(B_arr/omega, energies[:,i],'.',label=f'VQE $|{i}\\rangle$')[0])
     return handles
     
 def qiskit_cost_plotter(B_arr, costs, omega, J, JII):
