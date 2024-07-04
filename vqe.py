@@ -13,22 +13,21 @@ if __name__=="__main__":
     B_size = 25
 
     B_arr = np.linspace(*B_range,B_size)*omega
-    singlets = {}
-    triplets = {}
+    f_energies = []
     costs = []
     penalties = []
     ls = []
 
     with ProcessPoolExecutor(14) as exe:
         mapper = exe.map(optimiser_main, B_arr)
-    for B, singlet, triplet, cost, layer_step, penalty in mapper:
-        singlets[B] = singlet
-        triplets[B] = triplet
+    for B, f_energy, cost, layer_step, penalty in mapper:
+        f_energies.append(f_energy)
         costs.append(cost)
         ls.append(layer_step)
         penalties.append(penalty)
-    B_arr, singlets = zip(*sorted(singlets.items()))
-    B_arr, triplets = zip(*sorted(triplets.items()))
+    # B_arr, singlets = zip(*sorted(singlets.items()))
+    # B_arr, triplets = zip(*sorted(triplets.items()))
+    f_energies = np.array(f_energies)
     singlets = np.array(singlets)
     triplets = np.array(triplets)
     penalties = np.array(penalties)
