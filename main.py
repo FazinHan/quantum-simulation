@@ -24,7 +24,7 @@ if __name__=="__main__":
         # singlets = data['singlets']
         # triplets = data['triplets']
         ls = data['layer_step']
-        energies = data['energies']
+        energies = data['f_energies']
         costs = data['costs']
         penalties = data['penalties']
     handles = qiskit_plotter(ax, B_arr, singlets, triplets, omega, J, JII)
