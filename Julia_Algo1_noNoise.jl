@@ -14,6 +14,7 @@ i_A = parse(Int64, String(split(ARGS[1])[3]))
 
 Num_shots = 8192;
 J = 1.0;
+JII = 1.0;
 omega = 5.0 * chain_length;
 T = 2*π / omega;
 time_iterations = 1000;
@@ -31,7 +32,7 @@ Num_EV = 2^chain_length
 
 EVs = zeros(Num_EV)
 
-FausewehZhuCirc = getFausewehZhuCircuit(chain_length,depth, U_T(chain_length,A, omega, delta_t, J, times_trapezoid))
+FausewehZhuCirc = getFausewehZhuCircuit(chain_length,depth, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid))
 
    
 number_of_parameters = Int((FausewehZhuCirc |> Yao.nparameters) / 2)
@@ -67,7 +68,7 @@ for i in 1:Num_EV
     
     #sol = SP.optimize.minimize(VarL, Theta,  args=(prev_solutions,chain_length,depth,A,FausewehZhuCirc,Overlap_circ), options=optns)
     
-    println("EV $(i) A$(i_A)_length$(chain_length)_depth$(depth) Overlap w/ time Evo = $(VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)) Energy = $(Energy(sol["x"], chain_length, depth, U_T(chain_length,A, omega, delta_t, J, times_trapezoid), T))")
+    println("EV $(i) A$(i_A)_length$(chain_length)_depth$(depth) Overlap w/ time Evo = $(VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)) Energy = $(Energy(sol["x"], chain_length, depth, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T))")
     flush(stdout)
 
     append!(prev_solutions, [sol["x"]])

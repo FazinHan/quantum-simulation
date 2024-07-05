@@ -20,15 +20,22 @@ function BField(A, t, omega)
     return [A*cos(omega*t), A*sin(omega*t)]
 end;
 
-function H_0(num_sites, J)
+function H_0(num_sites, J, JII)
 
     sigma_x = [pauli_operator(i,num_sites, [[0, 1.0] [1.0,0]]) for i in 1:num_sites];
     sigma_y = [pauli_operator(i,num_sites, [[0, -1.0im] [1.0im,0]]) for i in 1:num_sites];
     sigma_z = [pauli_operator(i,num_sites, [[1.0, 0.0] [0.0,-1.0]]) for i in 1:num_sites];
 
-    return sum( vcat(   [J/4*sigma_x[i]*sigma_x[i%num_sites+1] for i in 1:num_sites], 
-                        [J/4*sigma_y[i]*sigma_y[i%num_sites+1] for i in 1:num_sites], 
-                        [J/4*sigma_z[i]*sigma_z[i%num_sites+1] for i in 1:num_sites] ))
+    return sum( vcat(   [J/4*sigma_x[i]*sigma_x[i+1] for i in 1:2:num_sites], 
+                        [J/4*sigma_y[i]*sigma_y[i+1] for i in 1:2:num_sites], 
+                        [J/4*sigma_z[i]*sigma_z[i+1] for i in 1:2:num_sites],
+                        [JII*sigma_x[i]*sigma_x[i+2] for i in 1:2:num_sites],
+                        [JII*sigma_y[i]*sigma_y[i+2] for i in 1:2:num_sites],
+                        [JII*sigma_z[i]*sigma_z[i+2] for i in 1:2:num_sites],
+                        [JII*sigma_x[(i+1)]*sigma_x[(i+1)+2] for i in 1:2:num_sites],
+                        [JII*sigma_y[(i+1)]*sigma_y[(i+1)+2] for i in 1:2:num_sites],
+                        [JII*sigma_z[(i+1)]*sigma_z[(i+1)+2] for i in 1:2:num_sites]
+            ))
 end;
 
 function H_1(num_sites, time, A, omega)
@@ -40,8 +47,8 @@ function H_1(num_sites, time, A, omega)
     return sum( [Bx * sigma_x[i] + By * sigma_y[i] for i in 1:num_sites] )
 end;
 
-function U_T(num_sites, A, omega, delta_t, J, times_trapezoid)
-    H0 = H_0(num_sites, J)
+function U_T(num_sites, A, omega, delta_t, J, JII, times_trapezoid)
+    H0 = H_0(num_sites, J, JII)
     U0 = LinearAlgebra.exp(-1.0im*delta_t*H0)
 
     U = I(2^num_sites)
@@ -60,6 +67,10 @@ function inverse_cnot(nbit, i, j)
     return Yao.cnot(nbit, j, i)
 end
 
+function entangle_map(num_sites, layer_type)
+    return [[i i+1] for i in 1:2:num_sites-1]
+end
+
 function pair_ring_new(num_sites)
     return circshift(Yao.EasyBuild.pair_ring(num_sites), 1)
 end
@@ -67,13 +78,13 @@ end
 #Function to get the circuit
 function getFausewehZhuCircuit(num_sites,depth, UT)
 
-    var_circ = Yao.EasyBuild.variational_circuit(Float64, num_sites, depth)
+    var_circ = Yao.EasyBuild.variational_circuit(Float64, num_sites, depth, entangle_map(num_sites,1))
 
     number_of_parameters = var_circ |> Yao.nparameters
 
     var_circ = Yao.dispatch!(var_circ,[k for k in 1:number_of_parameters]);
 
-    var_circ_dag = Yao.dispatch!(Yao.chain(num_sites, Yao.put( (([i for i in 1:num_sites]) |> reverse) => Yao.EasyBuild.variational_circuit(Float64, num_sites, depth, pair_ring_new(num_sites), entangler=inverse_cnot))),[-k for k in 1:number_of_parameters |> reverse]);
+    var_circ_dag = Yao.dispatch!(Yao.chain(num_sites, Yao.put( (([i for i in 1:num_sites]) |> reverse) => Yao.EasyBuild.variational_circuit(Float64, num_sites, depth, entangle_map(num_sites,1), pair_ring_new(num_sites), entangler=inverse_cnot))),[-k for k in 1:number_of_parameters |> reverse]);
 
     circ = Yao.chain(num_sites, Yao.put(([i for i in 1:num_sites])=>var_circ), Yao.put(([i for i in 1:num_sites])=>Yao.matblock(UT, tag="UT")), Yao.put(([i for i in 1:num_sites])=>var_circ_dag) )
 
@@ -116,13 +127,13 @@ end
 
 function getOverlapCircuit(num_sites,depth)
 
-    var_circ = Yao.EasyBuild.variational_circuit(Float64, num_sites, depth)
+    var_circ = Yao.EasyBuild.variational_circuit(Float64, num_sites, depth, entangle_map(num_sites,1))
 
     number_of_parameters = var_circ |> Yao.nparameters
 
     var_circ = Yao.dispatch!(var_circ,[p for p in 1:number_of_parameters]);
 
-    var_circ_dag = Yao.dispatch!(Yao.chain(num_sites, Yao.put( (([i for i in 1:num_sites]) |> reverse) =>Yao.EasyBuild.variational_circuit(Float64, num_sites, depth, pair_ring_new(num_sites), entangler=inverse_cnot))),[-p for p in 1:number_of_parameters |> reverse]);
+    var_circ_dag = Yao.dispatch!(Yao.chain(num_sites, Yao.put( (([i for i in 1:num_sites]) |> reverse) =>Yao.EasyBuild.variational_circuit(Float64, num_sites, depth, entangle_map(num_sites,1), pair_ring_new(num_sites), entangler=inverse_cnot))),[-p for p in 1:number_of_parameters |> reverse]);
 
     circ = Yao.chain(num_sites, Yao.put(([i for i in 1:num_sites])=>var_circ), Yao.put(([i for i in 1:num_sites])=>var_circ_dag) )
 
