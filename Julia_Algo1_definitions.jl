@@ -26,15 +26,15 @@ function H_0(num_sites, J, JII)
     sigma_y = [pauli_operator(i,num_sites, [[0, -1.0im] [1.0im,0]]) for i in 1:num_sites];
     sigma_z = [pauli_operator(i,num_sites, [[1.0, 0.0] [0.0,-1.0]]) for i in 1:num_sites];
 
-    return sum( vcat(   [J/4*sigma_x[i]*sigma_x[i+1] for i in 1:2:num_sites], 
-                        [J/4*sigma_y[i]*sigma_y[i+1] for i in 1:2:num_sites], 
-                        [J/4*sigma_z[i]*sigma_z[i+1] for i in 1:2:num_sites],
-                        [JII*sigma_x[i]*sigma_x[i+2] for i in 1:2:num_sites],
-                        [JII*sigma_y[i]*sigma_y[i+2] for i in 1:2:num_sites],
-                        [JII*sigma_z[i]*sigma_z[i+2] for i in 1:2:num_sites],
-                        [JII*sigma_x[(i+1)]*sigma_x[(i+1)+2] for i in 1:2:num_sites],
-                        [JII*sigma_y[(i+1)]*sigma_y[(i+1)+2] for i in 1:2:num_sites],
-                        [JII*sigma_z[(i+1)]*sigma_z[(i+1)+2] for i in 1:2:num_sites]
+    return sum( vcat(   [J/4*sigma_x[i]*sigma_x[i+1] for i in 1:2:num_sites-1], 
+                        [J/4*sigma_y[i]*sigma_y[i+1] for i in 1:2:num_sites-1], 
+                        [J/4*sigma_z[i]*sigma_z[i+1] for i in 1:2:num_sites-1],
+                        [JII*sigma_x[i]*sigma_x[i+2] for i in 1:2:num_sites-2],
+                        [JII*sigma_y[i]*sigma_y[i+2] for i in 1:2:num_sites-2],
+                        [JII*sigma_z[i]*sigma_z[i+2] for i in 1:2:num_sites-2],
+                        [JII*sigma_x[(i+1)]*sigma_x[(i+1)+2] for i in 1:2:num_sites-3],
+                        [JII*sigma_y[(i+1)]*sigma_y[(i+1)+2] for i in 1:2:num_sites-3],
+                        [JII*sigma_z[(i+1)]*sigma_z[(i+1)+2] for i in 1:2:num_sites-3]
             ))
 end;
 
@@ -78,7 +78,7 @@ end
 #Function to get the circuit
 function getFausewehZhuCircuit(num_sites,depth, UT)
 
-    var_circ = Yao.EasyBuild.variational_circuit(Float64, num_sites, depth, entangle_map(num_sites,1))
+    var_circ = Yao.EasyBuild.variational_circuit(Float64, num_sites, depth)
 
     number_of_parameters = var_circ |> Yao.nparameters
 

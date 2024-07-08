@@ -34,6 +34,8 @@ EVs = zeros(Num_EV)
 
 FausewehZhuCirc = getFausewehZhuCircuit(chain_length,depth, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid))
 
+println("circuit:")
+vizcircuit(FausewehZhuCirc)
    
 number_of_parameters = Int((FausewehZhuCirc |> Yao.nparameters) / 2)
     
