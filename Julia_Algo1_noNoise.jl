@@ -1,5 +1,7 @@
 include("Julia_Algo1_definitions.jl")
 
+# use printed output to form plot: error = 1 + Overlap w/ time Evo
+
 import SciPy as SP
 import JLD2 as D2
 
@@ -30,7 +32,7 @@ A = A_vec[i_A]
 psi_0 = Yao.zero_state(chain_length);
 zero_state_projector =  Yao.matblock(Yao.state(psi_0)*transpose(Yao.state(psi_0)));
 
-Num_EV = 2^chain_length
+Num_EV = 2^chain_length <= 10 ? 2^chain_length : 10
 
 EVs = zeros(Num_EV)
 
