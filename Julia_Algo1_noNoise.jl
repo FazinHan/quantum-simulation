@@ -9,8 +9,10 @@ import YaoPlots
 #setup for parallel -a Args.txt julia Julia_Algo1_noNoise.jl
 
 chain_length = parse(Int64, String(split(ARGS[1])[1]))
-depth = parse(Int64, String(split(ARGS[1])[2]))
-i_A = parse(Int64, String(split(ARGS[1])[3]))
+# depth = parse(Int64, String(split(ARGS[1])[2]))
+i_A = parse(Int64, String(split(ARGS[1])[2]))
+
+layer_plan = [2 1 1]
 
 Num_shots = 8192;
 J = 1.0;
@@ -32,16 +34,16 @@ Num_EV = 2^chain_length
 
 EVs = zeros(Num_EV)
 
-FausewehZhuCirc = getFausewehZhuCircuit(chain_length,depth, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid))
+FausewehZhuCirc = getFausewehZhuCircuit(chain_length,layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid))
 
-println("circuit:")
+# println("circuit:")
 YaoPlots.vizcircuit(FausewehZhuCirc, filename=joinpath(@__DIR__, "circ.png"))
    
 number_of_parameters = Int((FausewehZhuCirc |> Yao.nparameters) / 2)
     
 prev_solutions = []
     
-Overlap_circ = getOverlapCircuit(chain_length,depth)
+Overlap_circ = getOverlapCircuit(chain_length,layer_plan)
     
 for i in 1:Num_EV
 
@@ -68,19 +70,19 @@ for i in 1:Num_EV
         (sol["success"] == true ) && break
     end
     
-    #sol = SP.optimize.minimize(VarL, Theta,  args=(prev_solutions,chain_length,depth,A,FausewehZhuCirc,Overlap_circ), options=optns)
+    #sol = SP.optimize.minimize(VarL, Theta,  args=(prev_solutions,chain_length,layer_plan,A,FausewehZhuCirc,Overlap_circ), options=optns)
     
-    println("EV $(i) A$(i_A)_length$(chain_length)_depth$(depth) Overlap w/ time Evo = $(VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)) Energy = $(Energy(sol["x"], chain_length, depth, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T))")
+    println("EV $(i) A$(i_A)_length$(chain_length)_depth$(layer_plan) Overlap w/ time Evo = $(VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)) Energy = $(Energy(sol["x"], chain_length, layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T))")
     flush(stdout)
 
     append!(prev_solutions, [sol["x"]])
     
 end
 
-println("Saving A$(i_A)_length$(chain_length)_depth$(depth) ... ")
+println("Saving A$(i_A)_length$(chain_length)_depth$(layer_plan) ... ")
 flush(stdout)
 
-D2.save_object(".//results//Solution_A$(i_A)_length$(chain_length)_depth$(depth).jld2", prev_solutions)
+D2.save_object(".//results//Solution_A$(i_A)_length$(chain_length)_depth$(layer_plan).jld2", prev_solutions)
 
 
 

@@ -1,7 +1,6 @@
 using LinearAlgebra
 using Random
 
-layer_plan = []
 
 function pauli_operator(idx, num_sites, pauli_matrix)
 
@@ -76,7 +75,7 @@ end
 function entangle_map_type2(num_sites)
     a = [2i=> 2i+1 for i in 1:convert(Int64, num_sites/2)-1]
     b = [i => i+1 for i in 1:2:num_sites-1]
-    return [a;b]
+    return [b;a]
 end
 
 function pair_ring_new(num_sites)
@@ -96,21 +95,23 @@ function put_circuit_reverse(circuit, num_sites)
 end
 
 function create_circuit(num_sites, layer_plan)
-    return Yao.chain(num_sites, [put_circuit(create_layer(num_sites, i, j), num_sites) for [i j] in layer_plan])
+    return Yao.chain(num_sites, [put_circuit(create_layer(num_sites, i), num_sites) for i in layer_plan])
+end
+
+function create_circuit_reverse(num_sites, layer_plan)
+    return Yao.chain(num_sites, [put_circuit_reverse(create_layer(num_sites, i, inverse=true), num_sites) for i in layer_plan])
 end
 
 #Function to get the circuit
-function getFausewehZhuCircuit(num_sites,depth, UT)
+function getFausewehZhuCircuit(num_sites,layer_plan, UT)
 
-    var_circ_type1 = create_layer(num_sites, 1)
-    var_circ_type2 = create_layer(num_sites, 2)
-    var_circ = create_layer(num_sites, 1)
+    var_circ = create_circuit(num_sites, layer_plan)
 
     number_of_parameters = var_circ |> Yao.nparameters
 
     var_circ = Yao.dispatch!(var_circ,[k for k in 1:number_of_parameters]);
 
-    var_circ_dag = Yao.dispatch!(Yao.chain(num_sites, put_circuit_reverse(  ) ),[-k for k in 1:number_of_parameters |> reverse]);
+    var_circ_dag = Yao.dispatch!(create_circuit_reverse(num_sites, layer_plan),[-k for k in 1:number_of_parameters |> reverse]);
 
     circ = Yao.chain(num_sites, Yao.put(([i for i in 1:num_sites])=>var_circ), Yao.put(([i for i in 1:num_sites])=>Yao.matblock(UT, tag="UT")), Yao.put(([i for i in 1:num_sites])=>var_circ_dag) )
 
@@ -151,15 +152,15 @@ function calcFausewehZhuGradient(grad)
     return grad_true
 end
 
-function getOverlapCircuit(num_sites,depth)
+function getOverlapCircuit(num_sites,layer_plan)
 
-    var_circ = create_layer(num_sites, 1)
+    var_circ = create_circuit(num_sites, layer_plan)
 
     number_of_parameters = var_circ |> Yao.nparameters
 
     var_circ = Yao.dispatch!(var_circ,[p for p in 1:number_of_parameters]);
 
-    var_circ_dag = Yao.dispatch!(Yao.chain(num_sites, Yao.put( (([i for i in 1:num_sites]) |> reverse) =>create_layer(num_sites, 1, inverse=true) )),[-p for p in 1:number_of_parameters |> reverse]);
+    var_circ_dag = Yao.dispatch!(create_circuit_reverse(num_sites, layer_plan),[-k for k in 1:number_of_parameters |> reverse]);
 
     circ = Yao.chain(num_sites, Yao.put(([i for i in 1:num_sites])=>var_circ), Yao.put(([i for i in 1:num_sites])=>var_circ_dag) )
 
@@ -218,9 +219,9 @@ function dVarL(Theta, ListOfOldSolutions, num_sites, FausewehZhuCirc, OverlapCir
     
 end;
 
-function Energy(Theta, num_sites, depth, UT, T)
+function Energy(Theta, num_sites, layer_plan, UT, T)
 
-    var_circ = create_layer(num_sites, 1)
+    var_circ = create_circuit(num_sites, layer_plan)
 
     var_circ = Yao.dispatch!(var_circ,Theta)
 
