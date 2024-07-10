@@ -35,6 +35,6 @@ if __name__=="__main__":
     #     file.write(str(errors.to_list()))
     
     print('complete')
-    print('pushed successfully')
     os.system("git commit -am 'update'")
     os.system("git push")
+    print('pushed successfully')
