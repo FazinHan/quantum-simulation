@@ -69,8 +69,11 @@ for i in 1:Num_EV
     end
     
     #sol = SP.optimize.minimize(VarL, Theta,  args=(prev_solutions,chain_length,depth,A,FausewehZhuCirc,Overlap_circ), options=optns)
+
+    en = Energy(sol["x"], chain_length, depth, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T)
+    timeevo = VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)
     
-    println("EV $(i) A$(i_A)_length$(chain_length)_depth$(depth) Overlap w/ time Evo = $(VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)) Energy = $(Energy(sol["x"], chain_length, depth, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T))")
+    println("$(i) A$(i_A)_length$(chain_length)_depth$(depth) $(timeevo) $(en)")
     flush(stdout)
 
     append!(prev_solutions, [sol["x"]])
