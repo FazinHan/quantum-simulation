@@ -14,24 +14,27 @@ layer_plan = [4,5,[2,1,1,2]] # if i is int, circuit will have i type 2 (complete
 errors = []
 
 if __name__=="__main__":
-    def func(i):
-        if type(i)==int:
-            layers = [2]*i
-        else:
-            layers = i
-        pipe = os.popen(f'julia Julia_Algo1_noNoise.jl {chain_length} 1 "{layers}"')
-        out = pipe.readlines()
-        interest = out[1:-1]
-        print(len(interest))
-        errors.append(interest)
-        return 0
+    # def func(i):
+    #     if type(i)==int:
+    #         layers = [2]*i
+    #     else:
+    #         layers = i
+    #     pipe = os.popen(f'julia Julia_Algo1_noNoise.jl {chain_length} 1 "{layers}"')
+    #     out = pipe.readlines()
+    #     interest = out[1:-1]
+    #     print(len(interest))
+    #     errors.append(interest)
+    #     return 0
 
-    with ProcessPoolExecutor(3) as exe:
-        a = [0 for _ in exe.map(func, layer_plan)]
+    # with ProcessPoolExecutor(3) as exe:
+    #     a = [0 for _ in exe.map(func, layer_plan)]
 
-    name = determine_next_filename('julia_result_errors','txt','data')
-    with open(name,'w') as file:
-        file.write(str(layer_plan))
-        file.write(str(errors.to_list()))
+    # name = determine_next_filename('julia_result_errors','txt','data')
+    # with open(name,'w') as file:
+    #     file.write(str(layer_plan))
+    #     file.write(str(errors.to_list()))
     
     print('complete')
+    print('pushed successfully')
+    os.system("git commit -am 'update'")
+    os.system("git push")
