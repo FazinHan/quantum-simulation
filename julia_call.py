@@ -1,7 +1,7 @@
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-rfom concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 
 '''$(i) A$(i_A)_length$(chain_length)_layer_plan$(layer_plan) $(timeevo) $(en)'''
 
