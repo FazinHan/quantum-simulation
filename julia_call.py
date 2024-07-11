@@ -11,7 +11,7 @@ JII = np.arange(0,1,.1)
 
 layer_plan = [2,[2,1]] # if i is int, circuit will have i type 2 (complete) layers
 # layer_plan = [1,2]
-Jii = 0
+Jii = 1
 B = range(1,11)
 
 errors = []
