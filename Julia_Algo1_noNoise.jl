@@ -99,7 +99,7 @@ append!(prev_solutions, [sol["x"]])
 # end
 
 # println("Saving A$(i_A)_length$(chain_length)_depth$(layer_plan) ... ")
-flush(stdout)
+# flush(stdout)
 
 D2.save_object(".//results//Solution_A$(i_A)_length$(chain_length)_layers$(layer_plan).jld2", prev_solutions)
 

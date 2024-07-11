@@ -15,14 +15,15 @@ B = range(1,11)
 
 if __name__=="__main__":
     def func(B_idx):
+        out = []
         for layers in layer_plan:
             if type(layers)==int:
                 layers = [2]*layers
             pipe = os.popen(f'julia Julia_Algo1_noNoise.jl {chain_length} {B_idx} {Jii} "{layers}"')
-            out = pipe.read()
+            out.append(pipe.read())
             # interest = out[1:-1]
             # print(len(out))
-            return float(out)
+        return float(out)
 
 
     import time
