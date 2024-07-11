@@ -1,4 +1,4 @@
-import sys
+import os
 from information import determine_next_filename
 from concurrent.futures import ProcessPoolExecutor
 
