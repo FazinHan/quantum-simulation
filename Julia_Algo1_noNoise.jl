@@ -92,7 +92,7 @@ end
 timeevo = timeevo/Num_EV;
     
 println("$(timeevo)")
-flush(stdout)
+# flush(stdout)
 
 append!(prev_solutions, [sol["x"]])
         
