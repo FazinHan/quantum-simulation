@@ -6,9 +6,9 @@ from information import determine_next_filename
 
 '''$(i) A$(i_A)_length$(chain_length)_layer_plan$(layer_plan) $(timeevo) $(en)'''
 
-chain_length = 4
+chain_length = 2
 
-layer_plan = [4,5,[2,1,1,2]] # if i is int, circuit will have i type 2 (complete) layers
+layer_plan = [2,[2,1]] # if i is int, circuit will have i type 2 (complete) layers
 # layer_plan = [1,2]
 
 errors = []
