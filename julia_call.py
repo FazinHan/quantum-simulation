@@ -36,6 +36,7 @@ if __name__=="__main__":
     name = determine_next_filename('julia_result_errors','txt','data')
     with open(name,'w') as file:
         file.write(str(layer_plan)+'\n'+str(errors))
+        print('written to',name)
     
     print(f'complete in {np.round(t1-t0,1)}s')
     os.system("git commit -am 'update'")
