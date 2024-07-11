@@ -52,42 +52,46 @@ number_of_parameters = Int((FausewehZhuCirc |> Yao.nparameters) / 2)
 prev_solutions = []
     
 Overlap_circ = getOverlapCircuit(chain_length,layer_plan)
+
+for A in A_vec:
+    for i in 1:Num_EV
     
-for i in 1:Num_EV
-
-    optns = Dict("maxiter"=>6000, "disp"=>false)
-
-    sol = nothing
-
-    while true
-
-        Theta = 2*pi*rand(number_of_parameters)
-
-        cur_it = 0
-
-        # function callbackfunc(xk)
-        #     cur_it += 1
-        #     if cur_it % 100 == 1
-        #         println("Callback: $(VarL(xk, prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector))")
-        #     end
-        # end
-        #callbackfunc(xk) = return
+        optns = Dict("maxiter"=>6000, "disp"=>false)
+    
+        sol = nothing
+    
+        while true
+    
+            Theta = 2*pi*rand(number_of_parameters)
+    
+            cur_it = 0
+    
+            # function callbackfunc(xk)
+            #     cur_it += 1
+            #     if cur_it % 100 == 1
+            #         println("Callback: $(VarL(xk, prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector))")
+            #     end
+            # end
+            #callbackfunc(xk) = return
+            
+            sol = SP.optimize.minimize(VarL, Theta, jac=dVarL, tol=1e-7, args=(prev_solutions,chain_length,FausewehZhuCirc,Overlap_circ, zero_state_projector), options=optns)
+    
+            (sol["success"] == true ) && break
+        end
         
-        sol = SP.optimize.minimize(VarL, Theta, jac=dVarL, tol=1e-7, args=(prev_solutions,chain_length,FausewehZhuCirc,Overlap_circ, zero_state_projector), options=optns)
-
-        (sol["success"] == true ) && break
+        #sol = SP.optimize.minimize(VarL, Theta,  args=(prev_solutions,chain_length,depth,A,FausewehZhuCirc,Overlap_circ), options=optns)
+    
+        en += Energy(sol["x"], chain_length, layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T)
+        timeevo = VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)
     end
-    
-    #sol = SP.optimize.minimize(VarL, Theta,  args=(prev_solutions,chain_length,depth,A,FausewehZhuCirc,Overlap_circ), options=optns)
 
-    en = Energy(sol["x"], chain_length, layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T)
-    timeevo = VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)
-    
+    en /= Num_EV;
+        
     println("$(i) A$(i_A)_length$(chain_length)_layers$(layer_plan) $(timeevo) $(en)")
     flush(stdout)
 
     append!(prev_solutions, [sol["x"]])
-    
+        
 end
 
 println("Saving A$(i_A)_length$(chain_length)_depth$(layer_plan) ... ")
