@@ -25,8 +25,9 @@ if __name__=="__main__":
             out = pipe.read()
             # interest = out[1:-1]
             # print(len(out))
-            print(out)
-            errors.append(float(out))
+            flow = float(out)
+            print(flow)
+            errors.append(flow)
             return 0
 
     import time
@@ -44,6 +45,7 @@ if __name__=="__main__":
         print('written to',name)
     
     print(f'\ncomplete in {np.round(t1-t0,1)}s\n')
-    os.system("git commit -am 'update'")
+    os.system("git add .")
+    os.system("git commit -m 'update'")
     os.system("git push")
     print('pushed successfully')
