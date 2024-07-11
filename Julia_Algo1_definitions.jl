@@ -33,9 +33,9 @@ function H_0(num_sites, J, JII)
                         [JII*sigma_x[i]*sigma_x[i+2] for i in 1:2:num_sites-2],
                         [JII*sigma_y[i]*sigma_y[i+2] for i in 1:2:num_sites-2],
                         [JII*sigma_z[i]*sigma_z[i+2] for i in 1:2:num_sites-2],
-                        [JII*sigma_x[(i+1)]*sigma_x[(i+1)+2] for i in 1:2:num_sites-3],
-                        [JII*sigma_y[(i+1)]*sigma_y[(i+1)+2] for i in 1:2:num_sites-3],
-                        [JII*sigma_z[(i+1)]*sigma_z[(i+1)+2] for i in 1:2:num_sites-3]
+                        [JII*sigma_x[i]*sigma_x[i+2] for i in 2:2:num_sites-3],
+                        [JII*sigma_y[i]*sigma_y[i+2] for i in 2:2:num_sites-3],
+                        [JII*sigma_z[i]*sigma_z[i+2] for i in 2:2:num_sites-3]
             ))
 end;
 
@@ -73,7 +73,7 @@ function entangle_map_type1(num_sites)
 end
 
 function entangle_map_type2(num_sites)
-    a = [2i=> 2i+1 for i in 1:convert(Int64, num_sites/2)-1]
+    a = [i => i+2 for i in 1:num_sites-2]
     b = [i => i+1 for i in 1:2:num_sites-1]
     return [b;a]
 end

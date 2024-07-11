@@ -13,24 +13,23 @@ import YaoPlots
 chain_length = parse(Int64, ARGS[1])
 # depth = parse(Int64, String(split(ARGS[1])[2]))
 i_A = parse(Int64, ARGS[2])
+JII = parse(Int64, ARGS[3]);
 
 # chain_length = 2
 # layers_string = rsplit(ARGS[3], "")
-layer_plan = let expr = Meta.parse(ARGS[3])
+layer_plan = let expr = Meta.parse(ARGS[4])
     @assert expr.head == :vect
     Int.(expr.args)
 end
 
-Num_shots = 8192;
 J = 1.0;
-JII = 1.0;
 omega = 5.0 * chain_length;
 T = 2*π / omega;
 time_iterations = 1000;
 delta_t = T/(time_iterations);
 times = LinRange(0,T,time_iterations+1);
 times_trapezoid = LinRange(0+delta_t/2,T-delta_t/2,time_iterations);
-A_vec = LinRange(0,2,20);
+A_vec = LinRange(0,1,10);
 A = A_vec[i_A]
 
 println("For A = $(A)")
