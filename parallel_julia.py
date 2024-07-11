@@ -6,7 +6,7 @@ from concurrent.futures import ProcessPoolExecutor
 Jii = range(1,11)
 
 def func(jii):
-    os.system(f'python julia_call.py {jii}')
+    os.system(f'python julia_call.py {int(jii)}')
 
 if __name__=="__main__":
     with ProcessPoolExecutor(len(Jii)) as exe:
