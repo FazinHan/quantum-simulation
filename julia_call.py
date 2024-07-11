@@ -25,6 +25,7 @@ if __name__=="__main__":
             out = pipe.read()
             # interest = out[1:-1]
             # print(len(out))
+            print(out)
             errors.append(float(out))
             return 0
 
@@ -35,7 +36,7 @@ if __name__=="__main__":
         a = [0 for _ in exe.map(func, B)]
     t1 = time.perf_counter()
 
-    print(errors)
+    # print(errors)
 
     name = determine_next_filename('julia_result_errors','txt','data')
     with open(name,'a+') as file:
