@@ -33,8 +33,7 @@ if __name__=="__main__":
 
     name = determine_next_filename('julia_result_errors','txt','data')
     with open(name,'w') as file:
-        file.write(str(layer_plan))
-        file.write(str(errors))
+        file.write(str(layer_plan)+'\n'+str(errors))
     
     print('complete')
     os.system("git commit -am 'update'")
