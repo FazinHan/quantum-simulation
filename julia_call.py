@@ -23,7 +23,7 @@ if __name__=="__main__":
             out.append(pipe.read())
             # interest = out[1:-1]
             # print(len(out))
-        return float(out)
+        return [float(i) for i in out]
 
 
     import time
