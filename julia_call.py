@@ -20,7 +20,7 @@ if __name__=="__main__":
         for layers in layer_plan:
             if type(layers)==int:
                 layers = [2]*layers
-            pipe = os.popen(f'julia Julia_Algo1_noNoise.jl {chain_length} {B_idx} {Jii} "{layers}"')
+            pipe = os.popen(f'julia Julia_Algo1_noNoise.jl {chain_length} {int(B_idx)} {Jii} "{layers}"')
             out.append(pipe.read())
             # interest = out[1:-1]
             # print(len(out))
@@ -36,7 +36,7 @@ if __name__=="__main__":
 
     # print(errors)
 
-    name = determine_next_filename(f'julia_result_errors{Jii}','txt','data')
+    name = determine_next_filename(f'julia_result_errors{np.round(Jii,1)}','txt','data')
     with open(name,'a+') as file:
         file.write(str(layer_plan)+'\n'+str(list(B))+'\n'+str(errors))
         print('written to',name)
