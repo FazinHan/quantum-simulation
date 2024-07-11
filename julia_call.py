@@ -14,8 +14,6 @@ layer_plan = [2,[2,1]] # if i is int, circuit will have i type 2 (complete) laye
 Jii = 1
 B = range(1,11)
 
-errors = []
-
 if __name__=="__main__":
     def func(B_idx):
         for layers in layer_plan:
@@ -25,16 +23,14 @@ if __name__=="__main__":
             out = pipe.read()
             # interest = out[1:-1]
             # print(len(out))
-            flow = float(out)
-            print(flow)
-            errors.append(flow)
-            return 0
+            return float(out)
+
 
     import time
     
     t0 = time.perf_counter()
     with ProcessPoolExecutor(len(B)) as exe:
-        a = [0 for _ in exe.map(func, B)]
+        errors = [i for i in exe.map(func, B)]
     t1 = time.perf_counter()
 
     # print(errors)
