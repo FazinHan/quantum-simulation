@@ -32,7 +32,7 @@ times_trapezoid = LinRange(0+delta_t/2,T-delta_t/2,time_iterations);
 A_vec = LinRange(0,1,10);
 # A = A_vec[i_A]
 
-for A in A_vec:
+for A in A_vec
     println("For A = $(A)")
     
     #Compute the zero state projector
