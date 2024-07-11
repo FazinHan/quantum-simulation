@@ -60,7 +60,7 @@ for i in 1:Num_EV
 
     optns = Dict("maxiter"=>6000, "disp"=>false)
 
-    sol = nothing
+    global sol = nothing
 
     global en
 
