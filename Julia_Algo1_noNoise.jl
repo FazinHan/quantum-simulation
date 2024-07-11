@@ -32,28 +32,28 @@ times_trapezoid = LinRange(0+delta_t/2,T-delta_t/2,time_iterations);
 A_vec = LinRange(0,1,10);
 # A = A_vec[i_A]
 
-println("For A = $(A)")
-
-#Compute the zero state projector
-psi_0 = Yao.zero_state(chain_length);
-zero_state_projector =  Yao.matblock(Yao.state(psi_0)*transpose(Yao.state(psi_0)));
-
-Num_EV = 2^chain_length <= 10 ? 2^chain_length : 10
-
-EVs = zeros(Num_EV)
-
-FausewehZhuCirc = getFausewehZhuCircuit(chain_length,layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid))
-
-# println("circuit:")
-YaoPlots.vizcircuit(FausewehZhuCirc, filename=joinpath(@__DIR__, "circ.png"))
-   
-number_of_parameters = Int((FausewehZhuCirc |> Yao.nparameters) / 2)
-    
-prev_solutions = []
-    
-Overlap_circ = getOverlapCircuit(chain_length,layer_plan)
-
 for A in A_vec:
+    println("For A = $(A)")
+    
+    #Compute the zero state projector
+    psi_0 = Yao.zero_state(chain_length);
+    zero_state_projector =  Yao.matblock(Yao.state(psi_0)*transpose(Yao.state(psi_0)));
+    
+    Num_EV = 2^chain_length <= 10 ? 2^chain_length : 10
+    
+    EVs = zeros(Num_EV)
+    
+    FausewehZhuCirc = getFausewehZhuCircuit(chain_length,layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid))
+    
+    # println("circuit:")
+    YaoPlots.vizcircuit(FausewehZhuCirc, filename=joinpath(@__DIR__, "circ.png"))
+       
+    number_of_parameters = Int((FausewehZhuCirc |> Yao.nparameters) / 2)
+        
+    prev_solutions = []
+        
+    Overlap_circ = getOverlapCircuit(chain_length,layer_plan)
+
     for i in 1:Num_EV
     
         optns = Dict("maxiter"=>6000, "disp"=>false)
