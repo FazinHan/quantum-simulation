@@ -83,11 +83,11 @@ for i in 1:Num_EV
     
     #sol = SP.optimize.minimize(VarL, Theta,  args=(prev_solutions,chain_length,depth,A,FausewehZhuCirc,Overlap_circ), options=optns)
 
-    en += Energy(sol["x"], chain_length, layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T)
+    en = en + Energy(sol["x"], chain_length, layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T)
     timeevo = VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)
 end
 
-en /= Num_EV;
+en = en/Num_EV;
     
 println("$(i) A$(i_A)_length$(chain_length)_layers$(layer_plan) $(timeevo) $(en)")
 flush(stdout)
