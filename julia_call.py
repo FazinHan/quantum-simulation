@@ -26,16 +26,18 @@ if __name__=="__main__":
         errors.append(interest)
         return 0
 
+    import time
     
-
+    t0 = time.perf_counter()
     with ProcessPoolExecutor(3) as exe:
         a = [0 for _ in exe.map(func, layer_plan)]
+    t1 = time.perf_counter()
 
     name = determine_next_filename('julia_result_errors','txt','data')
     with open(name,'w') as file:
         file.write(str(layer_plan)+'\n'+str(errors))
     
-    print('complete')
+    print(f'complete in {np.round(t1-t0,1)}s')
     os.system("git commit -am 'update'")
     os.system("git push")
     print('pushed successfully')
