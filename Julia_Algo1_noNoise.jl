@@ -62,6 +62,8 @@ for i in 1:Num_EV
 
     sol = nothing
 
+    global en
+
     while true
 
         Theta = 2*pi*rand(number_of_parameters)
@@ -89,7 +91,7 @@ end
 
 en = en/Num_EV;
     
-println("$(i) A$(i_A)_length$(chain_length)_layers$(layer_plan) $(timeevo) $(en)")
+println("A$(i_A)_length$(chain_length)_layers$(layer_plan) $(timeevo) $(en)")
 flush(stdout)
 
 append!(prev_solutions, [sol["x"]])
