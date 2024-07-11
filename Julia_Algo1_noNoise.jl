@@ -33,7 +33,7 @@ A_vec = LinRange(0,1,10);
 A = A_vec[i_A]
 
 # for A in A_vec
-println("For A = $(A)")
+# println("For A = $(A)")
 
 #Compute the zero state projector
 psi_0 = Yao.zero_state(chain_length);
@@ -54,7 +54,7 @@ prev_solutions = []
     
 Overlap_circ = getOverlapCircuit(chain_length,layer_plan)
 
-en = 0
+timeevo = 0
 
 for i in 1:Num_EV
 
@@ -62,7 +62,7 @@ for i in 1:Num_EV
 
     global sol = nothing
 
-    global en
+    global timeevo
 
     while true
 
@@ -85,20 +85,20 @@ for i in 1:Num_EV
     
     #sol = SP.optimize.minimize(VarL, Theta,  args=(prev_solutions,chain_length,depth,A,FausewehZhuCirc,Overlap_circ), options=optns)
 
-    en = en + Energy(sol["x"], chain_length, layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T)
-    global timeevo = VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)
+    en = Energy(sol["x"], chain_length, layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T)
+    timeevo += VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)
 end
 
-en = en/Num_EV;
+timeevo = timeevo/Num_EV;
     
-println("A$(i_A)_length$(chain_length)_layers$(layer_plan) $(timeevo) $(en)")
+println("$(timeevo)")
 flush(stdout)
 
 append!(prev_solutions, [sol["x"]])
         
 # end
 
-println("Saving A$(i_A)_length$(chain_length)_depth$(layer_plan) ... ")
+# println("Saving A$(i_A)_length$(chain_length)_depth$(layer_plan) ... ")
 flush(stdout)
 
 D2.save_object(".//results//Solution_A$(i_A)_length$(chain_length)_layers$(layer_plan).jld2", prev_solutions)

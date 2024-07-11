@@ -22,10 +22,10 @@ if __name__=="__main__":
             if type(layers)==int:
                 layers = [2]*layers
             pipe = os.popen(f'julia Julia_Algo1_noNoise.jl {chain_length} {B_idx} {Jii} "{layers}"')
-            out = pipe.readlines()
-            interest = out[1:-1]
-            print(len(interest))
-            errors.append(interest)
+            out = pipe.read()
+            # interest = out[1:-1]
+            print(len(out))
+            errors.append(out)
             return 0
 
     import time
