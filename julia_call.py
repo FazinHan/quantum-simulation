@@ -24,8 +24,8 @@ if __name__=="__main__":
             pipe = os.popen(f'julia Julia_Algo1_noNoise.jl {chain_length} {B_idx} {Jii} "{layers}"')
             out = pipe.read()
             # interest = out[1:-1]
-            print(len(out))
-            errors.append(out)
+            # print(len(out))
+            errors.append(float(out))
             return 0
 
     import time
@@ -35,12 +35,14 @@ if __name__=="__main__":
         a = [0 for _ in exe.map(func, B)]
     t1 = time.perf_counter()
 
+    print(errors)
+
     name = determine_next_filename('julia_result_errors','txt','data')
     with open(name,'a+') as file:
         file.write(str(layer_plan)+'\n'+str(errors))
         print('written to',name)
     
-    print(f'complete in {np.round(t1-t0,1)}s')
+    print(f'\ncomplete in {np.round(t1-t0,1)}s\n')
     os.system("git commit -am 'update'")
     os.system("git push")
     print('pushed successfully')
