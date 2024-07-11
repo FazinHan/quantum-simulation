@@ -10,5 +10,5 @@ def func(jii):
     os.system(f'python julia_call.py {jii}')
 
 if __name__=="__main__":
-    with ProcessPoolExecutor(len(Jii)) as exe:
-        [0 for _ in exe.map(func, Jii)]
+    for i in Jii:
+        func(i)
