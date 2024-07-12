@@ -5,9 +5,9 @@ from parallel_julia import JII
 from information import determine_next_filename
 
 jii_offset = 1
-jii_plot_count = 3
+jii_plot_count = 4
 
-
+layer_slice = '[:]'
 
 fig, axs = plt.subplots(layout='constrained')
 
@@ -23,7 +23,7 @@ for i in range(jii_plot_count):
         errors = 1 + np.array(eval(file.readline()))
     x_axis = range(len(layer_plan))
     
-    axs.plot(x_axis, errors[i], label=f'J||={jii}')
+    axs.plot(eval('x_axis'+layer_slice), eval('errors[i]'+layer_slice), label=f'J||={jii}')
     
 axs.set_xticks(x_axis, layer_plan)
 axs.grid()
