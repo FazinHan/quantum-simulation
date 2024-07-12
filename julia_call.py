@@ -9,7 +9,7 @@ from information import determine_next_filename
 
 chain_length = 4
 
-layer_plan = [3,4,[2,1,1]] # if i is int, circuit will have i type 2 (complete) layers
+layer_plan = range(1,7) # if i is int, circuit will have i type 2 (complete) layers
 # layer_plan = [1,2]
 Jii = float(sys.argv[1])
 B = range(1,11)
