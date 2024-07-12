@@ -4,11 +4,11 @@ import sys
 from information import determine_next_filename
 from concurrent.futures import ProcessPoolExecutor
 
-JII = np.arange(0,1,.1)
+B = range(1,11)
 
-def func(jii):
-    os.system(f'python julia_call.py {jii}')
+def func(b):
+    os.system(f'python julia_call.py {b}')
 
 if __name__=="__main__":
-    for i in JII:
+    for i in B:
         func(i)
