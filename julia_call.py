@@ -43,7 +43,7 @@ if __name__=="__main__":
 
     name = determine_next_filename(f'julia_result_errors_{B}_','txt','data')
     with open(name,'a+') as file:
-        file.write(str(layer_plan)+'\n'+str(list(B))+'\n'+str(errors))
+        file.write(str(layer_plan)+'\n'+str(list(Jii))+'\n'+str(errors))
         print('written to',name)
     
     print(f'\ncomplete in {np.round(t1-t0,1)}s\n')
