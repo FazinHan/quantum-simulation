@@ -18,7 +18,7 @@ dt = T / num_time_steps
 
 J = 1
 JII = .1
-B_range = [0,3]
+B_range = [0,.08]
 
 def hamiltonian_circular(t, A=2, J=J, omega=Ω):
     creator = ['I']*chain_length
