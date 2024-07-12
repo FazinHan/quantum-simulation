@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from physics import B_range
 
 def classical_plotter(ax, B_arr, omega, energies, J, JII, plot_singlets=True):
     handles = []

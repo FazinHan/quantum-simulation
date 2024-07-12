@@ -4,10 +4,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 from information import determine_next_filename
+from physics import num_qubits as chain_length
 
 '''$(i) A$(i_A)_length$(chain_length)_layer_plan$(layer_plan) $(timeevo) $(en)'''
 
-chain_length = 4
+# chain_length = 4
 
 layer_plan = range(1,7) # if i is int, circuit will have i type 2 (complete) layers
 

@@ -4,8 +4,8 @@ from qiskit import QuantumCircuit
 from qiskit.quantum_info import SparsePauliOp
 from qutip import tensor, sigmax, sigmay, sigmaz, qeye, FloquetBasis
 
-num_rungs = 1
-num_layers = 1
+num_rungs = 2
+num_layers = 2
 num_qubits = 2*num_rungs
 
 Ω = 2.5
@@ -17,8 +17,8 @@ T = num_periods * 2*np.pi/Ω
 dt = T / num_time_steps
 
 J = 1
-JII = 1
-B_range = [0,.4]
+JII = .1
+B_range = [0,3]
 
 def hamiltonian_circular(t, A=2, J=J, omega=Ω):
     creator = ['I']*chain_length
