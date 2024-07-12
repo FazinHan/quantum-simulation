@@ -12,7 +12,7 @@ import YaoPlots
 
 chain_length = parse(Int64, ARGS[1])
 # depth = parse(Int64, String(split(ARGS[1])[2]))
-i_A = parse(Int64, ARGS[2])
+i_A = parse(Float64, ARGS[2])
 JII = parse(Float64, ARGS[3]);
 
 # chain_length = 2
