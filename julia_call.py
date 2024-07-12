@@ -9,12 +9,12 @@ from information import determine_next_filename
 
 chain_length = 4
 
-# layer_plan = range(1,7) # if i is int, circuit will have i type 2 (complete) layers
+layer_plan = range(1,7) # if i is int, circuit will have i type 2 (complete) layers
 
-layer_plan = [4,5,[2,2,1,1,1],[2,1,1,1,2]]
+# layer_plan = [4,5,[2,2,1,1,1],[2,1,1,1,2]]
 
 # layer_plan = [1,2]
-Jii = np.arange(0,1,.1)
+Jii = [.1,1]
 
 if __name__=="__main__":
     B = int(sys.argv[1])

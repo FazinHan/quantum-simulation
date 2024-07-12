@@ -4,7 +4,7 @@ import sys
 from information import determine_next_filename
 from concurrent.futures import ProcessPoolExecutor
 
-B = range(1,11)
+B = [2]
 
 def func(b):
     os.system(f'python julia_call.py {b}')
