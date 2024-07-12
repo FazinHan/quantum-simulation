@@ -1,12 +1,12 @@
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-from parallel_julia import B
+from physics import B_range
 from julia_call import Jii
 from information import determine_next_filename
 
-b_offset = 1
-b_plot_count = 4
+b_offset = 0
+b_plot_count = 1
 
 layer_slice = '[:]'
 
@@ -15,9 +15,9 @@ fig, axs = plt.subplots(layout='constrained')
 
 for i in range(b_plot_count):
     
-    b = np.round(B[i+b_offset],1)
-    
-    name = determine_next_filename(f'julia_result_errors0.4','txt','data//round1',exists=True)
+    b = np.round(B_range[i+b_offset],1)
+
+    name = determine_next_filename(f'julia_result_errors_0.0_','txt','data',exists=True)
     with open(name,'r') as file:
         layer_plan = eval(file.readline())
         B = eval(file.readline())

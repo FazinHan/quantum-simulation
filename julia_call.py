@@ -11,7 +11,7 @@ from physics import num_qubits as chain_length
 # chain_length = 4
 
 layer_plan = range(2,7) # if i is int, circuit will have i type 2 (complete) layers
-layer_plan = [2] # if i is int, circuit will have i type 2 (complete) layers
+# layer_plan = [2] # if i is int, circuit will have i type 2 (complete) layers
 
 # layer_plan = [4,5,[2,2,1,1,1],[2,1,1,1,2]]
 
