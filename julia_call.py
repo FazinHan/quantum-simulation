@@ -19,7 +19,7 @@ layer_plan = [2] # if i is int, circuit will have i type 2 (complete) layers
 Jii = [.1,1]
 
 if __name__=="__main__":
-    B = int(sys.argv[1])
+    B = float(sys.argv[1])
     def func(Jii):
         out = []
         for layers in layer_plan:
