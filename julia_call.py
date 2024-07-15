@@ -16,7 +16,7 @@ layer_plan = [2,[2,1]] # if i is int, circuit will have i type 2 (complete) laye
 # layer_plan = [4,5,[2,2,1,1,1],[2,1,1,1,2]]
 
 # layer_plan = [1,2]
-Jii = [.1,1]
+Jii = [.1,.5,1]
 
 if __name__=="__main__":
     B = float(sys.argv[1])
