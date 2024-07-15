@@ -34,12 +34,12 @@ if __name__=="__main__":
 
     # print(errors)
 
-    name = determine_next_filename(f'julia_result_errors_{B}_','txt','data')
+    name = determine_next_filename(f'julia_result_errors_{chain_length}_{B}_','txt','data')
     with open(name,'a+') as file:
-        file.write(str(chain_length)+'\n'+str(layer_plan)+'\n'+str(list(Jii))+'\n'+str(errors))
+        file.write(str(layer_plan)+'\n'+str(list(Jii))+'\n'+str(errors))
         print('\nwritten to',name)
     
-    os.system('python jplot.py')
+    os.system(f'python jplot.py {chain_length}')
     print(f'\nplotted length {chain_length} and field {B}')
     
     print(f'\ncomplete in {np.round(t1-t0,1)}s\n')

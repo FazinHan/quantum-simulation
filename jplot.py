@@ -1,4 +1,4 @@
-import os
+import os, sys
 import matplotlib.pyplot as plt
 import numpy as np
 from parallel_julia import B_range
@@ -14,6 +14,8 @@ fig, axs = plt.subplots(layout='constrained')
 
 B_vec = np.linspace(*B_range, 1)
 
+chain_length = int(sys.argv[1])
+
 def layer_def(plan):
     if type(plan)==int:
         return '-'.join(['d']*plan)
@@ -22,10 +24,10 @@ def layer_def(plan):
 for i in range(b_plot_count):
     
     b = B_vec[i+b_offset]
-
-    name = determine_next_filename(f'julia_result_errors_{b}_','txt','data',exists=True)
+    
+    name = determine_next_filename(f"julia_result_errors_{chain_length}_{b}_" ,'txt','data',exists=True)
     with open(name,'r') as file:
-        chain_length = eval(file.readline())
+        # chain_length = eval(file.readline())
         layer_plan = eval(file.readline())
         Jii = eval(file.readline())
         errors = 1 + np.array(eval(file.readline()))
@@ -35,7 +37,7 @@ for i in range(b_plot_count):
     for idx, layers in enumerate(layer_plan):
         axs.semilogy(eval('Jii'+layer_slice), eval('errors[:,idx]'+layer_slice), label=f'{layer_def(layers)}')
     
-axs.set_xticks(x_axis, np.array(Jii))
+axs.set_xticks(np.array(Jii))
 axs.grid()
 axs.legend()
 axs.set_xlabel('$J||$')
