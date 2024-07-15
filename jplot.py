@@ -30,12 +30,12 @@ for i in range(b_plot_count):
         Jii = eval(file.readline())
         errors = 1 + np.array(eval(file.readline()))
         print(errors)
-    x_axis = np.array(Jii)
+    x_axis = range(len(Jii))
 
     for idx, layers in enumerate(layer_plan):
-        axs.semilogy(eval('x_axis'+layer_slice), eval('errors[:,idx]'+layer_slice), label=f'{layer_def(layers)}')
+        axs.semilogy(eval('Jii'+layer_slice), eval('errors[:,idx]'+layer_slice), label=f'{layer_def(layers)}')
     
-# axs.set_xticks(x_axis, layer_plan)
+axs.set_xticks(x_axis, np.array(Jii))
 axs.grid()
 axs.legend()
 axs.set_xlabel('$J||$')
