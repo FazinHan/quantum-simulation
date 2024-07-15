@@ -29,7 +29,7 @@ time_iterations = 1000;
 delta_t = T/(time_iterations);
 times = LinRange(0,T,time_iterations+1);
 times_trapezoid = LinRange(0+delta_t/2,T-delta_t/2,time_iterations);
-A_vec = LinRange(0,1,10);
+A_vec = LinRange(0,.08,10);
 # A = A_vec[i_A]
 A = i_A
 

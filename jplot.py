@@ -12,10 +12,12 @@ layer_slice = '[:]'
 
 fig, axs = plt.subplots(layout='constrained')
 
+B_vec = np.linspace(*B_range, 10)
+
 
 for i in range(b_plot_count):
     
-    b = np.round(B_range[i+b_offset],1)
+    b = np.round(B_vec[i+b_offset],1)
 
     name = determine_next_filename(f'julia_result_errors_0.0_','txt','data',exists=True)
     with open(name,'r') as file:
