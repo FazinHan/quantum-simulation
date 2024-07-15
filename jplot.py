@@ -1,10 +1,9 @@
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-from physics import B_range
+from parallel_julia import B_range
 from julia_call import Jii
 from information import determine_next_filename
-from physics import num_qubits as chain_length
 
 b_offset = 0
 b_plot_count = 1
@@ -26,6 +25,7 @@ for i in range(b_plot_count):
 
     name = determine_next_filename(f'julia_result_errors_{b}_','txt','data',exists=True)
     with open(name,'r') as file:
+        chain_length = eval(file.readline())
         layer_plan = eval(file.readline())
         Jii = eval(file.readline())
         errors = 1 + np.array(eval(file.readline()))
@@ -40,7 +40,7 @@ axs.grid()
 axs.legend()
 axs.set_xlabel('$J||$')
 axs.set_ylabel('Abs. Error')
-fig.suptitle(f'J = 1, $\\Omega={5*chain_length}$, B={B_vec[0]}, chain={chain_length}')
+fig.suptitle(f'J = 1, $\\Omega={5*chain_length}$, B={B_vec[0]}, qubits={chain_length}')
 name = determine_next_filename(f'jii_vs_err_{chain_length}_','png','outputs')
-# plt.savefig(name)
-plt.show()
+plt.savefig(name)
+# plt.show()
