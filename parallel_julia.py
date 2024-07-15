@@ -5,7 +5,7 @@ from information import determine_next_filename
 from concurrent.futures import ProcessPoolExecutor
 from physics import B_range
 
-B_vec = np.linspace(*B_range,2)
+B_vec = np.linspace(*B_range,1)
 
 def func(b):
     os.system(f'python julia_call.py {b}')

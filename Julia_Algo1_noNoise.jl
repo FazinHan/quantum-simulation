@@ -29,7 +29,7 @@ time_iterations = 1000;
 delta_t = T/(time_iterations);
 times = LinRange(0,T,time_iterations+1);
 times_trapezoid = LinRange(0+delta_t/2,T-delta_t/2,time_iterations);
-A_vec = LinRange(0,.08,10);
+A_vec = LinRange(0.08,.08,1);
 # A = A_vec[i_A]
 A = i_A
 
@@ -59,7 +59,7 @@ timeevo = 0
 
 for i in 1:Num_EV
 
-    optns = Dict("maxiter"=>8000, "disp"=>false)
+    optns = Dict("maxiter"=>20000, "disp"=>false)
 
     global sol = nothing
 
@@ -79,7 +79,7 @@ for i in 1:Num_EV
         # end
         #callbackfunc(xk) = return
         
-        sol = SP.optimize.minimize(VarL, Theta, jac=dVarL, tol=1e-10, args=(prev_solutions,chain_length,FausewehZhuCirc,Overlap_circ, zero_state_projector), options=optns)
+        sol = SP.optimize.minimize(VarL, Theta, jac=dVarL, tol=1e-7, args=(prev_solutions,chain_length,FausewehZhuCirc,Overlap_circ, zero_state_projector), options=optns)
 
         (sol["success"] == true ) && break
     end

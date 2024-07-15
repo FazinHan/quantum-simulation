@@ -12,7 +12,7 @@ layer_slice = '[:]'
 
 fig, axs = plt.subplots(layout='constrained')
 
-B_vec = np.linspace(*B_range, 10)
+B_vec = np.linspace(*B_range, 1)
 
 
 for i in range(b_plot_count):
