@@ -6,11 +6,11 @@ from concurrent.futures import ProcessPoolExecutor
 
 B_range = [.08,.08]
 
-chain_length = int(sys.argv[1])
 
 B_vec = np.linspace(*B_range,1)
 
 def func(b):
+    chain_length = int(sys.argv[1])
     os.system(f'python julia_call.py {chain_length} {b}')
 
 if __name__=="__main__":
