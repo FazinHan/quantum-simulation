@@ -68,6 +68,8 @@ function inverse_cnot(nbit, i, j)
     return Yao.cnot(nbit, j, i)
 end
 
+function inverse_rzz(nbit, theta, i, j)
+
 function entangle_map_type1(num_sites)
     return [i => i+1 for i in 1:2:num_sites-1]
 end
