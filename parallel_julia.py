@@ -16,6 +16,9 @@ def func(b):
 if __name__=="__main__":
     # for i in B_vec:
         # func(i)
+    import time
+    t0 = time.perf_counter()
     with ProcessPoolExecutor(B_vec.size) as exe:
         [_ for _ in exe.map(func, B_vec)]
-
+    t1 = time.perf_counter()
+    print(f'\n{np.round(t1-t0,3)} s')

@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH --ntasks=3
+#SBATCH --error=./out_files/qsim.err
+#SBATCH --output=./out_files/qsim.out
+#SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
+#SBATCH --job-name=deo.double.ji
+#SBATCH --cpus-per-task=3
+
+srun --ntasks=1 --nodes=1 --cpus-per-task=$SLURM_CPUS_PER_TASK bash -c "module load conda && conda activate qsims && python parallel_julia.py 4"
+srun --ntasks=1 --nodes=1 --cpus-per-task=$SLURM_CPUS_PER_TASK bash -c "module load conda && conda activate qsims && python parallel_julia.py 6"
+srun --ntasks=1 --nodes=1 --cpus-per-task=$SLURM_CPUS_PER_TASK bash -c "module load conda && conda activate qsims && python parallel_julia.py 8"
