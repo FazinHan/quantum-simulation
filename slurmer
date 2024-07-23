@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --ntasks=3
-#SBATCH --error=./out_files/qsim.err
-#SBATCH --output=./out_files/qsim.out
+#SBATCH --error=qsim.err
+#SBATCH --output=qsim.out
 #SBATCH --mail-user=fizaan.khan.phy21@iitbhu.ac.in
 #SBATCH --job-name=deo.double.ji
 #SBATCH --cpus-per-task=3
