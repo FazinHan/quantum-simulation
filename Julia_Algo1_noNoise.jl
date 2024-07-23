@@ -47,6 +47,7 @@ EVs = zeros(Num_EV)
 FausewehZhuCirc = getFausewehZhuCircuit(chain_length,layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid))
 
 # println("circuit:")
+YaoPlots.lighttheme!()
 YaoPlots.vizcircuit(FausewehZhuCirc, filename=joinpath(@__DIR__, "circ.png"))
    
 number_of_parameters = Int((FausewehZhuCirc |> Yao.nparameters) / 2)

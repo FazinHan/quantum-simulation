@@ -69,15 +69,16 @@ function inverse_cnot(nbit, i, j)
 end
 
 function inverse_rzz(nbit, theta, i, j)
+end
 
-function entangle_map_type1(num_sites)
+function entangle_map_type1(num_sites, inverse=false)
     return [i => i+1 for i in 1:2:num_sites-1]
 end
 
-function entangle_map_type2(num_sites)
+function entangle_map_type2(num_sites, inverse=false)
     a = [i => i+2 for i in 1:num_sites-2]
     b = [i => i+1 for i in 1:2:num_sites-1]
-    return [b;a]
+    return inverse ? [a;b] : [b;a]
 end
 
 function pair_ring_new(num_sites)
@@ -85,7 +86,7 @@ function pair_ring_new(num_sites)
 end
 
 function create_layer(num_sites, layer_type; inverse=false)
-    return Yao.EasyBuild.variational_circuit(Float64, num_sites, 1, layer_type==2 ? entangle_map_type2(num_sites) : entangle_map_type1(num_sites), entangler= inverse ? inverse_cnot : Yao.cnot)
+    return Yao.EasyBuild.variational_circuit(Float64, num_sites, 1, layer_type==2 ? entangle_map_type2(num_sites, inverse) : entangle_map_type1(num_sites, inverse), entangler= inverse ? inverse_cnot : Yao.cnot)
 end
 
 function put_circuit(circuit, num_sites)
@@ -101,7 +102,7 @@ function create_circuit(num_sites, layer_plan)
 end
 
 function create_circuit_reverse(num_sites, layer_plan)
-    return Yao.chain(num_sites, [put_circuit_reverse(create_layer(num_sites, i, inverse=true), num_sites) for i in layer_plan])
+    return Yao.chain(num_sites, [put_circuit_reverse(create_layer(num_sites, i, inverse=true), num_sites) for i in reverse(layer_plan)])
 end
 
 #Function to get the circuit
