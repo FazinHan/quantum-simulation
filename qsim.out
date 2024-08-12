@@ -1,0 +1,15 @@
+==========================================
+SLURM_CLUSTER_NAME = param-shivay
+SLURM_JOB_ACCOUNT = physics_engg
+SLURM_JOB_ID = 986297
+SLURM_JOB_NAME = deo.double.ji
+SLURM_JOB_NODELIST = cn177
+SLURM_JOB_USER = fizaank.phy21.iitbhu
+SLURM_JOB_UID = 5982
+SLURM_JOB_PARTITION = standard
+SLURM_TASK_PID = 117010
+SLURM_SUBMIT_DIR = /home/fizaank.phy21.iitbhu/quantum-simulation
+SLURM_CPUS_ON_NODE = 9
+SLURM_NTASKS = 3
+SLURM_TASK_PID = 117010
+==========================================
