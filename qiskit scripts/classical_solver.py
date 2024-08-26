@@ -8,13 +8,22 @@ from plotters import classical_plotter
 import matplotlib.pyplot as plt
 from information import determine_next_filename
 
-omega = 5 * num_qubits
+omega = 2.5
+
+num_rungs = 2
+num_layers = 2
+num_qubits = 2*num_rungs
+
+num_periods = 1
+num_time_steps = 100
+T = num_periods * 2*np.pi/omega
+dt = T / num_time_steps
 
 state = [basis(2,0)]*num_qubits
 state[0] = basis(2,1)
 state = tensor(state)
 
-B_arr = np.linspace(*B_range,1000)*omega
+B_arr = np.linspace(0,.4,500)*omega
 
 energies = []
 
@@ -30,13 +39,13 @@ for B in B_arr:
 
 energies = np.array(energies)
 
-fname = determine_next_filename('qutip_data','npz','data')
-with open(fname,'wb') as file:
-    np.savez(file, B_arr=B_arr, energies=energies)
-    print(f'data saved to {fname}')
+# fname = determine_next_filename('qutip_data','npz','data')
+# with open(fname,'wb') as file:
+#     np.savez(file, B_arr=B_arr, energies=energies)
+#     print(f'data saved to {fname}')
 
-# fig, ax = plt.subplots()
-# classical_plotter(ax, num_qubits, B_arr, omega, energies, J, JII)
-# fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
+fig, ax = plt.subplots()
+classical_plotter(ax, B_arr, omega, energies, J, JII)
+fig.suptitle(f'$\\Omega={omega}$, $J={J}$, $J_{{||}}={JII}$')
 # plt.savefig(determine_next_filename('qutip',folder='outputs'))
-# plt.show()
+plt.show()

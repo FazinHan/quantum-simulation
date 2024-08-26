@@ -1,6 +1,7 @@
+include("variational_circuit.jl")
+
 using LinearAlgebra
 using Random
-
 
 function pauli_operator(idx, num_sites, pauli_matrix)
 
@@ -68,7 +69,12 @@ function inverse_cnot(nbit, i, j)
     return Yao.cnot(nbit, j, i)
 end
 
-function inverse_rzz(nbit, theta, i, j)
+function RZZ(theta, qubit1, qubit2)
+    return control(qubit1, put(qubit2=>2, rot(ZZ, theta)))
+end
+
+function inverse_RZZ(theta, qubit1, qubit2)
+    return control(qubit2, put(qubit1=>2, rot(ZZ, -theta)))
 end
 
 function entangle_map_type1(num_sites, inverse=false)
@@ -81,12 +87,12 @@ function entangle_map_type2(num_sites, inverse=false)
     return inverse ? [a;b] : [b;a]
 end
 
-function pair_ring_new(num_sites)
+function pair_ring_new(num_sites) # not required for my ansatz
     return circshift(Yao.EasyBuild.pair_ring(num_sites), 1)
 end
 
 function create_layer(num_sites, layer_type; inverse=false)
-    return Yao.EasyBuild.variational_circuit(Float64, num_sites, 1, layer_type==2 ? entangle_map_type2(num_sites, inverse) : entangle_map_type1(num_sites, inverse), entangler= inverse ? inverse_cnot : Yao.cnot)
+    return variational_circuit(Float64, num_sites, 1, layer_type==2 ? entangle_map_type2(num_sites, inverse) : entangle_map_type1(num_sites, inverse), entangler= inverse ? inverse_RZZ : RZZ)
 end
 
 function put_circuit(circuit, num_sites)

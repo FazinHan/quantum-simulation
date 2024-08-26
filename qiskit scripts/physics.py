@@ -17,7 +17,7 @@ T = num_periods * 2*np.pi/Ω
 dt = T / num_time_steps
 
 J = 1
-JII = .1
+JII = 1
 B_range = [.08,.08]
 
 def hamiltonian_circular(t, A=2, J=J, omega=Ω):

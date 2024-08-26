@@ -6,7 +6,7 @@ from concurrent.futures import ProcessPoolExecutor
 from information import determine_next_filename
 
 
-layer_plan = [2,[2,1]] # if i is int, circuit will have i type 2 (complete) layers
+layer_plan = [2,[2,1]] # if i is int, circuit will have i type 2 (dense) layers
 
 Jii = [.1,.5,1]
 
