@@ -62,19 +62,22 @@ function U_T(num_sites, A, omega, delta_t, J, JII, times_trapezoid)
     return U
 end;
 
-import Yao
+using Yao
 import Yao.EasyBuild
+
+inv_shift(θ) = ShiftGate(θ)
+mat(::Type{T}, gate::ShiftGate) where {T} = Diagonal(T[1.0, exp(-im * gate.theta)])
 
 function inverse_cnot(nbit, i, j)
     return Yao.cnot(nbit, j, i)
 end
 
-function RZZ(theta, qubit1, qubit2)
-    return control(qubit1, put(qubit2=>2, rot(ZZ, theta)))
+function RZZ(theta, total, ctrl_locs, locs)
+    return Yao.control(total, ctrl_locs => Yao.shift(theta), locs => inv_shift(theta))
 end
 
-function inverse_RZZ(theta, qubit1, qubit2)
-    return control(qubit2, put(qubit1=>2, rot(ZZ, -theta)))
+function inverse_RZZ(theta, total, ctrl_locs, locs)
+    return Yao.control(total, locs => Yao.shift(theta), ctrl_locs => inv_shift(theta))
 end
 
 function entangle_map_type1(num_sites, inverse=false)

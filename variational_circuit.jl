@@ -98,7 +98,7 @@ A kind of widely used differentiable quantum circuit, angles in the circuit is r
 function variational_circuit(::Type{T}, nbit, nlayer, pairs; mode=:Split, do_cache=false, entangler=cnot) where T
     circuit = chain(nbit)
 
-    ent = chain(nbit, entangler(T, i, j) for (i, j) in pairs)
+    ent = chain(nbit, entangler(T, nbit, i, j) for (i, j) in pairs)
     if do_cache
         ent = ent |> cache
     end
