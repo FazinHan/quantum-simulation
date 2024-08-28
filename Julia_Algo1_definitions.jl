@@ -65,19 +65,16 @@ end;
 using Yao
 import Yao.EasyBuild
 
-inv_shift(θ) = ShiftGate(θ)
-mat(::Type{T}, gate::ShiftGate) where {T} = Diagonal(T[1.0, exp(-im * gate.theta)])
-
 function inverse_cnot(nbit, i, j)
     return Yao.cnot(nbit, j, i)
 end
 
 function RZZ(theta, total, ctrl_locs, locs)
-    return Yao.control(total, ctrl_locs => Yao.shift(theta), locs => inv_shift(theta))
+    return Yao.rot(Yao.kron(total, ctrl_locs=>Yao.Z, locs=>Yao.Z), theta)
 end
 
 function inverse_RZZ(theta, total, ctrl_locs, locs)
-    return Yao.control(total, locs => Yao.shift(theta), ctrl_locs => inv_shift(theta))
+    return Yao.rot(Yao.kron(total, ctrl_locs=>Yao.Z, locs=>Yao.Z), theta)
 end
 
 function entangle_map_type1(num_sites, inverse=false)
