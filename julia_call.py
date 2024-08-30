@@ -1,6 +1,5 @@
 import os
 import sys
-import matplotlib.pyplot as plt
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 from information import determine_next_filename
