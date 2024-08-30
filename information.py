@@ -1,6 +1,6 @@
-from qiskit.quantum_info import SparsePauliOp
+#from qiskit.quantum_info import SparsePauliOp
 import numpy as np
-from qiskit.quantum_info import Statevector
+#from qiskit.quantum_info import Statevector
 
 def convergence_parameter(ansatz, parameters, U_T):
     circuit = ansatz.assign_parameters(parameters)

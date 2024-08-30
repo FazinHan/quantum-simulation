@@ -1,7 +1,7 @@
 import os
 import sys
 import numpy as np
-from concurrent.futures import ProcessPoolExecutor
+#from concurrent.futures import ProcessPoolExecutor
 from information import determine_next_filename
 
 
@@ -27,8 +27,7 @@ if __name__=="__main__":
     import time
     
     t0 = time.perf_counter()
-    with ProcessPoolExecutor(len(Jii)) as exe:
-        errors = [i for i in exe.map(func, Jii)]
+    errors = [func(i) for i in Jii]
     t1 = time.perf_counter()
 
     # print(errors)
