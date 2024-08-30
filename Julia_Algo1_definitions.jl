@@ -69,13 +69,9 @@ function inverse_cnot(nbit, i, j)
     return Yao.cnot(nbit, j, i)
 end
 
-function RZZ(theta, total, ctrl_locs, locs)
-    return Yao.rot(Yao.kron(total, ctrl_locs=>Yao.Z, locs=>Yao.Z), theta)
-end
+RZZ(::Type{theta}, total, ctrl_locs, locs) where theta = Yao.rot(Yao.kron(total, ctrl_locs=>Yao.Z, locs=>Yao.Z), zero(theta))
 
-function inverse_RZZ(theta, total, ctrl_locs, locs)
-    return Yao.rot(Yao.kron(total, ctrl_locs=>Yao.Z, locs=>Yao.Z), theta)
-end
+inverse_RZZ(::Type{theta}, total, ctrl_locs, locs) where theta = Yao.rot(Yao.kron(total, locs=>Yao.Z, ctrl_locs=>Yao.Z), zero(theta))
 
 function entangle_map_type1(num_sites, inverse=false)
     return [i => i+1 for i in 1:2:num_sites-1]
