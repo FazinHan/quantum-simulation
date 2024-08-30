@@ -50,8 +50,6 @@ FausewehZhuCirc = getFausewehZhuCircuit(chain_length,layer_plan, U_T(chain_lengt
 YaoPlots.lighttheme!()
 YaoPlots.vizcircuit(FausewehZhuCirc, filename=joinpath(@__DIR__, "circ.png"))#, transparent=false)
 
-exit()
-   
 number_of_parameters = Int((FausewehZhuCirc |> Yao.nparameters) / 2)
     
 prev_solutions = []
