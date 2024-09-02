@@ -37,9 +37,9 @@ for i in range(b_plot_count):
     layer_list = range(len(layer_plan))
 
     for idx, jii in enumerate(Jii):
-        axs.semilogy(layer_list, errors[idx], label=f'$J_{{||}}={jii}$')
+        axs.semilogy(layer_list, errors[idx,:], label=f'$J_{{||}}={jii}$')
 
-axs.set_xticks(layer_list, layer_def(layer_plan))
+axs.set_xticks(layer_list, [layer_def(i) for i in layer_plan])
     
 axs.grid()
 axs.legend()
