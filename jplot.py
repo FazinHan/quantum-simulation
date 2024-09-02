@@ -39,11 +39,11 @@ for i in range(b_plot_count):
     for idx, jii in enumerate(Jii):
         axs.semilogy(layer_list, errors[idx], label=f'$J_{{||}}={jii}$')
 
-axs.set_xticks(layer_def(layer_plan))
+axs.set_xticks(layer_list, layer_def(layer_plan))
     
 axs.grid()
 axs.legend()
-axs.set_xlabel('$J||$')
+axs.set_xlabel('layers')
 axs.set_ylabel('Abs. Error')
 fig.suptitle(f'J = 1, $\\Omega={5*chain_length}$, B={B_vec[0]}, qubits={chain_length}')
 name = determine_next_filename(f'jii_vs_err_{chain_length}_','png','outputs')
