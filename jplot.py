@@ -34,6 +34,9 @@ for i in range(b_plot_count):
         print(errors)
     x_axis = range(len(Jii))
 
+    print(errors.shape)
+    raise
+
     for idx, layers in enumerate(layer_plan):
         axs.semilogy(eval('Jii'+layer_slice), eval('errors[:,idx]'+layer_slice), label=f'{layer_def(layers)}')
     
