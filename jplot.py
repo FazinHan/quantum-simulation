@@ -39,9 +39,8 @@ for i in range(b_plot_count):
     for idx, jii in enumerate(Jii):
         axs.semilogy(layer_list, errors[idx], label=f'$J_{{||}}={jii}$')
 
-axs.set_xticks(np.array(layer_list), layer_def(layer_plan))
+axs.set_xticks(layer_def(layer_plan))
     
-axs.set_xticks(np.array(Jii))
 axs.grid()
 axs.legend()
 axs.set_xlabel('$J||$')
