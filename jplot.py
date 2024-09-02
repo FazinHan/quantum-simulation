@@ -1,4 +1,4 @@
-import os, sys
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from parallel_julia import B_range
@@ -34,11 +34,12 @@ for i in range(b_plot_count):
         print(errors)
     x_axis = range(len(Jii))
 
-    print(errors.shape)
-    raise
+    layer_list = range(len(layer_plan))
 
-    for idx, layers in enumerate(layer_plan):
-        axs.semilogy(eval('Jii'+layer_slice), eval('errors[:,idx]'+layer_slice), label=f'{layer_def(layers)}')
+    for idx, jii in enumerate(Jii):
+        axs.semilogy(layer_list, errors[idx], label=f'$J_{{||}}={jii}$')
+
+axs.set_xticks(np.array(layer_list), layer_def(layer_plan))
     
 axs.set_xticks(np.array(Jii))
 axs.grid()
