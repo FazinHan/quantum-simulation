@@ -37,7 +37,10 @@ for i in range(b_plot_count):
     layer_list = range(len(layer_plan))
 
     for idx, jii in enumerate(Jii):
-        axs.semilogy(layer_list, errors[idx,:], label=f'$J_{{||}}={jii}$')
+        indices = np.argsort(errors[idx,:])
+        x_axis = layer_list[indices]
+        y_axis = errors[idx,indices]
+        axs.semilogy(x_axis, y_axis, label=f'$J_{{||}}={jii}$')
 
 axs.set_xticks(layer_list, [layer_def(i) for i in layer_plan])
     
