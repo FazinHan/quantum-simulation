@@ -31,16 +31,15 @@ for i in range(b_plot_count):
         layer_plan = eval(file.readline())
         Jii = eval(file.readline())
         errors = 1 + np.array(eval(file.readline()))
-        print(errors)
     x_axis = range(len(Jii))
 
-    layer_list = range(len(layer_plan))
+    layer_list = np.array(range(len(layer_plan)))
 
     for idx, jii in enumerate(Jii):
-        indices = np.argsort(errors[idx,:])
+        indices = np.argsort(errors[idx,:])[::-1]
+        y_axis = errors[idx,:][indices]
         x_axis = layer_list[indices]
-        y_axis = errors[idx,indices]
-        axs.semilogy(x_axis, y_axis, label=f'$J_{{||}}={jii}$')
+        axs.semilogy(layer_list, y_axis, label=f'$J_{{||}}={jii}$')
 
 axs.set_xticks(layer_list, [layer_def(i) for i in layer_plan])
     
