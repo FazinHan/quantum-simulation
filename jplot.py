@@ -35,8 +35,9 @@ for i in range(b_plot_count):
 
     layer_list = np.array(range(len(layer_plan)))
 
+    indices = np.argsort(errors[0,:])[::-1]
+
     for idx, jii in enumerate(Jii):
-        indices = np.argsort(errors[idx,:])[::-1]
         y_axis = errors[idx,:][indices]
         x_axis = layer_list[indices]
         axs.semilogy(layer_list, y_axis, label=f'$J_{{||}}={jii}$')
