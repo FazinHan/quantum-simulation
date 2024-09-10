@@ -38,6 +38,8 @@ for i in range(b_plot_count):
     indices = np.argsort(errors[0,:])[::-1]
 
     for idx, jii in enumerate(Jii):
+        if jii == .1:
+            continue
         y_axis = errors[idx,:][indices]
         x_axis = layer_list[indices]
         axs.semilogy(layer_list, y_axis, label=f'$J_{{||}}={jii}$')
