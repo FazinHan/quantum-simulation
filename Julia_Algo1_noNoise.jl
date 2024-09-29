@@ -80,7 +80,7 @@ for i in 1:Num_EV
         # end
         #callbackfunc(xk) = return
         
-        sol = SP.optimize.minimize(VarL, Theta, jac=dVarL, tol=1e-12, args=(prev_solutions,chain_length,FausewehZhuCirc,Overlap_circ, zero_state_projector), options=optns)
+        sol = SP.optimize.minimize(VarL, Theta, jac=dVarL, tol=1e-10, args=(prev_solutions,chain_length,FausewehZhuCirc,Overlap_circ, zero_state_projector), options=optns)
 
         (sol["success"] == true ) && break
     end
