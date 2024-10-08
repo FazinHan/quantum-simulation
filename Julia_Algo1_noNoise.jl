@@ -57,6 +57,7 @@ prev_solutions = []
 Overlap_circ = getOverlapCircuit(chain_length,layer_plan)
 
 timeevo = 0
+grad = 0
 
 for i in 1:Num_EV
 
@@ -89,11 +90,12 @@ for i in 1:Num_EV
 
     en = Energy(sol["x"], chain_length, layer_plan, U_T(chain_length,A, omega, delta_t, J, JII, times_trapezoid), T)
     timeevo += VarL(sol["x"], prev_solutions,chain_length, FausewehZhuCirc, Overlap_circ, zero_state_projector)
+    grad += norm(dVarL(sol["x"], prev_solutions,chain_length,FausewehZhuCirc,Overlap_circ, zero_state_projector))
 end
 
 timeevo = timeevo/Num_EV;
     
-println("$(timeevo)")
+println("$(timeevo) $(grad/Num_EV)")
 # flush(stdout)
 
 append!(prev_solutions, [sol["x"]])
