@@ -67,6 +67,8 @@ for i in 1:Num_EV
 
     global timeevo
 
+    global grad
+
     while true
 
         Theta = 2*pi*rand(number_of_parameters)
