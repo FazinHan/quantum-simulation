@@ -61,7 +61,7 @@ grad = 0
 
 for i in 1:Num_EV
 
-    optns = Dict("maxiter"=>20000, "disp"=>false)
+    optns = Dict("maxiter"=>25000, "disp"=>false)
 
     global sol = nothing
 
