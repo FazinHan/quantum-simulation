@@ -4,7 +4,7 @@
 #SBATCH --output=qs.out
 #SBATCH --time=4-00:00:00
 
-source ~/.bashrc
+#source ~/.bashrc
 time mpiexec.hydra -n $SLURM_NTASKS python parallel_julia.py
 #python parallel_julia.py 4
 #python parallel_julia.py 6
