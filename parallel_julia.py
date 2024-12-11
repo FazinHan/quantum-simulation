@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import sys
+from mpi4py import MPI; rank = MPI.COMM_WORLD.Get_rank() # type: ignore
 # from information import determine_next_filename
 # from concurrent.futures import ProcessPoolExecutor
 
@@ -10,7 +11,7 @@ B_range = [.08,.08]
 B_vec = np.linspace(*B_range,1)
 
 def func(b):
-    chain_length = int(sys.argv[1])
+    chain_length = (int(rank)+2)*2
     os.system(f'python julia_call.py {chain_length} {b}')
 
 if __name__=="__main__":
