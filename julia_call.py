@@ -19,7 +19,7 @@ if __name__=="__main__":
         for layers in layer_plan:
             if type(layers)==int:
                 layers = [2]*layers
-            pipe = os.popen(f'julia Julia_Algo1_noNoise.jl {chain_length} {B} {Jii} "{layers}"')
+            pipe = os.popen(f'/scratch/fizaank.phy21.iitbhu/julia-1.11.2/bin/julia Julia_Algo1_noNoise.jl {chain_length} {B} {Jii} "{layers}"')
             out.append(pipe.read().split())
             # interest = out[1:-1]
             # print(len(out))
