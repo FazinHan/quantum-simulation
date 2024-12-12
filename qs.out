@@ -6,21 +6,21 @@ SLURM_ARRAY_TASK_COUNT =
 SLURM_ARRAY_TASK_MAX = 
 SLURM_ARRAY_TASK_MIN = 
 SLURM_JOB_ACCOUNT = physics_engg
-SLURM_JOB_ID = 1018860
+SLURM_JOB_ID = 1018976
 SLURM_JOB_NAME = jeff
-SLURM_JOB_NODELIST = cn027
+SLURM_JOB_NODELIST = cn088
 SLURM_JOB_USER = fizaank.phy21.iitbhu
 SLURM_JOB_UID = 5982
 SLURM_JOB_PARTITION = standard
-SLURM_TASK_PID = 66414
+SLURM_TASK_PID = 8658
 SLURM_SUBMIT_DIR = /scratch/fizaank.phy21.iitbhu/quantum-simulation
 SLURM_CPUS_ON_NODE = 40
 SLURM_NTASKS = 2
-SLURM_TASK_PID = 66414
+SLURM_TASK_PID = 8658
 ==========================================
-python: can't open file '/scratch/fizaank.phy21.iitbhu/parallel_julia.py': [Errno 2] No such file or directory
-python: can't open file '/scratch/fizaank.phy21.iitbhu/parallel_julia.py': [Errno 2] No such file or directory
+[proxy:0@cn088] HYDU_create_process (lib/utils/launch.c:73): execvp error on file source (No such file or directory)
+[proxy:0@cn088] HYDU_create_process (lib/utils/launch.c:73): execvp error on file source (No such file or directory)
 
-real	0m0.325s
-user	0m0.023s
-sys	0m0.024s
+real	0m0.213s
+user	0m0.019s
+sys	0m0.026s
