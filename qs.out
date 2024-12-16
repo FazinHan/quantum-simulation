@@ -6,21 +6,247 @@ SLURM_ARRAY_TASK_COUNT =
 SLURM_ARRAY_TASK_MAX = 
 SLURM_ARRAY_TASK_MIN = 
 SLURM_JOB_ACCOUNT = physics_engg
-SLURM_JOB_ID = 1018976
-SLURM_JOB_NAME = jeff
-SLURM_JOB_NODELIST = cn088
+SLURM_JOB_ID = 1019009
+SLURM_JOB_NAME = fauseweh-zhu
+SLURM_JOB_NODELIST = cn154
 SLURM_JOB_USER = fizaank.phy21.iitbhu
 SLURM_JOB_UID = 5982
 SLURM_JOB_PARTITION = standard
-SLURM_TASK_PID = 8658
+SLURM_TASK_PID = 7378
 SLURM_SUBMIT_DIR = /scratch/fizaank.phy21.iitbhu/quantum-simulation
 SLURM_CPUS_ON_NODE = 40
 SLURM_NTASKS = 2
-SLURM_TASK_PID = 8658
+SLURM_TASK_PID = 7378
 ==========================================
-[proxy:0@cn088] HYDU_create_process (lib/utils/launch.c:73): execvp error on file source (No such file or directory)
-[proxy:0@cn088] HYDU_create_process (lib/utils/launch.c:73): execvp error on file source (No such file or directory)
+ERROR: ERROR: LoadError: LoadError: ArgumentError: ArgumentError: Package YaoArrayRegister not found in current path.
+- Run `import Pkg; Pkg.add("YaoArrayRegister")` to install the YaoArrayRegister package.Package YaoArrayRegister not found in current path.
+- Run `import Pkg; Pkg.add("YaoArrayRegister")` to install the YaoArrayRegister package.
+Stacktrace:
 
-real	0m0.213s
-user	0m0.019s
-sys	0m0.026s
+Stacktrace:
+  [1] macro expansion
+  [1] macro expansion
+    @    @ ./ ./loading.jl:2296 [inlined]
+loading.jl:2296 [inlined]
+  [2] macro expansion
+  [2] macro expansion    @ ./
+    @lock.jl:273 [inlined]
+ ./  [3] lock.jl:273 [inlined]
+  [3] __require(into::Module, mod::Symbol)
+    @__require(into::Module, mod::Symbol)
+    @  BaseBase  ./loading.jl:2271
+./loading.jl:2271
+  [4] #invoke_in_world#3  [4] #invoke_in_world#3
+    @ 
+    @ ./essentials.jl:1089 [inlined]
+ ./essentials.jl:1089 [inlined] [5] invoke_in_world
+    @
+  [5]  ./essentials.jl:1086invoke_in_world
+    @ [inlined]
+  [6]  ./essentials.jl:1086 [inlined]
+require(into::Module, mod::Symbol)
+  [6]     @ Base ./loading.jl:2260
+require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2260
+  [7]   [7] include(fname::String)
+    @ Maininclude(fname::String)
+    @  Main./sysimg.jl:38
+ ./  [8] top-level scope
+sysimg.jl:38
+     @  [8] top-level scope
+/scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1    @ 
+  [9] /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+include(fname::String)
+    @ Main  [9]  include(fname::String)
+    @ Main./sysimg.jl:38
+ [10]  ./sysimg.jl:38top-level scope
+    @
+ [10] top-level scope /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/variational_circuit.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/variational_circuit.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+ERROR: LoadError: ERROR: LoadError: ArgumentError: Package YaoArrayRegister not found in current path.
+- Run `import Pkg; Pkg.add("YaoArrayRegister")` to install the YaoArrayRegister package.
+Stacktrace:
+  [1] macro expansion
+    @ ./loading.jl:2296 [inlined]
+  [2] macro expansion
+    @ ./lock.jl:273 [inlined]
+  [3] __require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2271
+  [4] #invoke_in_world#3
+    @ ./essentials.jl:1089 [inlined]
+  [5] invoke_in_world
+    @ ./essentials.jl:1086 [inlined]
+  [6] require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2260
+  [7] include(fname::String)
+    @ Main ./sysimg.jl:38
+  [8] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+  [9] include(fname::String)
+    @ Main ./sysimg.jl:38
+ [10] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/variational_circuit.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+ArgumentError: Package YaoArrayRegister not found in current path.
+- Run `import Pkg; Pkg.add("YaoArrayRegister")` to install the YaoArrayRegister package.
+Stacktrace:
+  [1] macro expansion
+    @ ./loading.jl:2296 [inlined]
+  [2] macro expansion
+    @ ./lock.jl:273 [inlined]
+  [3] __require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2271
+  [4] #invoke_in_world#3
+    @ ./essentials.jl:1089 [inlined]
+  [5] invoke_in_world
+    @ ./essentials.jl:1086 [inlined]
+  [6] require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2260
+  [7] include(fname::String)
+    @ Main ./sysimg.jl:38
+  [8] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+  [9] include(fname::String)
+    @ Main ./sysimg.jl:38
+ [10] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/variational_circuit.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+ERROR: ERROR: LoadError: LoadError: ArgumentError: Package YaoArrayRegister not found in current path.
+- Run `import Pkg; Pkg.add("YaoArrayRegister")` to install the YaoArrayRegister package.
+Stacktrace:
+ArgumentError: Package YaoArrayRegister not found in current path.
+- Run `import Pkg; Pkg.add("YaoArrayRegister")` to install the YaoArrayRegister package.
+Stacktrace:
+  [1] macro expansion
+    @ ./loading.jl:2296 [inlined]
+  [2] macro expansion
+    @ ./lock.jl:273 [inlined]
+  [3]   [1] macro expansion
+    @ ./loading.jl:2296 [inlined]
+  [2] macro expansion
+    @ ./lock.jl:273 [inlined]
+  [3] __require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2271
+  [4] #invoke_in_world#3
+    @ ./essentials.jl:1089 [inlined]
+  [5] invoke_in_world
+    @ ./essentials.jl:1086 [inlined]
+  [6] require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2260
+  [7] include(fname::String)
+    @ Main ./sysimg.jl:38
+  [8] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+  [9] include(fname::String)
+    @ Main ./sysimg.jl:38
+ [10] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/variational_circuit.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+__require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2271
+  [4] #invoke_in_world#3
+    @ ./essentials.jl:1089 [inlined]
+  [5] invoke_in_world
+    @ ./essentials.jl:1086 [inlined]
+  [6] require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2260
+  [7] include(fname::String)
+    @ Main ./sysimg.jl:38
+  [8] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+  [9] include(fname::String)
+    @ Main ./sysimg.jl:38
+ [10] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/variational_circuit.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+ERROR: LoadError: ERROR: LoadError: ArgumentError: Package YaoArrayRegister not found in current path.
+- Run `import Pkg; Pkg.add("YaoArrayRegister")` to install the YaoArrayRegister package.
+Stacktrace:
+  [1] macro expansion
+    @ ./loading.jl:2296 [inlined]
+  [2] macro expansion
+    @ ./lock.jl:273 [inlined]
+  [3] __require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2271
+  [4] #invoke_in_world#3
+    @ ./essentials.jl:1089 [inlined]
+  [5] invoke_in_world
+    @ ./essentials.jl:1086 [inlined]
+  [6] require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2260
+  [7] include(fname::String)
+    @ Main ./sysimg.jl:38
+  [8] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+  [9] include(fname::String)
+    @ Main ./sysimg.jl:38
+ [10] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/variational_circuit.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+Traceback (most recent call last):
+  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/julia_call.py", line 32, in <module>
+    data = np.array([func(i) for i in Jii])
+                     ^^^^^^^
+  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/julia_call.py", line 26, in func
+    return [[float(i), float(j)] for i, j in out]
+                                     ^^^^
+ValueError: not enough values to unpack (expected 2, got 0)
+ArgumentError: Package YaoArrayRegister not found in current path.
+- Run `import Pkg; Pkg.add("YaoArrayRegister")` to install the YaoArrayRegister package.
+Stacktrace:
+  [1] macro expansion
+    @ ./loading.jl:2296 [inlined]
+  [2] macro expansion
+    @ ./lock.jl:273 [inlined]
+  [3] __require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2271
+  [4] #invoke_in_world#3
+    @ ./essentials.jl:1089 [inlined]
+  [5] invoke_in_world
+    @ ./essentials.jl:1086 [inlined]
+  [6] require(into::Module, mod::Symbol)
+    @ Base ./loading.jl:2260
+  [7] include(fname::String)
+    @ Main ./sysimg.jl:38
+  [8] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+  [9] include(fname::String)
+    @ Main ./sysimg.jl:38
+ [10] top-level scope
+    @ /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/variational_circuit.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_definitions.jl:1
+in expression starting at /scratch/fizaank.phy21.iitbhu/quantum-simulation/Julia_Algo1_noNoise.jl:1
+Traceback (most recent call last):
+  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/julia_call.py", line 32, in <module>
+    data = np.array([func(i) for i in Jii])
+                     ^^^^^^^
+  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/julia_call.py", line 26, in func
+    return [[float(i), float(j)] for i, j in out]
+                                     ^^^^
+ValueError: not enough values to unpack (expected 2, got 0)
+
+76.538 s
+
+76.54 s
+
+real	1m44.151s
+user	0m0.020s
+sys	0m0.047s
