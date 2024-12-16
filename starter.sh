@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -N 1
-#SBATCH --job-name=fauseweh-zhu
+#SBATCH --job-name=fz1
 #SBATCH --output=qs.out
 #SBATCH --time=4-00:00:00
 #SBATCH --ntasks-per-node=2
