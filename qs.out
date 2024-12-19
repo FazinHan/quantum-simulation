@@ -18,3 +18,59 @@ SLURM_CPUS_ON_NODE = 40
 SLURM_NTASKS = 2
 SLURM_TASK_PID = 30670
 ==========================================
+Traceback (most recent call last):
+  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/jplot.py", line 33, in <module>
+    errors = 1 + np.array(eval(file.readline()))
+                          ^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1
+    [[-9.99804256e-01  2.06152271e-09]
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+Traceback (most recent call last):
+  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/jplot.py", line 33, in <module>
+    errors = 1 + np.array(eval(file.readline()))
+                          ^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 1
+    [[-9.99999996e-01  1.34262622e-09]
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?
+sh: git: command not found
+sh: git: command not found
+sh: git: command not found
+sh: git: command not found
+sh: git: command not found
+
+written to ./data/julia_result_errors_6_0.08_16.txt
+
+written to ./data/julia_result_grads_6_0.08_3.txt
+
+plotted length 6 and field 0.08
+
+complete in 217418.1s
+
+pushed successfully
+sh: git: command not found
+
+written to ./data/julia_result_errors_4_0.08_16.txt
+
+written to ./data/julia_result_grads_4_0.08_3.txt
+
+plotted length 4 and field 0.08
+
+complete in 95763.5s
+
+pushed successfully
+
+217953.169 s
+
+217953.18 s
+[cli-1]: PMIU_write error; fd=6 buf=:cmd=finalize
+:
+system msg for write_line failure : Broken pipe
+[cli-0]: PMIU_write error; fd=5 buf=:cmd=finalize
+:
+system msg for write_line failure : Broken pipe
+
+real	3633m10.387s
+user	0m0.019s
+sys	0m0.043s
