@@ -30,7 +30,7 @@ for i in range(b_plot_count):
         # chain_length = eval(file.readline())
         layer_plan = eval(file.readline())
         Jii = eval(file.readline())
-        errors = 1 + np.array(eval(file.readline()))
+        errors = 1 + np.array([eval(i.replace('  ', ',').replace('[[','[').replace(']]',']')) for i in file.readlines()])
     x_axis = range(len(Jii))
 
     layer_list = np.array(range(len(layer_plan)))
