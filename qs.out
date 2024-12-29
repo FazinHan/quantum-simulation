@@ -6,71 +6,79 @@ SLURM_ARRAY_TASK_COUNT =
 SLURM_ARRAY_TASK_MAX = 
 SLURM_ARRAY_TASK_MIN = 
 SLURM_JOB_ACCOUNT = physics_engg
-SLURM_JOB_ID = 1019511
-SLURM_JOB_NAME = fauseweh-zhu
-SLURM_JOB_NODELIST = cn070
+SLURM_JOB_ID = 1020587
+SLURM_JOB_NAME = fz1
+SLURM_JOB_NODELIST = cn153
 SLURM_JOB_USER = fizaank.phy21.iitbhu
 SLURM_JOB_UID = 5982
 SLURM_JOB_PARTITION = standard
-SLURM_TASK_PID = 30670
+SLURM_TASK_PID = 147666
 SLURM_SUBMIT_DIR = /scratch/fizaank.phy21.iitbhu/quantum-simulation
 SLURM_CPUS_ON_NODE = 40
 SLURM_NTASKS = 2
-SLURM_TASK_PID = 30670
+SLURM_TASK_PID = 147666
 ==========================================
 Traceback (most recent call last):
-  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/jplot.py", line 33, in <module>
-    errors = 1 + np.array(eval(file.readline()))
-                          ^^^^^^^^^^^^^^^^^^^^^
-  File "<string>", line 1
-    [[-9.99804256e-01  2.06152271e-09]
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-SyntaxError: invalid syntax. Perhaps you forgot a comma?
-Traceback (most recent call last):
-  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/jplot.py", line 33, in <module>
-    errors = 1 + np.array(eval(file.readline()))
-                          ^^^^^^^^^^^^^^^^^^^^^
-  File "<string>", line 1
-    [[-9.99999996e-01  1.34262622e-09]
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-SyntaxError: invalid syntax. Perhaps you forgot a comma?
+  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/jplot.py", line 45, in <module>
+    axs.semilogy(layer_list, y_axis, label=f'$J_{{||}}={jii}$')
+  File "/scratch/fizaank.phy21.iitbhu/anaconda3/lib/python3.12/site-packages/matplotlib/axes/_axes.py", line 1959, in semilogy
+    return self.plot(
+           ^^^^^^^^^^
+  File "/scratch/fizaank.phy21.iitbhu/anaconda3/lib/python3.12/site-packages/matplotlib/axes/_axes.py", line 1724, in plot
+    lines = [*self._get_lines(self, *args, data=data, **kwargs)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/fizaank.phy21.iitbhu/anaconda3/lib/python3.12/site-packages/matplotlib/axes/_base.py", line 303, in __call__
+    yield from self._plot_args(
+               ^^^^^^^^^^^^^^^^
+  File "/scratch/fizaank.phy21.iitbhu/anaconda3/lib/python3.12/site-packages/matplotlib/axes/_base.py", line 499, in _plot_args
+    raise ValueError(f"x and y must have same first dimension, but "
+ValueError: x and y must have same first dimension, but have shapes (4,) and (2,)
 sh: git: command not found
 sh: git: command not found
 sh: git: command not found
-sh: git: command not found
-sh: git: command not found
 
-written to ./data/julia_result_errors_6_0.08_16.txt
+written to ./data/julia_result_errors_4_0.08_17.txt
 
-written to ./data/julia_result_grads_6_0.08_3.txt
-
-plotted length 6 and field 0.08
-
-complete in 217418.1s
-
-pushed successfully
-sh: git: command not found
-
-written to ./data/julia_result_errors_4_0.08_16.txt
-
-written to ./data/julia_result_grads_4_0.08_3.txt
+written to ./data/julia_result_grads_4_0.08_4.txt
 
 plotted length 4 and field 0.08
 
-complete in 95763.5s
+complete in 114295.2s
 
 pushed successfully
 
-217953.169 s
+114585.38 s
+Traceback (most recent call last):
+  File "/scratch/fizaank.phy21.iitbhu/quantum-simulation/jplot.py", line 45, in <module>
+    axs.semilogy(layer_list, y_axis, label=f'$J_{{||}}={jii}$')
+  File "/scratch/fizaank.phy21.iitbhu/anaconda3/lib/python3.12/site-packages/matplotlib/axes/_axes.py", line 1959, in semilogy
+    return self.plot(
+           ^^^^^^^^^^
+  File "/scratch/fizaank.phy21.iitbhu/anaconda3/lib/python3.12/site-packages/matplotlib/axes/_axes.py", line 1724, in plot
+    lines = [*self._get_lines(self, *args, data=data, **kwargs)]
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/scratch/fizaank.phy21.iitbhu/anaconda3/lib/python3.12/site-packages/matplotlib/axes/_base.py", line 303, in __call__
+    yield from self._plot_args(
+               ^^^^^^^^^^^^^^^^
+  File "/scratch/fizaank.phy21.iitbhu/anaconda3/lib/python3.12/site-packages/matplotlib/axes/_base.py", line 499, in _plot_args
+    raise ValueError(f"x and y must have same first dimension, but "
+ValueError: x and y must have same first dimension, but have shapes (4,) and (2,)
+sh: git: command not found
+sh: git: command not found
+sh: git: command not found
 
-217953.18 s
-[cli-1]: PMIU_write error; fd=6 buf=:cmd=finalize
-:
-system msg for write_line failure : Broken pipe
-[cli-0]: PMIU_write error; fd=5 buf=:cmd=finalize
-:
-system msg for write_line failure : Broken pipe
+written to ./data/julia_result_errors_6_0.08_17.txt
 
-real	3633m10.387s
-user	0m0.019s
-sys	0m0.043s
+written to ./data/julia_result_grads_6_0.08_4.txt
+
+plotted length 6 and field 0.08
+
+complete in 269495.2s
+
+pushed successfully
+
+269653.841 s
+
+real	4498m45.585s
+user	0m0.021s
+sys	0m0.047s
